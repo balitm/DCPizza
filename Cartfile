@@ -1,0 +1,5 @@
+github "Alamofire/Alamofire"
+github "Alamofire/AlamofireNetworkActivityIndicator"
+github "realm/realm-cocoa"
+github "RxSwiftCommunity/RxSwiftExt"
+github "RxSwiftCommunity/RxDataSources"

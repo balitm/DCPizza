@@ -1,0 +1,16 @@
+--swiftversion 5
+--disable andOperator
+--disable leadingDelimiters
+--disable linebreakAtEndOfFile
+--disable numberFormatting
+--disable sortedImports
+--disable strongOutlets
+--disable unusedArguments
+--disable wrapArguments
+--disable redundantFileprivate
+--operatorfunc no-space
+--disable trailingClosures
+
+# rules
+
+--enable isEmpty
