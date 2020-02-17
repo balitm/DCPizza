@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,6 +14,27 @@
 		2941A3FD23FAF0DE005838BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2941A3FC23FAF0DE005838BA /* Assets.xcassets */; };
 		2941A40023FAF0DE005838BA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2941A3FE23FAF0DE005838BA /* LaunchScreen.storyboard */; };
 		2941A40B23FAF0DE005838BA /* DCPizzaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A40A23FAF0DE005838BA /* DCPizzaTests.swift */; };
+		2941A42323FAFA28005838BA /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A41A23FAFA28005838BA /* Domain.framework */; };
+		2941A42A23FAFA28005838BA /* DomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A42923FAFA28005838BA /* DomainTests.swift */; };
+		2941A42C23FAFA28005838BA /* Domain.h in Headers */ = {isa = PBXBuildFile; fileRef = 2941A41C23FAFA28005838BA /* Domain.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2941A42F23FAFA28005838BA /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A41A23FAFA28005838BA /* Domain.framework */; };
+		2941A43023FAFA28005838BA /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A41A23FAFA28005838BA /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2941A43F23FAFC75005838BA /* Drink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A43E23FAFC75005838BA /* Drink.swift */; };
+		2941A44123FAFD03005838BA /* Pizza.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A44023FAFD03005838BA /* Pizza.swift */; };
+		2941A44323FAFD9B005838BA /* Pizzas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A44223FAFD9B005838BA /* Pizzas.swift */; };
+		2941A44923FB0CC3005838BA /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A44623FB0CC3005838BA /* API.swift */; };
+		2941A44E23FB1841005838BA /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A44D23FB1841005838BA /* Alamofire.framework */; };
+		2941A44F23FB1841005838BA /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A44D23FB1841005838BA /* Alamofire.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2941A45523FB196E005838BA /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A45423FB196E005838BA /* RxSwift.framework */; };
+		2941A45623FB196E005838BA /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A45423FB196E005838BA /* RxSwift.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2941A47123FB1AA6005838BA /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A47023FB1AA6005838BA /* Constants.swift */; };
+		294ACF9723FBF7230027D0D4 /* GetIngredients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACF9623FBF7230027D0D4 /* GetIngredients.swift */; };
+		294ACF9923FBF7D80027D0D4 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACF9823FBF7D80027D0D4 /* DataSource.swift */; };
+		294ACF9A23FBFC090027D0D4 /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A43C23FAFBE4005838BA /* Ingredient.swift */; };
+		294ACF9B23FBFC0C0027D0D4 /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A43C23FAFBE4005838BA /* Ingredient.swift */; };
+		294ACF9C23FBFC3F0027D0D4 /* RequestBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A44723FB0CC3005838BA /* RequestBase.swift */; };
+		294ACFA023FBFCDC0027D0D4 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACF9F23FBFCDC0027D0D4 /* Log.swift */; };
+		294ACFA323FBFD640027D0D4 /* NetworkUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFA223FBFD640027D0D4 /* NetworkUseCase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -24,7 +45,54 @@
 			remoteGlobalIDString = 2941A3EF23FAF0DC005838BA;
 			remoteInfo = DCPizza;
 		};
+		2941A42423FAFA28005838BA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2941A3E823FAF0DC005838BA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2941A41923FAFA28005838BA;
+			remoteInfo = Domain;
+		};
+		2941A42623FAFA28005838BA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2941A3E823FAF0DC005838BA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2941A3EF23FAF0DC005838BA;
+			remoteInfo = DCPizza;
+		};
+		2941A42D23FAFA28005838BA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2941A3E823FAF0DC005838BA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2941A41923FAFA28005838BA;
+			remoteInfo = Domain;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2941A43423FAFA28005838BA /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2941A43023FAFA28005838BA /* Domain.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2941A45023FB1841005838BA /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2941A45623FB196E005838BA /* RxSwift.framework in Embed Frameworks */,
+				2941A44F23FB1841005838BA /* Alamofire.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2941A3F023FAF0DC005838BA /* DCPizza.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DCPizza.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -38,6 +106,27 @@
 		2941A40623FAF0DE005838BA /* DCPizzaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DCPizzaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2941A40A23FAF0DE005838BA /* DCPizzaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCPizzaTests.swift; sourceTree = "<group>"; };
 		2941A40C23FAF0DE005838BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2941A41A23FAFA28005838BA /* Domain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Domain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2941A41C23FAFA28005838BA /* Domain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Domain.h; sourceTree = "<group>"; };
+		2941A41D23FAFA28005838BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2941A42223FAFA28005838BA /* DomainTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DomainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2941A42923FAFA28005838BA /* DomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainTests.swift; sourceTree = "<group>"; };
+		2941A42B23FAFA28005838BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2941A43C23FAFBE4005838BA /* Ingredient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ingredient.swift; sourceTree = "<group>"; };
+		2941A43E23FAFC75005838BA /* Drink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drink.swift; sourceTree = "<group>"; };
+		2941A44023FAFD03005838BA /* Pizza.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pizza.swift; sourceTree = "<group>"; };
+		2941A44223FAFD9B005838BA /* Pizzas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pizzas.swift; sourceTree = "<group>"; };
+		2941A44423FB0AD3005838BA /* Cart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cart.swift; sourceTree = "<group>"; };
+		2941A44623FB0CC3005838BA /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		2941A44723FB0CC3005838BA /* RequestBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestBase.swift; sourceTree = "<group>"; };
+		2941A44D23FB1841005838BA /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		2941A45123FB1860005838BA /* AlamofireNetworkActivityIndicator.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlamofireNetworkActivityIndicator.framework; path = Carthage/Build/iOS/AlamofireNetworkActivityIndicator.framework; sourceTree = "<group>"; };
+		2941A45423FB196E005838BA /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
+		2941A47023FB1AA6005838BA /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		294ACF9623FBF7230027D0D4 /* GetIngredients.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetIngredients.swift; sourceTree = "<group>"; };
+		294ACF9823FBF7D80027D0D4 /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
+		294ACF9F23FBFCDC0027D0D4 /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		294ACFA223FBFD640027D0D4 /* NetworkUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUseCase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +134,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2941A42F23FAFA28005838BA /* Domain.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,6 +142,23 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2941A41723FAFA28005838BA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2941A45523FB196E005838BA /* RxSwift.framework in Frameworks */,
+				2941A44E23FB1841005838BA /* Alamofire.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2941A41F23FAFA28005838BA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2941A42323FAFA28005838BA /* Domain.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,7 +170,10 @@
 			children = (
 				2941A3F223FAF0DC005838BA /* DCPizza */,
 				2941A40923FAF0DE005838BA /* DCPizzaTests */,
+				2941A41B23FAFA28005838BA /* Domain */,
+				2941A42823FAFA28005838BA /* DomainTests */,
 				2941A3F123FAF0DC005838BA /* Products */,
+				2941A44C23FB1841005838BA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -72,6 +182,8 @@
 			children = (
 				2941A3F023FAF0DC005838BA /* DCPizza.app */,
 				2941A40623FAF0DE005838BA /* DCPizzaTests.xctest */,
+				2941A41A23FAFA28005838BA /* Domain.framework */,
+				2941A42223FAFA28005838BA /* DomainTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -99,7 +211,114 @@
 			path = DCPizzaTests;
 			sourceTree = "<group>";
 		};
+		2941A41B23FAFA28005838BA /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				294ACFA123FBFD240027D0D4 /* UseCases */,
+				294ACF9E23FBFC8C0027D0D4 /* Common */,
+				2941A43823FAFB52005838BA /* DataSource */,
+				2941A41C23FAFA28005838BA /* Domain.h */,
+				2941A41D23FAFA28005838BA /* Info.plist */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		2941A42823FAFA28005838BA /* DomainTests */ = {
+			isa = PBXGroup;
+			children = (
+				2941A42923FAFA28005838BA /* DomainTests.swift */,
+				2941A42B23FAFA28005838BA /* Info.plist */,
+			);
+			path = DomainTests;
+			sourceTree = "<group>";
+		};
+		2941A43823FAFB52005838BA /* DataSource */ = {
+			isa = PBXGroup;
+			children = (
+				2941A43923FAFB79005838BA /* Entities */,
+				2941A43B23FAFBA6005838BA /* API */,
+				2941A43A23FAFB8E005838BA /* Database */,
+				294ACF9823FBF7D80027D0D4 /* DataSource.swift */,
+			);
+			path = DataSource;
+			sourceTree = "<group>";
+		};
+		2941A43923FAFB79005838BA /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				2941A43C23FAFBE4005838BA /* Ingredient.swift */,
+				2941A43E23FAFC75005838BA /* Drink.swift */,
+				2941A44023FAFD03005838BA /* Pizza.swift */,
+				2941A44223FAFD9B005838BA /* Pizzas.swift */,
+				2941A44423FB0AD3005838BA /* Cart.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		2941A43A23FAFB8E005838BA /* Database */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Database;
+			sourceTree = "<group>";
+		};
+		2941A43B23FAFBA6005838BA /* API */ = {
+			isa = PBXGroup;
+			children = (
+				294ACF9523FBF6AA0027D0D4 /* Entities */,
+				2941A44623FB0CC3005838BA /* API.swift */,
+				2941A44723FB0CC3005838BA /* RequestBase.swift */,
+				2941A47023FB1AA6005838BA /* Constants.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		2941A44C23FB1841005838BA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2941A45423FB196E005838BA /* RxSwift.framework */,
+				2941A45123FB1860005838BA /* AlamofireNetworkActivityIndicator.framework */,
+				2941A44D23FB1841005838BA /* Alamofire.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		294ACF9523FBF6AA0027D0D4 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				294ACF9623FBF7230027D0D4 /* GetIngredients.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		294ACF9E23FBFC8C0027D0D4 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				294ACF9F23FBFCDC0027D0D4 /* Log.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		294ACFA123FBFD240027D0D4 /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				294ACFA223FBFD640027D0D4 /* NetworkUseCase.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		2941A41523FAFA28005838BA /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2941A42C23FAFA28005838BA /* Domain.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		2941A3EF23FAF0DC005838BA /* DCPizza */ = {
@@ -109,10 +328,12 @@
 				2941A3EC23FAF0DC005838BA /* Sources */,
 				2941A3ED23FAF0DC005838BA /* Frameworks */,
 				2941A3EE23FAF0DC005838BA /* Resources */,
+				2941A43423FAFA28005838BA /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				2941A42E23FAFA28005838BA /* PBXTargetDependency */,
 			);
 			name = DCPizza;
 			productName = DCPizza;
@@ -137,6 +358,44 @@
 			productReference = 2941A40623FAF0DE005838BA /* DCPizzaTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		2941A41923FAFA28005838BA /* Domain */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2941A43123FAFA28005838BA /* Build configuration list for PBXNativeTarget "Domain" */;
+			buildPhases = (
+				2941A41523FAFA28005838BA /* Headers */,
+				2941A41623FAFA28005838BA /* Sources */,
+				2941A41723FAFA28005838BA /* Frameworks */,
+				2941A41823FAFA28005838BA /* Resources */,
+				2941A45023FB1841005838BA /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Domain;
+			productName = Domain;
+			productReference = 2941A41A23FAFA28005838BA /* Domain.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		2941A42123FAFA28005838BA /* DomainTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2941A43523FAFA28005838BA /* Build configuration list for PBXNativeTarget "DomainTests" */;
+			buildPhases = (
+				2941A41E23FAFA28005838BA /* Sources */,
+				2941A41F23FAFA28005838BA /* Frameworks */,
+				2941A42023FAFA28005838BA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2941A42523FAFA28005838BA /* PBXTargetDependency */,
+				2941A42723FAFA28005838BA /* PBXTargetDependency */,
+			);
+			name = DomainTests;
+			productName = DomainTests;
+			productReference = 2941A42223FAFA28005838BA /* DomainTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -154,10 +413,18 @@
 						CreatedOnToolsVersion = 11.3.1;
 						TestTargetID = 2941A3EF23FAF0DC005838BA;
 					};
+					2941A41923FAFA28005838BA = {
+						CreatedOnToolsVersion = 11.3.1;
+						LastSwiftMigration = 1130;
+					};
+					2941A42123FAFA28005838BA = {
+						CreatedOnToolsVersion = 11.3.1;
+						TestTargetID = 2941A3EF23FAF0DC005838BA;
+					};
 				};
 			};
 			buildConfigurationList = 2941A3EB23FAF0DC005838BA /* Build configuration list for PBXProject "DCPizza" */;
-			compatibilityVersion = "Xcode 9.3";
+			compatibilityVersion = "Xcode 11.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -171,6 +438,8 @@
 			targets = (
 				2941A3EF23FAF0DC005838BA /* DCPizza */,
 				2941A40523FAF0DE005838BA /* DCPizzaTests */,
+				2941A41923FAFA28005838BA /* Domain */,
+				2941A42123FAFA28005838BA /* DomainTests */,
 			);
 		};
 /* End PBXProject section */
@@ -187,6 +456,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		2941A40423FAF0DE005838BA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2941A41823FAFA28005838BA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2941A42023FAFA28005838BA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -214,6 +497,33 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2941A41623FAFA28005838BA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2941A44323FAFD9B005838BA /* Pizzas.swift in Sources */,
+				2941A43F23FAFC75005838BA /* Drink.swift in Sources */,
+				294ACFA023FBFCDC0027D0D4 /* Log.swift in Sources */,
+				2941A47123FB1AA6005838BA /* Constants.swift in Sources */,
+				294ACF9723FBF7230027D0D4 /* GetIngredients.swift in Sources */,
+				294ACF9A23FBFC090027D0D4 /* Ingredient.swift in Sources */,
+				2941A44923FB0CC3005838BA /* API.swift in Sources */,
+				294ACFA323FBFD640027D0D4 /* NetworkUseCase.swift in Sources */,
+				294ACF9C23FBFC3F0027D0D4 /* RequestBase.swift in Sources */,
+				294ACF9923FBF7D80027D0D4 /* DataSource.swift in Sources */,
+				2941A44123FAFD03005838BA /* Pizza.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2941A41E23FAFA28005838BA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				294ACF9B23FBFC0C0027D0D4 /* Ingredient.swift in Sources */,
+				2941A42A23FAFA28005838BA /* DomainTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -221,6 +531,21 @@
 			isa = PBXTargetDependency;
 			target = 2941A3EF23FAF0DC005838BA /* DCPizza */;
 			targetProxy = 2941A40723FAF0DE005838BA /* PBXContainerItemProxy */;
+		};
+		2941A42523FAFA28005838BA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2941A41923FAFA28005838BA /* Domain */;
+			targetProxy = 2941A42423FAFA28005838BA /* PBXContainerItemProxy */;
+		};
+		2941A42723FAFA28005838BA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2941A3EF23FAF0DC005838BA /* DCPizza */;
+			targetProxy = 2941A42623FAFA28005838BA /* PBXContainerItemProxy */;
+		};
+		2941A42E23FAFA28005838BA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2941A41923FAFA28005838BA /* Domain */;
+			targetProxy = 2941A42D23FAFA28005838BA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -361,6 +686,7 @@
 		2941A41023FAF0DE005838BA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = DCPizza/Info.plist;
@@ -369,6 +695,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_SWIFT_FLAGS = "-D DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = "hu.kil-dev.DCPizza";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -379,6 +706,7 @@
 		2941A41123FAF0DE005838BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = DCPizza/Info.plist;
@@ -436,6 +764,112 @@
 			};
 			name = Release;
 		};
+		2941A43223FAFA28005838BA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = Domain/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "-D DEBUG";
+				PRODUCT_BUNDLE_IDENTIFIER = "hu.kil-dev.Domain";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		2941A43323FAFA28005838BA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = Domain/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "hu.kil-dev.Domain";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		2941A43623FAFA28005838BA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = DomainTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "hu.kil-dev.DomainTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DCPizza.app/DCPizza";
+			};
+			name = Debug;
+		};
+		2941A43723FAFA28005838BA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = DomainTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "hu.kil-dev.DomainTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DCPizza.app/DCPizza";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -462,6 +896,24 @@
 			buildConfigurations = (
 				2941A41323FAF0DE005838BA /* Debug */,
 				2941A41423FAF0DE005838BA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2941A43123FAFA28005838BA /* Build configuration list for PBXNativeTarget "Domain" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2941A43223FAFA28005838BA /* Debug */,
+				2941A43323FAFA28005838BA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2941A43523FAFA28005838BA /* Build configuration list for PBXNativeTarget "DomainTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2941A43623FAFA28005838BA /* Debug */,
+				2941A43723FAFA28005838BA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
