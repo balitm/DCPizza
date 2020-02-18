@@ -1,5 +1,5 @@
 //
-//  Drink.swift
+//  DSCart.swift
 //  Domain
 //
 //  Created by Balázs Kilvády on 2/17/20.
@@ -9,11 +9,5 @@
 import Foundation
 
 extension DataSource {
-    struct Drink: Codable {
-        typealias ID = Int64
-
-        let id: ID
-        let name: String
-        let price: Double
-    }
+    typealias Cart = Domain.Cart
 }

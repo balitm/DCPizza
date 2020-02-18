@@ -9,6 +9,6 @@
 import UIKit
 
 struct KColors {
-    static let tint = UIColor.white
-    static let barTint = UIColor.red
+    static let tint = UIColor(hex: 0xE14D45)
+    static let barTint = UIColor.white
 }
