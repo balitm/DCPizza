@@ -9,16 +9,7 @@
 import Foundation
 
 extension API {
-    struct IngredientsModel: ModelProtocol {
-        typealias Result = [DS.Ingredient]
-
-        init() {}
-
-        func process(json: Data) throws -> [DS.Ingredient] {
-            DLog("Recved json data:\n", json)
-            return []
-        }
-    }
+    typealias IngredientsModel = ModelBase<[DS.Drink]>
 
     class GetIngredients: RequestBase<IngredientsModel> {
         required init() {

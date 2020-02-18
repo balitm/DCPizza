@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2941A3F423FAF0DC005838BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A3F323FAF0DC005838BA /* AppDelegate.swift */; };
-		2941A3F623FAF0DC005838BA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A3F523FAF0DC005838BA /* SceneDelegate.swift */; };
 		2941A3F823FAF0DC005838BA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A3F723FAF0DC005838BA /* ViewController.swift */; };
 		2941A3FB23FAF0DC005838BA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2941A3F923FAF0DC005838BA /* Main.storyboard */; };
 		2941A3FD23FAF0DE005838BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2941A3FC23FAF0DE005838BA /* Assets.xcassets */; };
@@ -18,15 +17,12 @@
 		2941A42A23FAFA28005838BA /* DomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A42923FAFA28005838BA /* DomainTests.swift */; };
 		2941A42C23FAFA28005838BA /* Domain.h in Headers */ = {isa = PBXBuildFile; fileRef = 2941A41C23FAFA28005838BA /* Domain.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2941A42F23FAFA28005838BA /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A41A23FAFA28005838BA /* Domain.framework */; };
-		2941A43023FAFA28005838BA /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A41A23FAFA28005838BA /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2941A43F23FAFC75005838BA /* Drink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A43E23FAFC75005838BA /* Drink.swift */; };
 		2941A44123FAFD03005838BA /* Pizza.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A44023FAFD03005838BA /* Pizza.swift */; };
 		2941A44323FAFD9B005838BA /* Pizzas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A44223FAFD9B005838BA /* Pizzas.swift */; };
 		2941A44923FB0CC3005838BA /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A44623FB0CC3005838BA /* API.swift */; };
 		2941A44E23FB1841005838BA /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A44D23FB1841005838BA /* Alamofire.framework */; };
-		2941A44F23FB1841005838BA /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A44D23FB1841005838BA /* Alamofire.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2941A45523FB196E005838BA /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A45423FB196E005838BA /* RxSwift.framework */; };
-		2941A45623FB196E005838BA /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A45423FB196E005838BA /* RxSwift.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2941A47123FB1AA6005838BA /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A47023FB1AA6005838BA /* Constants.swift */; };
 		294ACF9723FBF7230027D0D4 /* GetIngredients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACF9623FBF7230027D0D4 /* GetIngredients.swift */; };
 		294ACF9923FBF7D80027D0D4 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACF9823FBF7D80027D0D4 /* DataSource.swift */; };
@@ -35,6 +31,17 @@
 		294ACF9C23FBFC3F0027D0D4 /* RequestBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A44723FB0CC3005838BA /* RequestBase.swift */; };
 		294ACFA023FBFCDC0027D0D4 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACF9F23FBFCDC0027D0D4 /* Log.swift */; };
 		294ACFA323FBFD640027D0D4 /* NetworkUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFA223FBFD640027D0D4 /* NetworkUseCase.swift */; };
+		294ACFA723FC026D0027D0D4 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFA623FC026D0027D0D4 /* Constant.swift */; };
+		294ACFA823FC04FF0027D0D4 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A44D23FB1841005838BA /* Alamofire.framework */; };
+		294ACFAA23FC04FF0027D0D4 /* AlamofireNetworkActivityIndicator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A45123FB1860005838BA /* AlamofireNetworkActivityIndicator.framework */; };
+		294ACFAC23FC04FF0027D0D4 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A45423FB196E005838BA /* RxSwift.framework */; };
+		294ACFB223FC04FF0027D0D4 /* Differentiator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 294ACFAE23FC04FF0027D0D4 /* Differentiator.framework */; };
+		294ACFB423FC04FF0027D0D4 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 294ACFAF23FC04FF0027D0D4 /* RxCocoa.framework */; };
+		294ACFB623FC04FF0027D0D4 /* RxRelay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 294ACFB023FC04FF0027D0D4 /* RxRelay.framework */; };
+		294ACFB823FC04FF0027D0D4 /* RxDataSources.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 294ACFB123FC04FF0027D0D4 /* RxDataSources.framework */; };
+		294ACFBD23FC0F6A0027D0D4 /* GetDrinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFBC23FC0F6A0027D0D4 /* GetDrinks.swift */; };
+		294ACFBF23FC100B0027D0D4 /* ModelBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFBE23FC100B0027D0D4 /* ModelBase.swift */; };
+		294ACFC123FC13950027D0D4 /* GetPizzas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFC023FC13950027D0D4 /* GetPizzas.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,36 +75,9 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		2941A43423FAFA28005838BA /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				2941A43023FAFA28005838BA /* Domain.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2941A45023FB1841005838BA /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				2941A45623FB196E005838BA /* RxSwift.framework in Embed Frameworks */,
-				2941A44F23FB1841005838BA /* Alamofire.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		2941A3F023FAF0DC005838BA /* DCPizza.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DCPizza.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2941A3F323FAF0DC005838BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		2941A3F523FAF0DC005838BA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		2941A3F723FAF0DC005838BA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		2941A3FA23FAF0DC005838BA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2941A3FC23FAF0DE005838BA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -127,6 +107,14 @@
 		294ACF9823FBF7D80027D0D4 /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		294ACF9F23FBFCDC0027D0D4 /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		294ACFA223FBFD640027D0D4 /* NetworkUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUseCase.swift; sourceTree = "<group>"; };
+		294ACFA623FC026D0027D0D4 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		294ACFAE23FC04FF0027D0D4 /* Differentiator.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Differentiator.framework; path = Carthage/Build/iOS/Differentiator.framework; sourceTree = "<group>"; };
+		294ACFAF23FC04FF0027D0D4 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = Carthage/Build/iOS/RxCocoa.framework; sourceTree = "<group>"; };
+		294ACFB023FC04FF0027D0D4 /* RxRelay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxRelay.framework; path = Carthage/Build/iOS/RxRelay.framework; sourceTree = "<group>"; };
+		294ACFB123FC04FF0027D0D4 /* RxDataSources.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxDataSources.framework; path = Carthage/Build/iOS/RxDataSources.framework; sourceTree = "<group>"; };
+		294ACFBC23FC0F6A0027D0D4 /* GetDrinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDrinks.swift; sourceTree = "<group>"; };
+		294ACFBE23FC100B0027D0D4 /* ModelBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelBase.swift; sourceTree = "<group>"; };
+		294ACFC023FC13950027D0D4 /* GetPizzas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPizzas.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,7 +122,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				294ACFB423FC04FF0027D0D4 /* RxCocoa.framework in Frameworks */,
+				294ACFAC23FC04FF0027D0D4 /* RxSwift.framework in Frameworks */,
+				294ACFB223FC04FF0027D0D4 /* Differentiator.framework in Frameworks */,
+				294ACFB823FC04FF0027D0D4 /* RxDataSources.framework in Frameworks */,
 				2941A42F23FAFA28005838BA /* Domain.framework in Frameworks */,
+				294ACFB623FC04FF0027D0D4 /* RxRelay.framework in Frameworks */,
+				294ACFA823FC04FF0027D0D4 /* Alamofire.framework in Frameworks */,
+				294ACFAA23FC04FF0027D0D4 /* AlamofireNetworkActivityIndicator.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,9 +186,8 @@
 		2941A3F223FAF0DC005838BA /* DCPizza */ = {
 			isa = PBXGroup;
 			children = (
+				294ACFA423FC02270027D0D4 /* UI */,
 				2941A3F323FAF0DC005838BA /* AppDelegate.swift */,
-				2941A3F523FAF0DC005838BA /* SceneDelegate.swift */,
-				2941A3F723FAF0DC005838BA /* ViewController.swift */,
 				2941A3F923FAF0DC005838BA /* Main.storyboard */,
 				2941A3FC23FAF0DE005838BA /* Assets.xcassets */,
 				2941A3FE23FAF0DE005838BA /* LaunchScreen.storyboard */,
@@ -268,6 +262,7 @@
 				294ACF9523FBF6AA0027D0D4 /* Entities */,
 				2941A44623FB0CC3005838BA /* API.swift */,
 				2941A44723FB0CC3005838BA /* RequestBase.swift */,
+				294ACFBE23FC100B0027D0D4 /* ModelBase.swift */,
 				2941A47023FB1AA6005838BA /* Constants.swift */,
 			);
 			path = API;
@@ -276,6 +271,10 @@
 		2941A44C23FB1841005838BA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				294ACFAE23FC04FF0027D0D4 /* Differentiator.framework */,
+				294ACFAF23FC04FF0027D0D4 /* RxCocoa.framework */,
+				294ACFB123FC04FF0027D0D4 /* RxDataSources.framework */,
+				294ACFB023FC04FF0027D0D4 /* RxRelay.framework */,
 				2941A45423FB196E005838BA /* RxSwift.framework */,
 				2941A45123FB1860005838BA /* AlamofireNetworkActivityIndicator.framework */,
 				2941A44D23FB1841005838BA /* Alamofire.framework */,
@@ -287,6 +286,8 @@
 			isa = PBXGroup;
 			children = (
 				294ACF9623FBF7230027D0D4 /* GetIngredients.swift */,
+				294ACFBC23FC0F6A0027D0D4 /* GetDrinks.swift */,
+				294ACFC023FC13950027D0D4 /* GetPizzas.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -307,6 +308,23 @@
 			path = UseCases;
 			sourceTree = "<group>";
 		};
+		294ACFA423FC02270027D0D4 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				294ACFA523FC024C0027D0D4 /* Common */,
+				2941A3F723FAF0DC005838BA /* ViewController.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		294ACFA523FC024C0027D0D4 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				294ACFA623FC026D0027D0D4 /* Constant.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -325,10 +343,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2941A40F23FAF0DE005838BA /* Build configuration list for PBXNativeTarget "DCPizza" */;
 			buildPhases = (
+				294ACFBB23FC07E80027D0D4 /* Run Script - Format */,
 				2941A3EC23FAF0DC005838BA /* Sources */,
 				2941A3ED23FAF0DC005838BA /* Frameworks */,
 				2941A3EE23FAF0DC005838BA /* Resources */,
-				2941A43423FAFA28005838BA /* Embed Frameworks */,
+				294ACFBA23FC07310027D0D4 /* Run Script  - Copy frameworks */,
 			);
 			buildRules = (
 			);
@@ -366,7 +385,6 @@
 				2941A41623FAFA28005838BA /* Sources */,
 				2941A41723FAFA28005838BA /* Frameworks */,
 				2941A41823FAFA28005838BA /* Resources */,
-				2941A45023FB1841005838BA /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -478,6 +496,47 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		294ACFBA23FC07310027D0D4 /* Run Script  - Copy frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"$(SRCROOT)/carthage-input.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "Run Script  - Copy frameworks";
+			outputFileListPaths = (
+				"$(SRCROOT)/carthage-output.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+		};
+		294ACFBB23FC07E80027D0D4 /* Run Script - Format */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script - Format";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"${CONFIGURATION}\" = \"Debug\" ]; then\n    \"${SRCROOT}/swiftformat\"  --lint --verbose --swiftversion 5 \"${SRCROOT}/DCPizza\" || true\nfi\n\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		2941A3EC23FAF0DC005838BA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -485,7 +544,7 @@
 			files = (
 				2941A3F823FAF0DC005838BA /* ViewController.swift in Sources */,
 				2941A3F423FAF0DC005838BA /* AppDelegate.swift in Sources */,
-				2941A3F623FAF0DC005838BA /* SceneDelegate.swift in Sources */,
+				294ACFA723FC026D0027D0D4 /* Constant.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -501,6 +560,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				294ACFBF23FC100B0027D0D4 /* ModelBase.swift in Sources */,
 				2941A44323FAFD9B005838BA /* Pizzas.swift in Sources */,
 				2941A43F23FAFC75005838BA /* Drink.swift in Sources */,
 				294ACFA023FBFCDC0027D0D4 /* Log.swift in Sources */,
@@ -509,7 +569,9 @@
 				294ACF9A23FBFC090027D0D4 /* Ingredient.swift in Sources */,
 				2941A44923FB0CC3005838BA /* API.swift in Sources */,
 				294ACFA323FBFD640027D0D4 /* NetworkUseCase.swift in Sources */,
+				294ACFC123FC13950027D0D4 /* GetPizzas.swift in Sources */,
 				294ACF9C23FBFC3F0027D0D4 /* RequestBase.swift in Sources */,
+				294ACFBD23FC0F6A0027D0D4 /* GetDrinks.swift in Sources */,
 				294ACF9923FBF7D80027D0D4 /* DataSource.swift in Sources */,
 				2941A44123FAFD03005838BA /* Pizza.swift in Sources */,
 			);
@@ -686,9 +748,12 @@
 		2941A41023FAF0DE005838BA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = DCPizza/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -706,9 +771,12 @@
 		2941A41123FAF0DE005838BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = DCPizza/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (

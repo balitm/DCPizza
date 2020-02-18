@@ -242,9 +242,9 @@ extension API {
             responseParser = _responeParser()
 
             afRequest = request
-             debugPrint(request)
+            debugPrint(request)
             request.validate().response(responseSerializer: _dataResponseSerializer) { response in
-                 debugPrint(response)
+                debugPrint(response)
                 switch response.result {
                 case let .success(result):
                     self.handleSuccess(result)
@@ -297,7 +297,6 @@ extension API {
             return result
         }
     }
-
 
     // MARK: - Download base class
 

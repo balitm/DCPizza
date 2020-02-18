@@ -9,8 +9,13 @@
 import Foundation
 
 extension DataSource {
-struct Pizzas: Codable {
-    let pizzas: [Pizza]
-    let basePrice: Double
-}
+    struct Pizzas: Codable {
+        let pizzas: [Pizza]
+        let basePrice: Double
+
+        init() {
+            pizzas = []
+            basePrice = 0
+        }
+    }
 }

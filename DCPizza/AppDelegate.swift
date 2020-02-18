@@ -1,32 +1,38 @@
 //
 //  AppDelegate.swift
-//  DCPizza
+//  Creative
 //
-//  Created by Balázs Kilvády on 2/17/20.
-//  Copyright © 2020 kil-dev. All rights reserved.
+//  Created by Bali on 12/6/14.
+//  Copyright (c) 2014 kil-dev. All rights reserved.
 //
 
 import UIKit
+import CoreData
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+final class AppDelegate: UIResponder, UIApplicationDelegate {
+        var window: UIWindow?
+
+    class var shared: AppDelegate {
+        return UIApplication.shared.delegate as! AppDelegate
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // Setup UI tint colors.
+        let navigationBarAppearace = UINavigationBar.appearance()
+        navigationBarAppearace.tintColor = KColors.tint
+        navigationBarAppearace.barTintColor = KColors.barTint
+        // Change navigation item title color.
+        navigationBarAppearace.titleTextAttributes = [.font: UIFont.systemFont(ofSize: 17), .foregroundColor: KColors.tint]
+
         return true
     }
 
-    // MARK: UISceneSession Lifecycle
-
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        // Called when a new scene session is being created.
-        // Use this method to select a configuration to create the new scene with.
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
-    }
-
-    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-        // Called when the user discards a scene session.
-        // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
-        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
-    }
+//    func applicationDidEnterBackground(_ application: UIApplication) {
+//        SaveManager.shared.execute()
+//    }
+//
+//    func applicationWillTerminate(_ application: UIApplication) {
+//        SaveManager.shared.execute()
+//    }
 }

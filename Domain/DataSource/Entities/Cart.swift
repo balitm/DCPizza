@@ -9,8 +9,8 @@
 import Foundation
 
 extension DataSource {
-struct Cart: Codable {
-    let pizzas: [Pizza]
-    let drinks: [Drink.ID]
-}
+    struct Cart: Codable {
+        let pizzas: [Pizza]
+        let drinks: [Drink.ID]
+    }
 }

@@ -9,9 +9,9 @@
 import Foundation
 
 extension DataSource {
-struct Pizza: Codable {
-    let name: String
-    let ingredients: [Ingredient.ID]
-    let imageUrl: String?
-}
+    struct Pizza: Codable {
+        let name: String
+        let ingredients: [Ingredient.ID]
+        let imageUrl: String?
+    }
 }

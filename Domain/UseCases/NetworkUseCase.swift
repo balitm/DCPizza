@@ -9,9 +9,21 @@
 import Foundation
 import RxSwift
 
-struct NetworkUseCase {
-    func getIngredients() -> Observable<Void> {
+public struct NetworkUseCase {
+    public init() {}
+
+    public func getIngredients() -> Observable<Void> {
         API.GetIngredients().rx.perform()
+            .map({ _ in () })
+    }
+
+    public func getDrinks() -> Observable<Void> {
+        API.GetDrinks().rx.perform()
+            .map({ _ in () })
+    }
+
+    public func getPizzas() -> Observable<Void> {
+        API.GetPizzas().rx.perform()
             .map({ _ in () })
     }
 }
