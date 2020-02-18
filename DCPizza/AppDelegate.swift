@@ -7,11 +7,11 @@
 //
 
 import UIKit
-import CoreData
+import AlamofireNetworkActivityIndicator
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
-        var window: UIWindow?
+    var window: UIWindow?
 
     class var shared: AppDelegate {
         return UIApplication.shared.delegate as! AppDelegate
@@ -25,14 +25,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         // Change navigation item title color.
         navigationBarAppearace.titleTextAttributes = [.font: UIFont.systemFont(ofSize: 17), .foregroundColor: KColors.tint]
 
+        NetworkActivityIndicatorManager.shared.startDelay = 0.0
+        NetworkActivityIndicatorManager.shared.isEnabled = true
+
         return true
     }
-
-//    func applicationDidEnterBackground(_ application: UIApplication) {
-//        SaveManager.shared.execute()
-//    }
-//
-//    func applicationWillTerminate(_ application: UIApplication) {
-//        SaveManager.shared.execute()
-//    }
 }

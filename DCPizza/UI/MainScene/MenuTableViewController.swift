@@ -35,8 +35,8 @@ final class MenuTableViewController: UITableViewController {
     private func _bind() {
         let out = _viewModel.transform(input: MenuTableViewModel.Input())
 
-        let dataSource = RxTableViewSectionedReloadDataSource<SectionModel>(configureCell: { [weak self] ds, tv, ip, _ in
-            tv.createCell(MenuTableViewCell.self, ds[ip].viewModel, ip)
+        let dataSource = RxTableViewSectionedReloadDataSource<SectionModel>(configureCell: { ds, tv, ip, _ in
+            tv.createCell(MenuTableViewCell.self, ds[ip], ip)
         })
         out.tableData
             .drive(tableView.rx.items(dataSource: dataSource))

@@ -9,7 +9,7 @@
 import Foundation
 
 extension API {
-    typealias IngredientsModel = ModelBase<[DS.Drink]>
+    typealias IngredientsModel = ModelBase<[DS.Ingredient]>
 
     class GetIngredients: RequestBase<IngredientsModel> {
         required init() {

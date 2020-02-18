@@ -8,11 +8,11 @@
 
 import Foundation
 
-struct Ingredient: Codable {
-    typealias ID = Int64
+public struct Ingredient: Codable {
+    public typealias ID = Int64
 
-    let id: ID
-    let name: String
-    let price: Double
+    public let id: ID
+    public let name: String
+    public let price: Double
 }
 

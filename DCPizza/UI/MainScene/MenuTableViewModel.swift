@@ -20,27 +20,29 @@ struct MenuTableViewModel: ViewModelType {
 
     func transform(input: MenuTableViewModel.Input) -> MenuTableViewModel.Output {
         let useCase = RepositoryNetworkUseCaseProvider().makeNetworkUseCase()
-        Observable.zip(useCase.getPizzas(), useCase.getIngredients())
-            .map({
-                
+        let sections = Observable.zip(useCase.getPizzas(), useCase.getIngredients()) { (pizzas: $0, ingredients: $1) }
+            .map({ pair -> [SectionModel] in
+                let basePrice = pair.pizzas.basePrice
+                let vms = pair.pizzas.pizzas.map {
+                    MenuCellViewModel(basePrice: basePrice,
+                                      pizza: $0,
+                                      ingredients: pair.ingredients)
+                }
+                return [SectionModel(items: vms)]
             })
-        let items = [SectionItem]()
-        return Output(tableData: Driver.just([SectionModel(items: items)]))
+            .asDriver(onErrorJustReturn: [])
+        return Output(tableData: sections)
     }
 }
 
 extension MenuTableViewModel {
     struct SectionModel {
-        var items: [SectionItem]
-    }
-
-    struct SectionItem {
-        let viewModel: MenuCellViewModel
+        var items: [MenuCellViewModel]
     }
 }
 
 extension MenuTableViewModel.SectionModel: SectionModelType {
-    typealias Item = MenuTableViewModel.SectionItem
+    typealias Item = MenuCellViewModel
 
     init(original: MenuTableViewModel.SectionModel, items: [Item]) {
         self.items = items

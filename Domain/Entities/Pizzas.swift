@@ -8,9 +8,9 @@
 
 import Foundation
 
-struct Pizzas: Codable {
-    let pizzas: [Pizza]
-    let basePrice: Double
+public struct Pizzas: Codable {
+    public let pizzas: [Pizza]
+    public let basePrice: Double
 
     init() {
         pizzas = []

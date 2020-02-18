@@ -10,21 +10,21 @@ import Foundation
 import RxSwift
 
 final class RepositoryNetworkUseCase: NetworkUseCase {
-    let _repository: NetworkRepository
+    let _repository: RepositoryNetworkProtocol
 
     init() {
         _repository = NetworkRepository()
     }
 
-    func getIngredients() -> Observable<Void> {
+    func getIngredients() -> Observable<[Ingredient]> {
         _repository.getIngredients()
     }
 
-    func getDrinks() -> Observable<Void> {
+    func getDrinks() -> Observable<[Drink]> {
         _repository.getDrinks()
     }
 
-    func getPizzas() -> Observable<Void> {
+    func getPizzas() -> Observable<Pizzas> {
         _repository.getPizzas()
     }
 }

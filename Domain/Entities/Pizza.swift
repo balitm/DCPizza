@@ -10,7 +10,7 @@ import Foundation
 import class UIKit.UIImage
 
 public struct Pizza: Codable {
-    let name: String
-    let ingredients: [Ingredient.ID]
-    let imageUrl: String?
+    public let name: String
+    public let ingredients: [Ingredient.ID]
+    public let imageUrl: String?
 }

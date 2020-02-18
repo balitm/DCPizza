@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Drink: Codable {
+public struct Drink: Codable {
     typealias ID = Int64
 
     let id: ID

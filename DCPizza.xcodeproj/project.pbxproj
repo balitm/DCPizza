@@ -58,6 +58,7 @@
 		294ACFF523FC601A0027D0D4 /* ViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFF423FC601A0027D0D4 /* ViewModelType.swift */; };
 		294ACFF723FC60C50027D0D4 /* MenuTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFF623FC60C50027D0D4 /* MenuTableViewModel.swift */; };
 		294ACFFA23FC63530027D0D4 /* MenuCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFF923FC63530027D0D4 /* MenuCellViewModel.swift */; };
+		294ACFFC23FC7FE80027D0D4 /* AlamofireImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 294ACFFB23FC7FE80027D0D4 /* AlamofireImage.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -149,6 +150,7 @@
 		294ACFF423FC601A0027D0D4 /* ViewModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelType.swift; sourceTree = "<group>"; };
 		294ACFF623FC60C50027D0D4 /* MenuTableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableViewModel.swift; sourceTree = "<group>"; };
 		294ACFF923FC63530027D0D4 /* MenuCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCellViewModel.swift; sourceTree = "<group>"; };
+		294ACFFB23FC7FE80027D0D4 /* AlamofireImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlamofireImage.framework; path = Carthage/Build/iOS/AlamofireImage.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,6 +158,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				294ACFFC23FC7FE80027D0D4 /* AlamofireImage.framework in Frameworks */,
 				294ACFB423FC04FF0027D0D4 /* RxCocoa.framework in Frameworks */,
 				294ACFAC23FC04FF0027D0D4 /* RxSwift.framework in Frameworks */,
 				294ACFB223FC04FF0027D0D4 /* Differentiator.framework in Frameworks */,
@@ -307,6 +310,7 @@
 		2941A44C23FB1841005838BA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				294ACFFB23FC7FE80027D0D4 /* AlamofireImage.framework */,
 				294ACFCD23FC3D4A0027D0D4 /* RxTest.framework */,
 				294ACFAE23FC04FF0027D0D4 /* Differentiator.framework */,
 				294ACFAF23FC04FF0027D0D4 /* RxCocoa.framework */,

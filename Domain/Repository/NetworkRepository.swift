@@ -11,26 +11,23 @@ import RxSwift
 
 
 protocol RepositoryNetworkProtocol {
-    func getIngredients() -> Observable<Void>
-    func getDrinks() -> Observable<Void>
-    func getPizzas() -> Observable<Void>
+    func getIngredients() -> Observable<[Ingredient]>
+    func getDrinks() -> Observable<[Drink]>
+    func getPizzas() -> Observable<Pizzas>
 }
 
 struct NetworkRepository: RepositoryNetworkProtocol {
     init() {}
 
-    func getIngredients() -> Observable<Void> {
+    func getIngredients() -> Observable<[Ingredient]> {
         API.GetIngredients().rx.perform()
-            .map({ _ in () })
     }
 
-    func getDrinks() -> Observable<Void> {
+    func getDrinks() -> Observable<[Drink]> {
         API.GetDrinks().rx.perform()
-            .map({ _ in () })
     }
 
-    func getPizzas() -> Observable<Void> {
+    func getPizzas() -> Observable<Pizzas> {
         API.GetPizzas().rx.perform()
-            .map({ _ in () })
     }
 }
