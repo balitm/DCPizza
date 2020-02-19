@@ -9,5 +9,34 @@
 import Foundation
 
 extension DataSource {
-    typealias Pizzas = Domain.Pizzas
+    struct Pizzas: Codable {
+        let pizzas: [Pizza]
+        let basePrice: Double
+
+        init() {
+            pizzas = []
+            basePrice = 0
+        }
+
+        init(pizzas: [Pizza], basePrice: Double) {
+            self.pizzas = pizzas
+            self.basePrice = basePrice
+        }
+    }
+}
+
+extension DataSource.Pizzas: DomainConvertibleType {
+    func asDomain(with ingredients: [Ingredient]) -> Domain.Pizzas {
+        let dPizzas = pizzas.map { pizza -> Domain.Pizza in
+            pizza.asDomain(with: ingredients)
+        }
+        return Domain.Pizzas(pizzas: dPizzas, basePrice: basePrice)
+    }
+}
+
+extension Domain.Pizzas: DSRepresentable {
+    func asDataSource() -> DataSource.Pizzas {
+        return DS.Pizzas(pizzas: pizzas.map { $0.asDataSource() }
+            , basePrice: basePrice)
+    }
 }

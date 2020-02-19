@@ -13,7 +13,7 @@ import RxSwift
 protocol RepositoryNetworkProtocol {
     func getIngredients() -> Observable<[Ingredient]>
     func getDrinks() -> Observable<[Drink]>
-    func getPizzas() -> Observable<Pizzas>
+    func getPizzas() -> Observable<(pizzas: Pizzas, ingredients: [Ingredient])>
 }
 
 struct NetworkRepository: RepositoryNetworkProtocol {
@@ -27,7 +27,10 @@ struct NetworkRepository: RepositoryNetworkProtocol {
         API.GetDrinks().rx.perform()
     }
 
-    func getPizzas() -> Observable<Pizzas> {
-        API.GetPizzas().rx.perform()
+    func getPizzas() -> Observable<(pizzas: Pizzas, ingredients: [Ingredient])> {
+        return Observable.zip(API.GetPizzas().rx.perform(), API.GetIngredients().rx.perform()) { (pizzas: $0, ingredients: $1) }
+            .map({ pair -> (pizzas: Pizzas, ingredients: [Ingredient]) in
+                (pair.pizzas.asDomain(with: pair.ingredients), pair.ingredients)
+            })
     }
 }

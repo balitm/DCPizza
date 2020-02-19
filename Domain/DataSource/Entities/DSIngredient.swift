@@ -9,5 +9,11 @@
 import Foundation
 
 extension DataSource {
-    typealias Ingredient = Domain.Ingredient
+    public struct Ingredient: Codable {
+        public typealias ID = Int64
+
+        public let id: ID
+        public let name: String
+        public let price: Double
+    }
 }

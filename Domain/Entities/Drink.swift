@@ -8,11 +8,4 @@
 
 import Foundation
 
-public struct Drink: Codable {
-    typealias ID = Int64
-
-    let id: ID
-    let name: String
-    let price: Double
-}
-
+public typealias Drink = DataSource.Drink

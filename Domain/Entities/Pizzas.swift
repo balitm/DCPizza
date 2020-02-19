@@ -8,12 +8,7 @@
 
 import Foundation
 
-public struct Pizzas: Codable {
+public struct Pizzas {
     public let pizzas: [Pizza]
     public let basePrice: Double
-
-    init() {
-        pizzas = []
-        basePrice = 0
-    }
 }

@@ -20,13 +20,11 @@ struct MenuTableViewModel: ViewModelType {
 
     func transform(input: MenuTableViewModel.Input) -> MenuTableViewModel.Output {
         let useCase = RepositoryNetworkUseCaseProvider().makeNetworkUseCase()
-        let sections = Observable.zip(useCase.getPizzas(), useCase.getIngredients()) { (pizzas: $0, ingredients: $1) }
+        let sections = useCase.getPizzas()
             .map({ pair -> [SectionModel] in
                 let basePrice = pair.pizzas.basePrice
                 let vms = pair.pizzas.pizzas.map {
-                    MenuCellViewModel(basePrice: basePrice,
-                                      pizza: $0,
-                                      ingredients: pair.ingredients)
+                    MenuCellViewModel(basePrice: basePrice, pizza: $0)
                 }
                 return [SectionModel(items: vms)]
             })

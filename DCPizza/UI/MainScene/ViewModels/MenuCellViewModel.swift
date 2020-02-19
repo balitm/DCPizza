@@ -16,17 +16,14 @@ struct MenuCellViewModel {
     let priceText: String
     let imageUrl: URL?
 
-    init(basePrice: Double, pizza: Pizza, ingredients: [Ingredient]) {
+    init(basePrice: Double, pizza: Pizza) {
         nameText = pizza.name
-        let related = pizza.ingredients.compactMap { id in
-            ingredients.first(where: { $0.id == id })
-        }
-        let price = basePrice + related.reduce(0.0) {
+        let price = basePrice + pizza.ingredients.reduce(0.0) {
             $0 + $1.price
         }
         priceText = "$\(price)"
         var iNames = ""
-        var it = related.makeIterator()
+        var it = pizza.ingredients.makeIterator()
         if let first = it.next() {
             iNames = first.name
             while let ingredient = it.next() {
@@ -35,11 +32,6 @@ struct MenuCellViewModel {
             iNames += "."
         }
         ingredientsText = iNames
-
-        if let str = pizza.imageUrl {
-            imageUrl = URL(string: str)
-        } else {
-            imageUrl = nil
-        }
+        imageUrl = pizza.imageUrl
     }
 }

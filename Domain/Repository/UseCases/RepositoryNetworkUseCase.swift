@@ -24,7 +24,7 @@ final class RepositoryNetworkUseCase: NetworkUseCase {
         _repository.getDrinks()
     }
 
-    func getPizzas() -> Observable<Pizzas> {
+    func getPizzas() -> Observable<(pizzas: Pizzas, ingredients: [Ingredient])> {
         _repository.getPizzas()
     }
 }

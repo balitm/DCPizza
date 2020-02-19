@@ -9,5 +9,8 @@
 import Foundation
 
 extension DataSource {
-    typealias Cart = Domain.Cart
+    struct Cart: Codable {
+        public let pizzas: [Pizza]
+        public let drinks: [Drink.ID]
+    }
 }

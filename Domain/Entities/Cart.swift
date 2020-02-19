@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Cart: Codable {
-    let pizzas: [Pizza]
-    let drinks: [Drink.ID]
+public struct Cart {
+    public let pizzas: [Pizza]
+    public let drinks: [Drink.ID]
 }

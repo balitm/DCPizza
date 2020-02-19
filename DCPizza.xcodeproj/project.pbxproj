@@ -59,6 +59,9 @@
 		294ACFF723FC60C50027D0D4 /* MenuTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFF623FC60C50027D0D4 /* MenuTableViewModel.swift */; };
 		294ACFFA23FC63530027D0D4 /* MenuCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFF923FC63530027D0D4 /* MenuCellViewModel.swift */; };
 		294ACFFC23FC7FE80027D0D4 /* AlamofireImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 294ACFFB23FC7FE80027D0D4 /* AlamofireImage.framework */; };
+		29711D7123FD3CFA00783025 /* DomainConvertibleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29711D7023FD3CFA00783025 /* DomainConvertibleType.swift */; };
+		29711D7323FD3D8300783025 /* DSRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29711D7223FD3D8300783025 /* DSRepresentable.swift */; };
+		298F813E23FD4C5F001A925C /* DSCart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A44423FB0AD3005838BA /* DSCart.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -151,6 +154,8 @@
 		294ACFF623FC60C50027D0D4 /* MenuTableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableViewModel.swift; sourceTree = "<group>"; };
 		294ACFF923FC63530027D0D4 /* MenuCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCellViewModel.swift; sourceTree = "<group>"; };
 		294ACFFB23FC7FE80027D0D4 /* AlamofireImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlamofireImage.framework; path = Carthage/Build/iOS/AlamofireImage.framework; sourceTree = "<group>"; };
+		29711D7023FD3CFA00783025 /* DomainConvertibleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainConvertibleType.swift; sourceTree = "<group>"; };
+		29711D7223FD3D8300783025 /* DSRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSRepresentable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -279,6 +284,7 @@
 		2941A43923FAFB79005838BA /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				29711D6F23FD3CAA00783025 /* Convertion */,
 				2941A43C23FAFBE4005838BA /* DSIngredient.swift */,
 				2941A43E23FAFC75005838BA /* DSDrink.swift */,
 				2941A44023FAFD03005838BA /* DSPizza.swift */,
@@ -435,6 +441,15 @@
 				294ACFF923FC63530027D0D4 /* MenuCellViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		29711D6F23FD3CAA00783025 /* Convertion */ = {
+			isa = PBXGroup;
+			children = (
+				29711D7023FD3CFA00783025 /* DomainConvertibleType.swift */,
+				29711D7223FD3D8300783025 /* DSRepresentable.swift */,
+			);
+			path = Convertion;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -685,6 +700,9 @@
 				294ACFBF23FC100B0027D0D4 /* ModelBase.swift in Sources */,
 				2941A44323FAFD9B005838BA /* DSPizzas.swift in Sources */,
 				2941A43F23FAFC75005838BA /* DSDrink.swift in Sources */,
+				29711D7123FD3CFA00783025 /* DomainConvertibleType.swift in Sources */,
+				298F813E23FD4C5F001A925C /* DSCart.swift in Sources */,
+				29711D7323FD3D8300783025 /* DSRepresentable.swift in Sources */,
 				294ACFA023FBFCDC0027D0D4 /* Log.swift in Sources */,
 				294ACFC823FC23050027D0D4 /* NetworkUseCaseProvider.swift in Sources */,
 				2941A47123FB1AA6005838BA /* Constants.swift in Sources */,
