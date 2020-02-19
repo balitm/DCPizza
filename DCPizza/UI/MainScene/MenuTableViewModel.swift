@@ -11,16 +11,26 @@ import Domain
 import RxSwift
 import RxDataSources
 import struct RxCocoa.Driver
+import class UIKit.UIImage
 
 struct MenuTableViewModel: ViewModelType {
-    struct Input {}
-    struct Output {
-        let tableData: Driver<[SectionModel]>
+    typealias Selected = (index: Int, image: UIImage?)
+    typealias Selection = (pizza: Pizza, image: UIImage?, ingredients: [Ingredient])
+
+    struct Input {
+        let selected: Observable<Selected>
     }
 
-    func transform(input: MenuTableViewModel.Input) -> MenuTableViewModel.Output {
+    struct Output {
+        let tableData: Driver<[SectionModel]>
+        let selection: Driver<Selection>
+    }
+
+    func transform(input: Input) -> Output {
         let useCase = RepositoryNetworkUseCaseProvider().makeNetworkUseCase()
-        let sections = useCase.getPizzas()
+        let data = useCase.getPizzas().share()
+
+        let sections = data
             .map({ pair -> [SectionModel] in
                 let basePrice = pair.pizzas.basePrice
                 let vms = pair.pizzas.pizzas.map {
@@ -29,7 +39,19 @@ struct MenuTableViewModel: ViewModelType {
                 return [SectionModel(items: vms)]
             })
             .asDriver(onErrorJustReturn: [])
-        return Output(tableData: sections)
+
+        let selection = input.selected
+            .withLatestFrom(data) { (pair: $1, selected: $0) }
+            .map({ t -> Selection in
+                let pizza = t.pair.pizzas.pizzas[t.selected.index]
+                let image = t.selected.image
+                let ingredients = t.pair.ingredients
+                return (pizza, image, ingredients)
+            })
+            .asDriver(onErrorDriveWith: Driver<Selection>.never())
+
+        return Output(tableData: sections,
+                      selection: selection)
     }
 }
 

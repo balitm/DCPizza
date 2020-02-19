@@ -242,9 +242,9 @@ extension API {
             responseParser = _responeParser()
 
             afRequest = request
-            debugPrint(request)
+            // debugPrint(request)
             request.validate().response(responseSerializer: _dataResponseSerializer) { response in
-                debugPrint(response)
+                // debugPrint(response)
                 switch response.result {
                 case let .success(result):
                     self.handleSuccess(result)
@@ -263,8 +263,6 @@ extension API {
             return { [unowned self] request, response, data, error in
                 if let error = error { return .failure(error) }
                 let data = data ?? Data()
-//                let json = (try? JSON(data: data, options: .allowFragments)) ?? JSON.null
-//                let response = Response(json: json, request: self, error: error)
 
                 do {
                     let model = self.createModel()
@@ -279,79 +277,10 @@ extension API {
         private lazy var _dataResponseSerializer = DataResponseSerializer<Target> { [unowned self] urlRequest, response, data, error in
             var result: Alamofire.Result<Target>
 
-//            #if DEBUG
-//                if self is GetSession {
-//                    sleep(5)
-//                    let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut, userInfo: nil)
-//                    let apiError = Response(code: .errorNet, request: self, error: error)
-//                    return .failure(apiError)
-//                }
-//            #endif
-
             if let error = error {
                 result = .failure(error)
             } else {
                 result = self.responseParser(urlRequest, response, data, error)
-            }
-
-            return result
-        }
-    }
-
-    // MARK: - Download base class
-
-    open class DownloadBase<Model>: _BaseRequest<Model>, RxAbleType {
-        public typealias Target = Model
-
-        /// Serializes Data into Model.
-        public typealias ResponseParser = (_ request: URLRequest?, _ response: HTTPURLResponse?, _ url: URL?, _ error: Error?) -> Alamofire.Result<Model>
-        public typealias ToProvider = DownloadRequest.DownloadFileDestination
-
-        /// Serializes received response into Result<Model>
-        public var responseParser: ResponseParser = { request, response, url, error in
-            .failure(AFError.responseSerializationFailed(reason: .inputFileNil))
-        }
-
-        public var toProvider: ToProvider = { url, response in
-            (url, [])
-        }
-
-        public override func _perform() {
-            let download = sessionManager
-                .download(_url,
-                          method: method,
-                          parameters: httpParams,
-                          encoding: TimeoutParameterEncoding(encoding: encoding, timeout: timeout),
-                          headers: headers,
-                          to: toProvider)
-
-            DLog("- Downloading: ", path, " - ", id)
-
-            afRequest = download
-            // debugPrint(download)
-            download.response(queue: .main, responseSerializer: _downloadResponseSerializer) { response in
-                // debugPrint(response)
-                switch response.result {
-                case let .success(model):
-                    self.handleSuccess(model)
-                case let .failure(error):
-                    self.handleError(error)
-                }
-            }
-        }
-
-        private lazy var _downloadResponseSerializer = DownloadResponseSerializer<Model> { [unowned self] urlRequest, response, url, error in
-            var result: Alamofire.Result<Model>
-
-            if let error = error {
-                result = .failure(error)
-            } else {
-                result = self.responseParser(urlRequest, response, url, error)
-                if let model = result.value {
-                    result = .success(model)
-                } else {
-                    result = .failure(error ?? NSError(domain: "Network", code: 1, userInfo: nil))
-                }
             }
 
             return result
