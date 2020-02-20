@@ -22,7 +22,7 @@ final class IngredientsViewController: UIViewController {
     @IBOutlet weak var cartLabel: UILabel!
 
     private var _viewModel: IngredientsViewModel!
-    private let _bag = DisposeBag()
+    let bag = DisposeBag()
 
     class func create(with navigator: Navigator, viewModel: IngredientsViewModel) -> IngredientsViewController {
         let vc = navigator.storyboard.load(type: IngredientsViewController.self)
@@ -69,11 +69,11 @@ private extension IngredientsViewController {
         })
         out.tableData
             .drive(tableView.rx.items(dataSource: dataSource))
-            .disposed(by: _bag)
+            .disposed(by: bag)
 
         out.cartText
             .drive(cartLabel.rx.text)
-            .disposed(by: _bag)
+            .disposed(by: bag)
     }
 
     func _footerTimer() {
@@ -81,7 +81,7 @@ private extension IngredientsViewController {
             .subscribe(onNext: { [unowned self] _ in
                 self._hideFooter()
             })
-            .disposed(by: _bag)
+            .disposed(by: bag)
     }
 
     func _hideFooter() {

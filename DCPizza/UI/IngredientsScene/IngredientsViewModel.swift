@@ -25,7 +25,7 @@ struct IngredientsViewModel: ViewModelType {
         let showAdded: Driver<Void>
     }
 
-    var cart: Observable<Cart> { _cart.asObservable() }
+    var cart: Observable<Cart> { _cart.asObservable().skip(1) }
     private let _pizza: Pizza
     private let _image: UIImage?
     private let _ingredients: [Ingredient]

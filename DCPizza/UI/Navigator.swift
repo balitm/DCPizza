@@ -16,7 +16,7 @@ protocol Navigator {
     func showIngredients(of pizza: Pizza,
                          image: UIImage?,
                          ingredients: [Ingredient],
-                         cart: Cart) -> Observable<Cart>
+                         cart: Cart) -> (Observable<Cart>, DisposeBag)
     func showAdded()
 }
 
@@ -33,11 +33,11 @@ final class DefaultNavigator: Navigator {
     func showIngredients(of pizza: Pizza,
                          image: UIImage?,
                          ingredients: [Ingredient],
-                         cart: Cart) -> Observable<Cart> {
+                         cart: Cart) -> (Observable<Cart>, DisposeBag) {
         let vm = IngredientsViewModel(pizza: pizza, image: image, ingredients: ingredients, cart: cart)
         let vc = IngredientsViewController.create(with: self, viewModel: vm)
         _navigationController.pushViewController(vc, animated: true)
-        return vm.cart
+        return (vm.cart, vc.bag)
     }
 
     func showAdded() {

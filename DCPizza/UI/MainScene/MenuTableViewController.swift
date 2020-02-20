@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Domain
 import RxSwift
 import RxSwiftExt
 import RxCocoa
@@ -56,14 +57,9 @@ final class MenuTableViewController: UITableViewController {
             .disposed(by: _bag)
 
         out.selection.asObservable()
-            .flatMap({
-                self._navigator.showIngredients(of: $0.pizza,
-                                                image: $0.image,
-                                                ingredients: $0.ingredients,
-                                                cart: $0.cart)
+            .subscribe(onNext: { [unowned self] in
+                self._getResult($0.pizza, $0.image, $0.ingredients, $0.cart)
             })
-            .debug(trimOutput: true)
-            .bind(to: self._viewModel.cart)
             .disposed(by: _bag)
 
         out.showAdded
@@ -71,5 +67,16 @@ final class MenuTableViewController: UITableViewController {
                 self._navigator.showAdded()
             })
             .disposed(by: _bag)
+    }
+
+    private func _getResult(_ pizza: Pizza, _ image: UIImage?, _ ingredients: [Ingredient], _ cart: Cart) {
+        let (stream, bag) = _navigator.showIngredients(of: pizza,
+                                        image: image,
+                                        ingredients: ingredients,
+                                        cart: cart)
+            stream
+                .debug(trimOutput: true)
+                .bind(to: _viewModel.cart)
+                .disposed(by: bag)
     }
 }
