@@ -69,9 +69,7 @@ final class MenuTableViewController: UITableViewController {
             .disposed(by: _bag)
 
         navigationItem.leftBarButtonItem?.rx.tap
-            .debug()
             .withLatestFrom(_viewModel.cart) { $1 }
-            .debug(trimOutput: true)
             .subscribe(onNext: { [unowned self] in
                 self._navigator.showCart($0)
             })
@@ -84,7 +82,6 @@ final class MenuTableViewController: UITableViewController {
                                         ingredients: ingredients,
                                         cart: cart)
             stream
-                .debug(trimOutput: true)
                 .bind(to: _viewModel.cart)
                 .disposed(by: bag)
     }

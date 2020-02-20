@@ -46,7 +46,8 @@ struct CartViewModel: ViewModelType {
                 let elems = cart.pizzas.enumerated().map {
                     SectionItem.item(row: offset + $0.offset,
                                      viewModel: CartItemCellViewModel(name: $0.element.name,
-                                                                      priceText: "$0"))}
+                                                                      priceText: "$0"))
+                }
                 items.append(contentsOf: elems)
                 offset += elems.count
                 items.append(.padding(row: offset, viewModel: PaddingCellViewModel(height: 24)))

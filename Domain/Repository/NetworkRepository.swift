@@ -25,10 +25,11 @@ struct NetworkRepository: RepositoryNetworkProtocol {
                                      API.GetDrinks().rx.perform(),
                                      resultSelector: { (pizzas: $0, ingredients: $1, drinks: $2) })
             .map({ tuple -> InitData in
-                InitData(pizzas: tuple.pizzas.asDomain(with: tuple.ingredients),
-                         ingredients: tuple.ingredients,
-                         drinks: tuple.drinks,
-                         cart: Domain.Cart(pizzas: [], drinks: []))
+                let ingredients = tuple.ingredients.sorted { $0.name < $1.name }
+                return InitData(pizzas: tuple.pizzas.asDomain(with: ingredients),
+                                ingredients: ingredients,
+                                drinks: tuple.drinks,
+                                cart: Domain.Cart(pizzas: [], drinks: []))
             })
         return netData
     }

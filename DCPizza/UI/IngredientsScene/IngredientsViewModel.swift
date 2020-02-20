@@ -66,7 +66,7 @@ struct IngredientsViewModel: ViewModelType {
 
         let sum = _pizza.ingredients.reduce(0.0, { $0 + $1.price })
         let cartText = "ADD TO CART ($\(sum))"
-        return Output(title: Driver.just(_pizza.name),
+        return Output(title: Driver.just(_pizza.name.uppercased()),
                       tableData: Driver.just([SectionModel(items: items)]),
                       cartText: Driver.just(cartText),
                       showAdded: input.addEvent.asDriver(onErrorJustReturn: ()))
