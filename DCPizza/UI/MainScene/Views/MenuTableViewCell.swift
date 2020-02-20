@@ -14,6 +14,17 @@ final class MenuTableViewCell: UITableViewCell {
     @IBOutlet weak var ingredientsLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var pizzaView: UIImageView!
+    @IBOutlet weak var cartView: RoundedView!
+
+    private weak var _tap: UITapGestureRecognizer!
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+
+        let tap = UITapGestureRecognizer()
+        cartView.addGestureRecognizer(tap)
+        _tap = tap
+    }
 }
 
 extension MenuTableViewCell: CellViewModelProtocol {
@@ -24,5 +35,10 @@ extension MenuTableViewCell: CellViewModelProtocol {
         if let url = viewModel.imageUrl {
             pizzaView.af_setImage(withURL: url)
         }
+
+        _tap.rx.event
+            .map({ _ in () })
+            .bind(to: viewModel.tap)
+            .disposed(by: rx.reuseBag)
     }
 }

@@ -20,7 +20,7 @@ struct ModelBase<Entity: EntityModel>: ModelProtocol {
     init() {}
 
     func process(json: Data) throws -> Result {
-        DLog("Recved json data:\n", json)
+        // DLog("Recved json data:\n", json)
 
         let decoder = JSONDecoder()
         do {

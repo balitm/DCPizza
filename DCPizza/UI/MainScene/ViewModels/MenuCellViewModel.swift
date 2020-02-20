@@ -9,12 +9,15 @@
 import Foundation
 import Domain
 import class UIKit.UIImage
+import RxSwift
+import RxRelay
 
 struct MenuCellViewModel {
     let nameText: String
     let ingredientsText: String
     let priceText: String
     let imageUrl: URL?
+    let tap = PublishRelay<Void>()
 
     init(basePrice: Double, pizza: Pizza) {
         nameText = pizza.name

@@ -55,9 +55,20 @@ final class MenuTableViewController: UITableViewController {
             .drive(tableView.rx.items(dataSource: dataSource))
             .disposed(by: _bag)
 
-        out.selection
-            .drive(onNext: { [unowned self] in
-                self._navigator.showIngredients(of: $0.pizza, image: $0.image, ingredients: $0.ingredients)
+        out.selection.asObservable()
+            .flatMap({
+                self._navigator.showIngredients(of: $0.pizza,
+                                                image: $0.image,
+                                                ingredients: $0.ingredients,
+                                                cart: $0.cart)
+            })
+            .debug(trimOutput: true)
+            .bind(to: self._viewModel.cart)
+            .disposed(by: _bag)
+
+        out.showAdded
+            .drive(onNext: { [unowned self] _ in
+                self._navigator.showAdded()
             })
             .disposed(by: _bag)
     }

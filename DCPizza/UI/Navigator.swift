@@ -8,9 +8,16 @@
 
 import UIKit
 import Domain
+import RxSwift
 
 protocol Navigator {
-    func showIngredients(of pizza: Pizza, image: UIImage?, ingredients: [Ingredient])
+    var storyboard: UIStoryboard { get }
+
+    func showIngredients(of pizza: Pizza,
+                         image: UIImage?,
+                         ingredients: [Ingredient],
+                         cart: Cart) -> Observable<Cart>
+    func showAdded()
 }
 
 final class DefaultNavigator: Navigator {
@@ -23,9 +30,18 @@ final class DefaultNavigator: Navigator {
         _navigationController = navigationController
     }
 
-    func showIngredients(of pizza: Pizza, image: UIImage?, ingredients: [Ingredient]) {
-        let vm = IngredientsViewModel(pizza: pizza, image: image, ingredients: ingredients)
-        let vc = IngredientsViewController.create(with: storyboard, viewModel: vm)
+    func showIngredients(of pizza: Pizza,
+                         image: UIImage?,
+                         ingredients: [Ingredient],
+                         cart: Cart) -> Observable<Cart> {
+        let vm = IngredientsViewModel(pizza: pizza, image: image, ingredients: ingredients, cart: cart)
+        let vc = IngredientsViewController.create(with: self, viewModel: vm)
         _navigationController.pushViewController(vc, animated: true)
+        return vm.cart
+    }
+
+    func showAdded() {
+        let vc = storyboard.load(type: AddedViewController.self)
+        _navigationController.present(vc, animated: true)
     }
 }

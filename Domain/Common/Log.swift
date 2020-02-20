@@ -18,11 +18,11 @@ private func _DLogMessage(file: String, items: [Any]) -> (String, String) {
 }
 
 #if DEBUG
-    func DLog(_ s: String, file: String = #file, line: Int = #line) {
+    public func DLog(_ s: String, file: String = #file, line: Int = #line) {
         print("<\(file.lastPathComponent):\(line)> \(s)")
     }
 
-    func DLog(file: String = #file, line: Int = #line, _ items: Any...) {
+    public func DLog(file: String = #file, line: Int = #line, _ items: Any...) {
         print("<\(file.lastPathComponent):\(line)> ", terminator: "")
         items.forEach {
             print($0, terminator: "")
@@ -31,9 +31,9 @@ private func _DLogMessage(file: String, items: [Any]) -> (String, String) {
     }
 
 #else
-    func DLog(_ s: String, file: String = #file, line: Int = #line) {}
+    public func DLog(_ s: String, file: String = #file, line: Int = #line) {}
 
-    func DLog(file: String = #file, line: Int = #line, _ items: Any...) {}
+    public func DLog(file: String = #file, line: Int = #line, _ items: Any...) {}
 #endif
 
 private func _rfind<C: Collection>(domain: C, value: C.Element) -> C.Index? where C.Element: Equatable {

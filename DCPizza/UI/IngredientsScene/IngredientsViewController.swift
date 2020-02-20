@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Domain
 import RxSwift
 import RxCocoa
 import RxDataSources
@@ -17,16 +18,20 @@ final class IngredientsViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var showLayout: NSLayoutConstraint!
     @IBOutlet weak var hideLayout: NSLayoutConstraint!
-    @IBOutlet var addTap: UITapGestureRecognizer!
+    @IBOutlet weak var addTap: UITapGestureRecognizer!
     @IBOutlet weak var cartLabel: UILabel!
 
     private var _viewModel: IngredientsViewModel!
     private let _bag = DisposeBag()
 
-    class func create(with storyboard: UIStoryboard, viewModel: IngredientsViewModel) -> IngredientsViewController {
-        let vc = storyboard.load(type: IngredientsViewController.self)
+    class func create(with navigator: Navigator, viewModel: IngredientsViewModel) -> IngredientsViewController {
+        let vc = navigator.storyboard.load(type: IngredientsViewController.self)
         vc._viewModel = viewModel
         return vc
+    }
+
+    deinit {
+        DLog(">>> deinit: ", type(of: self))
     }
 
     // MARK: - View functions
@@ -44,7 +49,9 @@ final class IngredientsViewController: UIViewController {
 
 private extension IngredientsViewController {
     func _bind() {
-        let out = _viewModel.transform(input: IngredientsViewModel.Input())
+        let out = _viewModel.transform(
+            input: IngredientsViewModel.Input(addEvent: addTap.rx.event.map { _ in () })
+        )
 
         out.title
             .drive(rx.title)

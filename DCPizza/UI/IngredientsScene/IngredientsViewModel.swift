@@ -10,24 +10,33 @@ import Foundation
 import Domain
 import RxSwift
 import RxDataSources
+import RxRelay
 import struct RxCocoa.Driver
 
 struct IngredientsViewModel: ViewModelType {
-    struct Input {}
+    struct Input {
+        let addEvent: Observable<Void>
+    }
+
     struct Output {
         let title: Driver<String>
         let tableData: Driver<[SectionModel]>
         let cartText: Driver<String>
+        let showAdded: Driver<Void>
     }
 
+    var cart: Observable<Cart> { _cart.asObservable() }
     private let _pizza: Pizza
     private let _image: UIImage?
     private let _ingredients: [Ingredient]
+    private let _cart: BehaviorRelay<Cart>
+    private let _bag = DisposeBag()
 
-    init(pizza: Pizza, image: UIImage?, ingredients: [Ingredient]) {
+    init(pizza: Pizza, image: UIImage?, ingredients: [Ingredient], cart: Cart) {
         _pizza = pizza
         _image = image
         _ingredients = ingredients
+        _cart = BehaviorRelay(value: cart)
     }
 
     func transform(input: Input) -> Output {
@@ -44,11 +53,23 @@ struct IngredientsViewModel: ViewModelType {
         }
         items.append(contentsOf: vms)
 
+        // Add pizza to cart.
+        input.addEvent
+            .withLatestFrom(_cart) { $1 }
+            .map({
+                var newCart = $0
+                newCart.add(pizza: self._pizza)
+                return newCart
+            })
+            .bind(to: _cart)
+            .disposed(by: _bag)
+
         let sum = _pizza.ingredients.reduce(0.0, { $0 + $1.price })
         let cartText = "ADD TO CART ($\(sum))"
         return Output(title: Driver.just(_pizza.name),
                       tableData: Driver.just([SectionModel(items: items)]),
-                      cartText: Driver.just(cartText))
+                      cartText: Driver.just(cartText),
+                      showAdded: input.addEvent.asDriver(onErrorJustReturn: ()))
     }
 }
 

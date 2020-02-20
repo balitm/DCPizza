@@ -60,6 +60,8 @@
 		294ACFFA23FC63530027D0D4 /* MenuCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFF923FC63530027D0D4 /* MenuCellViewModel.swift */; };
 		294ACFFC23FC7FE80027D0D4 /* AlamofireImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 294ACFFB23FC7FE80027D0D4 /* AlamofireImage.framework */; };
 		2969857723FE93130024466E /* InitData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969857623FE93130024466E /* InitData.swift */; };
+		2969857923FEA5870024466E /* UITableViewCell+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969857823FEA5870024466E /* UITableViewCell+Extension.swift */; };
+		2969857C23FEB5400024466E /* AddedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969857B23FEB5400024466E /* AddedViewController.swift */; };
 		29711D7123FD3CFA00783025 /* DomainConvertibleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29711D7023FD3CFA00783025 /* DomainConvertibleType.swift */; };
 		29711D7323FD3D8300783025 /* DSRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29711D7223FD3D8300783025 /* DSRepresentable.swift */; };
 		2976A46523FD6B9300828A94 /* IngredientsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A46423FD6B9300828A94 /* IngredientsViewController.swift */; };
@@ -164,6 +166,8 @@
 		294ACFF923FC63530027D0D4 /* MenuCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCellViewModel.swift; sourceTree = "<group>"; };
 		294ACFFB23FC7FE80027D0D4 /* AlamofireImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlamofireImage.framework; path = Carthage/Build/iOS/AlamofireImage.framework; sourceTree = "<group>"; };
 		2969857623FE93130024466E /* InitData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitData.swift; sourceTree = "<group>"; };
+		2969857823FEA5870024466E /* UITableViewCell+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extension.swift"; sourceTree = "<group>"; };
+		2969857B23FEB5400024466E /* AddedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddedViewController.swift; sourceTree = "<group>"; };
 		29711D7023FD3CFA00783025 /* DomainConvertibleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainConvertibleType.swift; sourceTree = "<group>"; };
 		29711D7223FD3D8300783025 /* DSRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSRepresentable.swift; sourceTree = "<group>"; };
 		2976A46423FD6B9300828A94 /* IngredientsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsViewController.swift; sourceTree = "<group>"; };
@@ -268,9 +272,9 @@
 		2941A41B23FAFA28005838BA /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				294ACF9E23FBFC8C0027D0D4 /* Common */,
 				294ACFC223FC21120027D0D4 /* Entities */,
 				294ACFA123FBFD240027D0D4 /* UseCases */,
-				294ACF9E23FBFC8C0027D0D4 /* Common */,
 				294ACFC323FC21540027D0D4 /* Repository */,
 				2941A43823FAFB52005838BA /* DataSource */,
 				2941A41C23FAFA28005838BA /* Domain.h */,
@@ -381,6 +385,7 @@
 				294ACFE323FC56630027D0D4 /* Extensions */,
 				294ACFEC23FC5B080027D0D4 /* MainScene */,
 				2976A46323FD6B3200828A94 /* IngredientsScene */,
+				2969857A23FEB4D60024466E /* AddedScene */,
 				2976A46823FD76F600828A94 /* Navigator.swift */,
 			);
 			path = UI;
@@ -434,6 +439,7 @@
 				294ACFE423FC56630027D0D4 /* UIStoryboard+load.swift */,
 				294ACFE523FC56630027D0D4 /* UITableView+Extension.swift */,
 				294ACFE623FC56630027D0D4 /* UIColor+Extensions.swift */,
+				2969857823FEA5870024466E /* UITableViewCell+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -463,6 +469,14 @@
 				294ACFF923FC63530027D0D4 /* MenuCellViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		2969857A23FEB4D60024466E /* AddedScene */ = {
+			isa = PBXGroup;
+			children = (
+				2969857B23FEB5400024466E /* AddedViewController.swift */,
+			);
+			path = AddedScene;
 			sourceTree = "<group>";
 		};
 		29711D6F23FD3CAA00783025 /* Convertion */ = {
@@ -731,6 +745,8 @@
 				2976A46D23FDB21B00828A94 /* IngredientsHeaderTableViewCell.swift in Sources */,
 				294ACFEB23FC57130027D0D4 /* RoundedView.swift in Sources */,
 				2976A46923FD76F600828A94 /* Navigator.swift in Sources */,
+				2969857C23FEB5400024466E /* AddedViewController.swift in Sources */,
+				2969857923FEA5870024466E /* UITableViewCell+Extension.swift in Sources */,
 				2976A46F23FDB58E00828A94 /* SeparableTableViewCell.swift in Sources */,
 				294ACFE823FC56630027D0D4 /* UITableView+Extension.swift in Sources */,
 				2941A3F423FAF0DC005838BA /* AppDelegate.swift in Sources */,
@@ -961,7 +977,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = DCPizza/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -984,7 +1000,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = DCPizza/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
