@@ -67,6 +67,15 @@ final class MenuTableViewController: UITableViewController {
                 self._navigator.showAdded()
             })
             .disposed(by: _bag)
+
+        navigationItem.leftBarButtonItem?.rx.tap
+            .debug()
+            .withLatestFrom(_viewModel.cart) { $1 }
+            .debug(trimOutput: true)
+            .subscribe(onNext: { [unowned self] in
+                self._navigator.showCart($0)
+            })
+            .disposed(by: _bag)
     }
 
     private func _getResult(_ pizza: Pizza, _ image: UIImage?, _ ingredients: [Ingredient], _ cart: Cart) {
