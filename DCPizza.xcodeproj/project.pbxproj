@@ -59,6 +59,7 @@
 		294ACFF723FC60C50027D0D4 /* MenuTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFF623FC60C50027D0D4 /* MenuTableViewModel.swift */; };
 		294ACFFA23FC63530027D0D4 /* MenuCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFF923FC63530027D0D4 /* MenuCellViewModel.swift */; };
 		294ACFFC23FC7FE80027D0D4 /* AlamofireImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 294ACFFB23FC7FE80027D0D4 /* AlamofireImage.framework */; };
+		2969857723FE93130024466E /* InitData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969857623FE93130024466E /* InitData.swift */; };
 		29711D7123FD3CFA00783025 /* DomainConvertibleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29711D7023FD3CFA00783025 /* DomainConvertibleType.swift */; };
 		29711D7323FD3D8300783025 /* DSRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29711D7223FD3D8300783025 /* DSRepresentable.swift */; };
 		2976A46523FD6B9300828A94 /* IngredientsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A46423FD6B9300828A94 /* IngredientsViewController.swift */; };
@@ -162,6 +163,7 @@
 		294ACFF623FC60C50027D0D4 /* MenuTableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableViewModel.swift; sourceTree = "<group>"; };
 		294ACFF923FC63530027D0D4 /* MenuCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCellViewModel.swift; sourceTree = "<group>"; };
 		294ACFFB23FC7FE80027D0D4 /* AlamofireImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlamofireImage.framework; path = Carthage/Build/iOS/AlamofireImage.framework; sourceTree = "<group>"; };
+		2969857623FE93130024466E /* InitData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitData.swift; sourceTree = "<group>"; };
 		29711D7023FD3CFA00783025 /* DomainConvertibleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainConvertibleType.swift; sourceTree = "<group>"; };
 		29711D7223FD3D8300783025 /* DSRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSRepresentable.swift; sourceTree = "<group>"; };
 		2976A46423FD6B9300828A94 /* IngredientsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsViewController.swift; sourceTree = "<group>"; };
@@ -403,6 +405,7 @@
 				294ACFDC23FC461E0027D0D4 /* Pizza.swift */,
 				294ACFDE23FC461E0027D0D4 /* Pizzas.swift */,
 				294ACFD123FC43F50027D0D4 /* Ingredient.swift */,
+				2969857623FE93130024466E /* InitData.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -772,6 +775,7 @@
 				294ACFE123FC461E0027D0D4 /* Cart.swift in Sources */,
 				294ACF9C23FBFC3F0027D0D4 /* RequestBase.swift in Sources */,
 				294ACFCA23FC24300027D0D4 /* RepositoryNetworkUseCaseProvider.swift in Sources */,
+				2969857723FE93130024466E /* InitData.swift in Sources */,
 				294ACFBD23FC0F6A0027D0D4 /* GetDrinks.swift in Sources */,
 				294ACF9923FBF7D80027D0D4 /* DataSource.swift in Sources */,
 				294ACFE223FC461E0027D0D4 /* Pizzas.swift in Sources */,

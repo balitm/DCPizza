@@ -12,5 +12,5 @@ import RxSwift
 public protocol NetworkUseCase {
     func getIngredients() -> Observable<[Ingredient]>
     func getDrinks() -> Observable<[Drink]>
-    func getPizzas() -> Observable<(pizzas: Pizzas, ingredients: [Ingredient])>
+    func getInitData() -> Observable<InitData>
 }

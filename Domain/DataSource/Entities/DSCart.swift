@@ -14,3 +14,17 @@ extension DataSource {
         public let drinks: [Drink.ID]
     }
 }
+
+extension DataSource.Cart: DomainConvertibleType {
+    func asDomain(with ingredients: [DS.Ingredient]) -> Domain.Cart {
+        Domain.Cart(pizzas: pizzas.map { $0.asDomain(with: ingredients) },
+                    drinks: drinks)
+    }
+}
+
+extension Domain.Cart: DSRepresentable {
+    func asDataSource() -> DS.Cart {
+        DS.Cart(pizzas: pizzas.map { $0.asDataSource() },
+                drinks: drinks)
+    }
+}

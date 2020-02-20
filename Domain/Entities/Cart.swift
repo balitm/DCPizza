@@ -9,6 +9,14 @@
 import Foundation
 
 public struct Cart {
-    public let pizzas: [Pizza]
-    public let drinks: [Drink.ID]
+    public private(set) var pizzas: [Pizza]
+    public private(set) var drinks: [Drink.ID]
+
+    public mutating func add(pizza: Pizza) {
+        pizzas.append(pizza)
+    }
+
+    public mutating func add(drink: Drink) {
+        drinks.append(drink.id)
+    }
 }

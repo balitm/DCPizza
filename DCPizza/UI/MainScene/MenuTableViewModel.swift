@@ -28,12 +28,12 @@ struct MenuTableViewModel: ViewModelType {
 
     func transform(input: Input) -> Output {
         let useCase = RepositoryNetworkUseCaseProvider().makeNetworkUseCase()
-        let data = useCase.getPizzas().share()
+        let data = useCase.getInitData().share()
 
         let sections = data
-            .map({ pair -> [SectionModel] in
-                let basePrice = pair.pizzas.basePrice
-                let vms = pair.pizzas.pizzas.map {
+            .map({ data -> [SectionModel] in
+                let basePrice = data.pizzas.basePrice
+                let vms = data.pizzas.pizzas.map {
                     MenuCellViewModel(basePrice: basePrice, pizza: $0)
                 }
                 return [SectionModel(items: vms)]
@@ -41,11 +41,11 @@ struct MenuTableViewModel: ViewModelType {
             .asDriver(onErrorJustReturn: [])
 
         let selection = input.selected
-            .withLatestFrom(data) { (pair: $1, selected: $0) }
+            .withLatestFrom(data) { (data: $1, selected: $0) }
             .map({ t -> Selection in
-                let pizza = t.pair.pizzas.pizzas[t.selected.index]
+                let pizza = t.data.pizzas.pizzas[t.selected.index]
                 let image = t.selected.image
-                let ingredients = t.pair.ingredients
+                let ingredients = t.data.ingredients
                 return (pizza, image, ingredients)
             })
             .asDriver(onErrorDriveWith: Driver<Selection>.never())

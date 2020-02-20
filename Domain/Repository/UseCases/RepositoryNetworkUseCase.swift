@@ -16,15 +16,15 @@ final class RepositoryNetworkUseCase: NetworkUseCase {
         _repository = NetworkRepository()
     }
 
+    func getInitData() -> Observable<InitData> {
+        _repository.getInitData()
+    }
+
     func getIngredients() -> Observable<[Ingredient]> {
         _repository.getIngredients()
     }
 
     func getDrinks() -> Observable<[Drink]> {
         _repository.getDrinks()
-    }
-
-    func getPizzas() -> Observable<(pizzas: Pizzas, ingredients: [Ingredient])> {
-        _repository.getPizzas()
     }
 }

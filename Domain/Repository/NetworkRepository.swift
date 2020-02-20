@@ -11,13 +11,27 @@ import RxSwift
 
 
 protocol RepositoryNetworkProtocol {
+    func getInitData() -> Observable<InitData>
     func getIngredients() -> Observable<[Ingredient]>
     func getDrinks() -> Observable<[Drink]>
-    func getPizzas() -> Observable<(pizzas: Pizzas, ingredients: [Ingredient])>
 }
 
 struct NetworkRepository: RepositoryNetworkProtocol {
     init() {}
+
+    func getInitData() -> Observable<InitData> {
+        let netData = Observable.zip(API.GetPizzas().rx.perform(),
+                                     API.GetIngredients().rx.perform(),
+                                     API.GetDrinks().rx.perform(),
+                                     resultSelector: { (pizzas: $0, ingredients: $1, drinks: $2) })
+            .map({ tuple -> InitData in
+                InitData(pizzas: tuple.pizzas.asDomain(with: tuple.ingredients),
+                         ingredients: tuple.ingredients,
+                         drinks: tuple.drinks,
+                         cart: Domain.Cart(pizzas: [], drinks: []))
+            })
+        return netData
+    }
 
     func getIngredients() -> Observable<[Ingredient]> {
         API.GetIngredients().rx.perform()
@@ -25,12 +39,5 @@ struct NetworkRepository: RepositoryNetworkProtocol {
 
     func getDrinks() -> Observable<[Drink]> {
         API.GetDrinks().rx.perform()
-    }
-
-    func getPizzas() -> Observable<(pizzas: Pizzas, ingredients: [Ingredient])> {
-        return Observable.zip(API.GetPizzas().rx.perform(), API.GetIngredients().rx.perform()) { (pizzas: $0, ingredients: $1) }
-            .map({ pair -> (pizzas: Pizzas, ingredients: [Ingredient]) in
-                (pair.pizzas.asDomain(with: pair.ingredients), pair.ingredients)
-            })
     }
 }
