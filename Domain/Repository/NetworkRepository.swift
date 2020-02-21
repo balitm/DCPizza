@@ -26,10 +26,12 @@ struct NetworkRepository: RepositoryNetworkProtocol {
                                      resultSelector: { (pizzas: $0, ingredients: $1, drinks: $2) })
             .map({ tuple -> InitData in
                 let ingredients = tuple.ingredients.sorted { $0.name < $1.name }
-                return InitData(pizzas: tuple.pizzas.asDomain(with: ingredients),
+                return InitData(pizzas: tuple.pizzas.asDomain(with: ingredients, drinks: tuple.drinks),
                                 ingredients: ingredients,
                                 drinks: tuple.drinks,
-                                cart: Domain.Cart(pizzas: [], drinks: []))
+                                cart: Domain.Cart(pizzas: [],
+                                                  drinks: [],
+                                                  basePrice: tuple.pizzas.basePrice))
             })
         return netData
     }

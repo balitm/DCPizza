@@ -11,5 +11,5 @@ import Foundation
 protocol DomainConvertibleType {
     associatedtype DomainType
 
-    func asDomain(with ingredients: [DS.Ingredient]) -> DomainType
+    func asDomain(with ingredients: [DS.Ingredient], drinks: [DS.Drink]) -> DomainType
 }

@@ -17,3 +17,9 @@ extension DataSource {
         public let price: Double
     }
 }
+
+extension DataSource.Drink: DomainConvertibleType {
+    func asDomain(with ingredients: [DS.Ingredient], drinks: [DS.Drink]) -> Domain.Drink {
+        drinks.first { $0.id == id } ?? Domain.Drink(id: -1, name: "", price: 0)
+    }
+}
