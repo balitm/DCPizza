@@ -23,6 +23,8 @@
 		2941A44E23FB1841005838BA /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A44D23FB1841005838BA /* Alamofire.framework */; };
 		2941A45523FB196E005838BA /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A45423FB196E005838BA /* RxSwift.framework */; };
 		2941A47123FB1AA6005838BA /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A47023FB1AA6005838BA /* Constants.swift */; };
+		2944CAA324003F1400F4709F /* UIViewController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2944CAA224003F1400F4709F /* UIViewController+Rx.swift */; };
+		2944CAA5240057AD00F4709F /* Checkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2944CAA4240057AD00F4709F /* Checkout.swift */; };
 		294ACF9723FBF7230027D0D4 /* GetIngredients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACF9623FBF7230027D0D4 /* GetIngredients.swift */; };
 		294ACF9923FBF7D80027D0D4 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACF9823FBF7D80027D0D4 /* DataSource.swift */; };
 		294ACF9A23FBFC090027D0D4 /* DSIngredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A43C23FAFBE4005838BA /* DSIngredient.swift */; };
@@ -141,6 +143,8 @@
 		2941A45123FB1860005838BA /* AlamofireNetworkActivityIndicator.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlamofireNetworkActivityIndicator.framework; path = Carthage/Build/iOS/AlamofireNetworkActivityIndicator.framework; sourceTree = "<group>"; };
 		2941A45423FB196E005838BA /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		2941A47023FB1AA6005838BA /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		2944CAA224003F1400F4709F /* UIViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Rx.swift"; sourceTree = "<group>"; };
+		2944CAA4240057AD00F4709F /* Checkout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkout.swift; sourceTree = "<group>"; };
 		294ACF9623FBF7230027D0D4 /* GetIngredients.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetIngredients.swift; sourceTree = "<group>"; };
 		294ACF9823FBF7D80027D0D4 /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		294ACF9F23FBFCDC0027D0D4 /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
@@ -373,6 +377,7 @@
 				294ACF9623FBF7230027D0D4 /* GetIngredients.swift */,
 				294ACFBC23FC0F6A0027D0D4 /* GetDrinks.swift */,
 				294ACFC023FC13950027D0D4 /* GetPizzas.swift */,
+				2944CAA4240057AD00F4709F /* Checkout.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -415,6 +420,7 @@
 				294ACFEA23FC57120027D0D4 /* RoundedView.swift */,
 				294ACFF423FC601A0027D0D4 /* ViewModelType.swift */,
 				2976A46E23FDB58E00828A94 /* SeparableTableViewCell.swift */,
+				2944CAA224003F1400F4709F /* UIViewController+Rx.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -792,6 +798,7 @@
 				294ACFE923FC56630027D0D4 /* UIColor+Extensions.swift in Sources */,
 				2976A47123FDB6A300828A94 /* IngredientsHeaderCellViewModel.swift in Sources */,
 				295C3D6723FEFB4900D82655 /* PaddingTableViewCell.swift in Sources */,
+				2944CAA324003F1400F4709F /* UIViewController+Rx.swift in Sources */,
 				2976A47323FDBA6700828A94 /* IngredientsItemTableViewCell.swift in Sources */,
 				295C3D7123FF03C900D82655 /* CartTotalCellViewModel.swift in Sources */,
 				2976A46D23FDB21B00828A94 /* IngredientsHeaderTableViewCell.swift in Sources */,
@@ -829,6 +836,7 @@
 				294ACFCC23FC30EA0027D0D4 /* NetworkRepository.swift in Sources */,
 				294ACFC623FC22090027D0D4 /* NetworkUseCase.swift in Sources */,
 				294ACFBF23FC100B0027D0D4 /* ModelBase.swift in Sources */,
+				2944CAA5240057AD00F4709F /* Checkout.swift in Sources */,
 				2941A44323FAFD9B005838BA /* DSPizzas.swift in Sources */,
 				2941A43F23FAFC75005838BA /* DSDrink.swift in Sources */,
 				29711D7123FD3CFA00783025 /* DomainConvertibleType.swift in Sources */,

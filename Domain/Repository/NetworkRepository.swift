@@ -14,6 +14,7 @@ protocol RepositoryNetworkProtocol {
     func getInitData() -> Observable<InitData>
     func getIngredients() -> Observable<[Ingredient]>
     func getDrinks() -> Observable<[Drink]>
+    func checkout(cart: DS.Cart) -> Observable<Void>
 }
 
 struct NetworkRepository: RepositoryNetworkProtocol {
@@ -42,5 +43,9 @@ struct NetworkRepository: RepositoryNetworkProtocol {
 
     func getDrinks() -> Observable<[Drink]> {
         API.GetDrinks().rx.perform()
+    }
+
+    func checkout(cart: DS.Cart) -> Observable<Void> {
+        API.Checkout(pizzas: cart.pizzas, drinks: cart.drinks).rx.perform()
     }
 }

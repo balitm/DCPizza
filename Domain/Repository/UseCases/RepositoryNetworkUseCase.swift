@@ -27,4 +27,8 @@ final class RepositoryNetworkUseCase: NetworkUseCase {
     func getDrinks() -> Observable<[Drink]> {
         _repository.getDrinks()
     }
+
+    func checkout(cart: Cart) -> Observable<Void> {
+        _repository.checkout(cart: cart.asDataSource())
+    }
 }

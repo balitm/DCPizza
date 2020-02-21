@@ -13,11 +13,13 @@ import RxSwift
 class DomainTests: XCTestCase {
     private let _bag = DisposeBag()
     var initData: InitData!
+    var useCase: NetworkUseCase!
 
     lazy var initialSetupFinished: XCTestExpectation = {
         let initialSetupFinished = expectation(description: "initial setup finished")
 
         let useCase = RepositoryNetworkUseCaseProvider().makeNetworkUseCase()
+        self.useCase = useCase
         useCase.getInitData()
             .subscribe(onNext: { [unowned self] in
                 self.initData = $0
@@ -91,5 +93,28 @@ class DomainTests: XCTestCase {
         XCTAssertEqual(cart.drinks.count, 1)
         XCTAssertEqual(cart.pizzas[0].name, initData.pizzas.pizzas[0].name)
         XCTAssertEqual(cart.drinks[0].id, initData.drinks[1].id)
+    }
+
+    func testCheckout() {
+        var cart = initData.cart
+        guard initData.drinks.count >= 2 && initData.pizzas.pizzas.count >= 2 else { return }
+        cart.add(drink: initData.drinks[0])
+        cart.add(drink: initData.drinks[1])
+        cart.add(pizza: initData.pizzas.pizzas[0])
+        cart.add(pizza: initData.pizzas.pizzas[1])
+        let expectation = XCTestExpectation(description: "checkout")
+
+        useCase.checkout(cart: cart)
+            .subscribe(onNext: { _ in
+                DLog("Checkout succeeded.")
+                XCTAssert(true)
+            }, onError: { _ in
+                XCTAssert(false)
+            }, onDisposed: {
+                expectation.fulfill()
+            })
+            .disposed(by: _bag)
+
+        wait(for: [expectation], timeout: 30.0)
     }
 }
