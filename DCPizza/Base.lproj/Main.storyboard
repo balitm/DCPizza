@@ -354,8 +354,9 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" image="checkmark" catalog="system" id="uoa-m0-Egb">
-                                                    <rect key="frame" x="17.75" y="13.5" width="18.5" height="16.5"/>
+                                                    <rect key="frame" x="21.25" y="16.5" width="11.5" height="10"/>
                                                     <autoresizingMask key="autoresizingMask"/>
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="10" weight="bold"/>
                                                 </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -475,8 +476,9 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" image="xmark" catalog="system" id="uNA-U0-gxS">
-                                                    <rect key="frame" x="18.25" y="13.5" width="17.5" height="15.5"/>
+                                                    <rect key="frame" x="22.75" y="18" width="8.5" height="7.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="8" weight="regular"/>
                                                 </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -504,8 +506,9 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" image="xmark" catalog="system" id="kyP-yb-CRb">
-                                                    <rect key="frame" x="18.25" y="13.5" width="17.5" height="15.5"/>
+                                                    <rect key="frame" x="22.75" y="18" width="8.5" height="7.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="8" weight="regular"/>
                                                 </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
