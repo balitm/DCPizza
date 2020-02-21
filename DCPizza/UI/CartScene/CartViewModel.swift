@@ -9,6 +9,7 @@
 import Foundation
 import Domain
 import RxSwift
+import RxSwiftExt
 import RxDataSources
 import struct RxCocoa.Driver
 
@@ -18,47 +19,61 @@ struct CartViewModel: ViewModelType {
     }
 
     enum SectionItem {
-        case padding(row: Int, viewModel: PaddingCellViewModel)
-        case item(row: Int, viewModel: CartItemCellViewModel)
-        case total(row: Int, viewModel: CartTotalCellViewModel)
+        case padding(viewModel: PaddingCellViewModel)
+        case item(viewModel: CartItemCellViewModel)
+        case total(viewModel: CartTotalCellViewModel)
     }
 
     struct Input {
+        let selected: Observable<Int>
+        let checkout: Observable<Void>
     }
 
     struct Output {
         let tableData: Driver<[SectionModel]>
     }
 
-    var cart: Observable<Cart> { _cart.asObservable().skip(1) }
-    private let _cart: BehaviorSubject<Cart>
+    var resultCart: Observable<Cart> { cart.asObservable().skip(1) }
+    let cart: BehaviorSubject<Cart>
     private let _bag = DisposeBag()
 
     init(cart: Cart) {
-        _cart = BehaviorSubject(value: cart)
+        self.cart = BehaviorSubject(value: cart)
     }
 
     func transform(input: Input) -> Output {
-        let models = _cart
+        let models = cart
             .map({ cart -> [SectionModel] in
-                var items = [SectionItem.padding(row: 0, viewModel: PaddingCellViewModel(height: 12))]
-                var offset = 1
+                var items = [SectionItem.padding(viewModel: PaddingCellViewModel(height: 12))]
                 let elems = cart.pizzas.enumerated().map {
-                    SectionItem.item(row: offset + $0.offset,
-                                     viewModel: CartItemCellViewModel(name: $0.element.name,
-                                                                      priceText: "$0"))
+                    SectionItem.item(viewModel: CartItemCellViewModel(pizza: $0.element,
+                                                                      basePrice: cart.basePrice)
+                    )
                 }
                 items.append(contentsOf: elems)
-                offset += elems.count
-                items.append(.padding(row: offset, viewModel: PaddingCellViewModel(height: 24)))
-                offset += 1
-                items.append(.total(row: offset, viewModel: CartTotalCellViewModel(price: 0)))
-//                elems = cart.drinks.enumerated().map {
-//                    SectionItem.item(row: offset + $0.offset,
-//                                     viewModel: CartItemCellViewModel(name: $0.element.name,
-//                                                                      priceText: "$0"))}
+                items.append(.padding(viewModel: PaddingCellViewModel(height: 24)))
+                items.append(.total(viewModel: CartTotalCellViewModel(price: cart.totalPrice())))
                 return [SectionModel(items: items)]
             })
+            .debug(trimOutput: true)
+
+        input.selected
+            .withLatestFrom(cart) { (index: $0, cart: $1) }
+            .filterMap({ pair -> FilterMap<Cart> in
+                assert(pair.index >= 1)
+                let index = pair.index - 1
+
+                DLog(">>> index: ", index)
+                var newCart = pair.cart
+                newCart.remove(at: index)
+                DLog(">>> pizzas in cart: ", newCart.pizzas.count)
+                return .map(newCart)
+            })
+            .bind(to: cart)
+            .disposed(by: _bag)
+
+//        input.checkout
+//            .
 
         return Output(
             tableData: models.asDriver(onErrorJustReturn: [])
@@ -80,15 +95,15 @@ extension CartViewModel.SectionModel: AnimatableSectionModelType {
 extension CartViewModel.SectionItem: IdentifiableType, Equatable {
     var identity: Int {
         switch self {
-        case let .padding(row, _): return row
-        case let .item(row, _): return row
-        case let .total(row, _): return row
+        case let .padding(viewModel): return 1000 + Int(viewModel.height)
+        case let .item(viewModel): return viewModel.name.count
+        case .total: return 2000
         }
     }
 
     var unique: Double {
         switch self {
-        case let .total(_, viewModel):
+        case let .total(viewModel):
             return viewModel.price
         default:
             return 0

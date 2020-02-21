@@ -9,6 +9,7 @@
 import UIKit
 import Domain
 import RxSwift
+import RxSwiftExt
 import RxDataSources
 
 class CartViewController: UIViewController {
@@ -18,7 +19,7 @@ class CartViewController: UIViewController {
     @IBOutlet weak var checkoutTap: UITapGestureRecognizer!
 
     private var _viewModel: CartViewModel!
-    let bag = DisposeBag()
+    private let _bag = DisposeBag()
 
     class func create(with navigator: Navigator, viewModel: CartViewModel) -> CartViewController {
         let vc = navigator.storyboard.load(type: CartViewController.self)
@@ -38,24 +39,44 @@ class CartViewController: UIViewController {
         tableView.tableFooterView = UIView()
 
         _bind()
+
+        rx.viewWillDisappear
+            .subscribe(onNext: { [unowned self] _ in
+                self._viewModel.cart.on(.completed)
+            })
+            .disposed(by: _bag)
     }
 }
 
 private extension CartViewController {
     func _bind() {
-        let out = _viewModel.transform(input: CartViewModel.Input())
-        let dataSource = RxTableViewSectionedAnimatedDataSource<SectionModel>(configureCell: { ds, tv, ip, _ in
+        let selected = tableView.rx.itemSelected
+            .filterMap({ [unowned self] ip -> FilterMap<Int> in
+                guard self.tableView.cellForRow(at: ip) is CartItemTableViewCell else { return .ignore }
+                return .map(ip.row)
+            })
+
+        let input = CartViewModel.Input(selected: selected,
+                                        checkout: checkoutTap.rx.event.map { _ in () })
+        let out = _viewModel.transform(input: input)
+
+        let dataSource = RxTableViewSectionedAnimatedDataSource<SectionModel>(
+            decideViewTransition: { ds, tv, changes in
+                .animated
+            },
+            configureCell: { ds, tv, ip, _ in
             switch ds[ip] {
-            case let .padding(_, viewModel):
+            case let .padding(viewModel):
                 return tv.createCell(PaddingTableViewCell.self, viewModel, ip)
-            case let .item(_, viewModel):
+            case let .item(viewModel):
                 return tv.createCell(CartItemTableViewCell.self, viewModel, ip)
-            case let .total(_, viewModel):
+            case let .total(viewModel):
                 return tv.createCell(CartTotalTableViewCell.self, viewModel, ip)
             }
         })
         out.tableData
+        .debug(trimOutput: true)
             .drive(tableView.rx.items(dataSource: dataSource))
-            .disposed(by: bag)
+            .disposed(by: _bag)
     }
 }

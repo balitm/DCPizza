@@ -182,6 +182,7 @@
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="m6X-8A-Sb2" firstAttribute="top" secondItem="Sqh-8H-W1G" secondAttribute="bottom" id="7k1-Yz-B9Z"/>
                             <constraint firstItem="m6X-8A-Sb2" firstAttribute="bottom" secondItem="ZdU-KE-6Bw" secondAttribute="bottom" id="8Hc-9G-fFh"/>
@@ -192,10 +193,17 @@
                             <constraint firstItem="m6X-8A-Sb2" firstAttribute="leading" secondItem="ZdU-KE-6Bw" secondAttribute="leading" id="vU5-0w-emT"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ZdU-KE-6Bw"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="qUv-Ji-tdd" appends="YES" id="3PT-FA-0hj"/>
+                        </connections>
                     </view>
                     <nil key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="tapRecognizer" destination="qUv-Ji-tdd" id="4kV-aT-cHQ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Blr-4G-aOd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="qUv-Ji-tdd"/>
             </objects>
             <point key="canvasLocation" x="-666.39999999999998" y="658.92053973013503"/>
         </scene>

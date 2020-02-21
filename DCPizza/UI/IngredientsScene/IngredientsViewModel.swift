@@ -10,7 +10,6 @@ import Foundation
 import Domain
 import RxSwift
 import RxDataSources
-import RxRelay
 import struct RxCocoa.Driver
 
 struct IngredientsViewModel: ViewModelType {
@@ -25,18 +24,18 @@ struct IngredientsViewModel: ViewModelType {
         let showAdded: Driver<Void>
     }
 
-    var cart: Observable<Cart> { _cart.asObservable().skip(1) }
+    var resultCart: Observable<Cart> { cart.asObservable().skip(1) }
     private let _pizza: Pizza
     private let _image: UIImage?
     private let _ingredients: [Ingredient]
-    private let _cart: BehaviorRelay<Cart>
+    let cart: BehaviorSubject<Cart>
     private let _bag = DisposeBag()
 
     init(pizza: Pizza, image: UIImage?, ingredients: [Ingredient], cart: Cart) {
         _pizza = pizza
         _image = image
         _ingredients = ingredients
-        _cart = BehaviorRelay(value: cart)
+        self.cart = BehaviorSubject(value: cart)
     }
 
     func transform(input: Input) -> Output {
@@ -55,13 +54,13 @@ struct IngredientsViewModel: ViewModelType {
 
         // Add pizza to cart.
         input.addEvent
-            .withLatestFrom(_cart) { $1 }
+            .withLatestFrom(cart) { $1 }
             .map({
                 var newCart = $0
                 newCart.add(pizza: self._pizza)
                 return newCart
             })
-            .bind(to: _cart)
+            .bind(to: cart)
             .disposed(by: _bag)
 
         let sum = _pizza.ingredients.reduce(0.0, { $0 + $1.price })

@@ -7,8 +7,14 @@
 //
 
 import Foundation
+import Domain
 
 struct CartItemCellViewModel {
     let name: String
     let priceText: String
+
+    init(pizza: Pizza, basePrice: Double) {
+        name = pizza.name
+        priceText = "$\(pizza.price(from: basePrice))"
+    }
 }

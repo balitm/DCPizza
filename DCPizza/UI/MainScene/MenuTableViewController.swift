@@ -57,9 +57,13 @@ final class MenuTableViewController: UITableViewController {
             .disposed(by: _bag)
 
         out.selection.asObservable()
-            .subscribe(onNext: { [unowned self] in
-                self._getResult($0.pizza, $0.image, $0.ingredients, $0.cart)
+            .flatMap({ [unowned self] in
+                self._navigator.showIngredients(of: $0.pizza,
+                                                image: $0.image,
+                                                ingredients: $0.ingredients,
+                                                cart: $0.cart)
             })
+            .bind(to: _viewModel.cart)
             .disposed(by: _bag)
 
         out.showAdded
@@ -70,19 +74,10 @@ final class MenuTableViewController: UITableViewController {
 
         navigationItem.leftBarButtonItem?.rx.tap
             .withLatestFrom(_viewModel.cart) { $1 }
-            .subscribe(onNext: { [unowned self] in
+            .flatMap({ [unowned self] in
                 self._navigator.showCart($0)
             })
+            .bind(to: _viewModel.cart)
             .disposed(by: _bag)
-    }
-
-    private func _getResult(_ pizza: Pizza, _ image: UIImage?, _ ingredients: [Ingredient], _ cart: Cart) {
-        let (stream, bag) = _navigator.showIngredients(of: pizza,
-                                        image: image,
-                                        ingredients: ingredients,
-                                        cart: cart)
-            stream
-                .bind(to: _viewModel.cart)
-                .disposed(by: bag)
     }
 }

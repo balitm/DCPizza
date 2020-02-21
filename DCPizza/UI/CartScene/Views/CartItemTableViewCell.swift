@@ -14,7 +14,7 @@ extension CartItemTableViewCell: CellViewModelProtocol {
     func config(with viewModel: CartItemCellViewModel) {
         textLabel?.text = viewModel.name
         detailTextLabel?.text = viewModel.priceText
-//        imageView?.scalesLargeContentImage = true
+        imageView?.scalesLargeContentImage = true
         imageView?.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
     }
 }
