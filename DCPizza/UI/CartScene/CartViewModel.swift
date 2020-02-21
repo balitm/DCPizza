@@ -31,6 +31,7 @@ struct CartViewModel: ViewModelType {
 
     struct Output {
         let tableData: Driver<[SectionModel]>
+        let showSuccess: Driver<Void>
     }
 
     var resultCart: Observable<Cart> { cart.asObservable().skip(1) }
@@ -72,11 +73,29 @@ struct CartViewModel: ViewModelType {
             .bind(to: cart)
             .disposed(by: _bag)
 
-//        input.checkout
-//            .
+        let checkout = input.checkout
+            .withLatestFrom(cart)
+            .flatMap({ cart -> Observable<Cart> in
+                let useCase = RepositoryNetworkUseCaseProvider().makeNetworkUseCase()
+                return useCase.checkout(cart: cart)
+                    .map({ cart })
+            })
+            .share()
+
+        checkout
+            .map({
+                var newCart = $0
+                newCart.empty()
+                return newCart
+            })
+            .bind(to: cart)
+            .disposed(by: _bag)
 
         return Output(
-            tableData: models.asDriver(onErrorJustReturn: [])
+            tableData: models.asDriver(onErrorJustReturn: []),
+            showSuccess: checkout
+                .map({ _ in () })
+                .asDriver(onErrorJustReturn: ())
         )
     }
 }

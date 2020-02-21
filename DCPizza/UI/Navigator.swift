@@ -19,6 +19,7 @@ protocol Navigator {
                          cart: Cart) -> Observable<Cart>
     func showAdded()
     func showCart(_ cart: Cart) -> Observable<Cart>
+    func showSuccess()
 }
 
 final class DefaultNavigator: Navigator {
@@ -51,5 +52,10 @@ final class DefaultNavigator: Navigator {
         let vc = CartViewController.create(with: self, viewModel: vm)
         _navigationController.pushViewController(vc, animated: true)
         return vm.resultCart
+    }
+
+    func showSuccess() {
+        let vc = SuccessViewController.create(with: storyboard)
+        _navigationController.present(vc, animated: true)
     }
 }

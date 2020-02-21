@@ -18,11 +18,13 @@ class CartViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var checkoutTap: UITapGestureRecognizer!
 
+    private var _navigator: Navigator!
     private var _viewModel: CartViewModel!
     private let _bag = DisposeBag()
 
     class func create(with navigator: Navigator, viewModel: CartViewModel) -> CartViewController {
         let vc = navigator.storyboard.load(type: CartViewController.self)
+        vc._navigator = navigator
         vc._viewModel = viewModel
         return vc
     }
@@ -60,6 +62,7 @@ private extension CartViewController {
                                         checkout: checkoutTap.rx.event.map { _ in () })
         let out = _viewModel.transform(input: input)
 
+        // Table view.
         let dataSource = RxTableViewSectionedAnimatedDataSource<SectionModel>(
             decideViewTransition: { ds, tv, changes in
                 .animated
@@ -75,8 +78,15 @@ private extension CartViewController {
             }
         })
         out.tableData
-        .debug(trimOutput: true)
+            // .debug(trimOutput: true)
             .drive(tableView.rx.items(dataSource: dataSource))
+            .disposed(by: _bag)
+
+        // On checkout success.
+        out.showSuccess
+            .drive(onNext: { [unowned self] _ in
+                self._navigator.showSuccess()
+            })
             .disposed(by: _bag)
     }
 }

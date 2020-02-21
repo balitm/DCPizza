@@ -37,6 +37,10 @@ final class MenuTableViewController: UITableViewController {
         _bind()
     }
 
+    @IBAction func unwindToMenu(_ segue: UIStoryboardSegue) {
+        DLog("Unwinded to menu.")
+    }
+
     // MARK: - bind functions
 
     private func _bind() {

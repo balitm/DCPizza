@@ -30,6 +30,11 @@ public struct Cart {
         }
     }
 
+    public mutating func empty() {
+        drinks = []
+        pizzas = []
+    }
+
     public func totalPrice() -> Double {
         let pizzaPrice = pizzas.reduce(0.0) {
             return $0 + $1.ingredients.reduce(basePrice) {
