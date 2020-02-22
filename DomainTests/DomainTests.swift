@@ -65,12 +65,16 @@ class DomainTests: XCTestCase {
     }
 
     func testCartConversion() {
-        var cart = initData.cart
         guard initData.drinks.count >= 2 && initData.pizzas.pizzas.count >= 2 else { return }
-        cart.add(drink: initData.drinks[0])
-        cart.add(drink: initData.drinks[1])
-        cart.add(pizza: initData.pizzas.pizzas[0])
-        cart.add(pizza: initData.pizzas.pizzas[1])
+        let pizzas = [
+            initData.pizzas.pizzas[0],
+            initData.pizzas.pizzas[1],
+        ]
+        let drinks = [
+            initData.drinks[0],
+            initData.drinks[1],
+        ]
+        let cart = Cart(pizzas: pizzas, drinks: drinks, basePrice: initData.pizzas.basePrice)
 
         let converted = cart.asDataSource().asDomain(with: initData.ingredients, drinks: initData.drinks)
         DLog("converted:\n", converted.drinks.map { $0.id }, "\norig:\n", cart.drinks.map { $0.id })
@@ -80,30 +84,19 @@ class DomainTests: XCTestCase {
         XCTAssertTrue(isConverted)
     }
 
-    func testCartRemove() {
-        var cart = initData.cart
-        guard initData.drinks.count >= 2 && initData.pizzas.pizzas.count >= 2 else { return }
-        cart.add(drink: initData.drinks[0])
-        cart.add(drink: initData.drinks[1])
-        cart.add(pizza: initData.pizzas.pizzas[0])
-        cart.add(pizza: initData.pizzas.pizzas[1])
-        cart.remove(at: 1)
-        cart.remove(at: 1)
-        XCTAssertEqual(cart.pizzas.count, 1)
-        XCTAssertEqual(cart.drinks.count, 1)
-        XCTAssertEqual(cart.pizzas[0].name, initData.pizzas.pizzas[0].name)
-        XCTAssertEqual(cart.drinks[0].id, initData.drinks[1].id)
-    }
-
     func testCheckout() {
-        var cart = initData.cart
         guard initData.drinks.count >= 2 && initData.pizzas.pizzas.count >= 2 else { return }
-        cart.add(drink: initData.drinks[0])
-        cart.add(drink: initData.drinks[1])
-        cart.add(pizza: initData.pizzas.pizzas[0])
-        cart.add(pizza: initData.pizzas.pizzas[1])
-        let expectation = XCTestExpectation(description: "checkout")
+        let pizzas = [
+            initData.pizzas.pizzas[0],
+            initData.pizzas.pizzas[1],
+        ]
+        let drinks = [
+            initData.drinks[0],
+            initData.drinks[1],
+        ]
+        let cart = Cart(pizzas: pizzas, drinks: drinks, basePrice: initData.pizzas.basePrice)
 
+        let expectation = XCTestExpectation(description: "checkout")
         useCase.checkout(cart: cart)
             .subscribe(onNext: { _ in
                 DLog("Checkout succeeded.")
