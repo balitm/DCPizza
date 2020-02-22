@@ -24,14 +24,14 @@ struct IngredientsViewModel: ViewModelType {
         let showAdded: Driver<Void>
     }
 
-    var resultCart: Observable<Cart> { cart.asObservable().skip(1) }
+    var resultCart: Observable<UI.Cart> { cart.asObservable().skip(1) }
     private let _pizza: Pizza
     private let _image: UIImage?
     private let _ingredients: [Ingredient]
-    let cart: BehaviorSubject<Cart>
+    let cart: BehaviorSubject<UI.Cart>
     private let _bag = DisposeBag()
 
-    init(pizza: Pizza, image: UIImage?, ingredients: [Ingredient], cart: Cart) {
+    init(pizza: Pizza, image: UIImage?, ingredients: [Ingredient], cart: UI.Cart) {
         _pizza = pizza
         _image = image
         _ingredients = ingredients

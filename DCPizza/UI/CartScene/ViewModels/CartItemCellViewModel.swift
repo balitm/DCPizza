@@ -12,9 +12,11 @@ import Domain
 struct CartItemCellViewModel {
     let name: String
     let priceText: String
+    let id: Int
 
-    init(pizza: Pizza, basePrice: Double) {
-        name = pizza.name
-        priceText = "$\(pizza.price(from: basePrice))"
+    init(pizza: UI.Pizza, basePrice: Double) {
+        name = pizza.pizza.name
+        priceText = "$\(pizza.pizza.price(from: basePrice))"
+        id = pizza.id
     }
 }

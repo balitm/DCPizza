@@ -34,11 +34,11 @@ struct CartViewModel: ViewModelType {
         let showSuccess: Driver<Void>
     }
 
-    var resultCart: Observable<Cart> { cart.asObservable().skip(1) }
-    let cart: BehaviorSubject<Cart>
+    var resultCart: Observable<UI.Cart> { cart.asObservable().skip(1) }
+    let cart: BehaviorSubject<UI.Cart>
     private let _bag = DisposeBag()
 
-    init(cart: Cart) {
+    init(cart: UI.Cart) {
         self.cart = BehaviorSubject(value: cart)
     }
 
@@ -54,13 +54,18 @@ struct CartViewModel: ViewModelType {
                 items.append(contentsOf: elems)
                 items.append(.padding(viewModel: PaddingCellViewModel(height: 24)))
                 items.append(.total(viewModel: CartTotalCellViewModel(price: cart.totalPrice())))
+
+                DLog(">>> cart items:\n")
+                for i in 1 ..< items.count - 2 {
+                    print("#", i, ">>>", items[i].identity, "-", items[i].unique)
+                }
                 return [SectionModel(items: items)]
             })
             .debug(trimOutput: true)
 
         input.selected
             .withLatestFrom(cart) { (index: $0, cart: $1) }
-            .filterMap({ pair -> FilterMap<Cart> in
+            .filterMap({ pair -> FilterMap<UI.Cart> in
                 assert(pair.index >= 1)
                 let index = pair.index - 1
 
@@ -75,9 +80,9 @@ struct CartViewModel: ViewModelType {
 
         let checkout = input.checkout
             .withLatestFrom(cart)
-            .flatMap({ cart -> Observable<Cart> in
+            .flatMap({ cart -> Observable<UI.Cart> in
                 let useCase = RepositoryNetworkUseCaseProvider().makeNetworkUseCase()
-                return useCase.checkout(cart: cart)
+                return useCase.checkout(cart: cart.asDomain())
                     .map({ cart })
             })
             .share()
@@ -115,7 +120,7 @@ extension CartViewModel.SectionItem: IdentifiableType, Equatable {
     var identity: Int {
         switch self {
         case let .padding(viewModel): return 1000 + Int(viewModel.height)
-        case let .item(viewModel): return viewModel.name.count
+        case let .item(viewModel): return viewModel.id
         case .total: return 2000
         }
     }

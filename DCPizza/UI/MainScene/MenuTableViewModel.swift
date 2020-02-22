@@ -20,7 +20,7 @@ struct MenuTableViewModel: ViewModelType {
         pizza: Pizza,
         image: UIImage?,
         ingredients: [Ingredient],
-        cart: Cart
+        cart: UI.Cart
     )
 
     struct Input {
@@ -33,7 +33,7 @@ struct MenuTableViewModel: ViewModelType {
         let showAdded: Driver<Void>
     }
 
-    let cart = PublishRelay<Cart>()
+    let cart = PublishRelay<UI.Cart>()
     private let _bag = DisposeBag()
 
     func transform(input: Input) -> Output {
@@ -53,7 +53,7 @@ struct MenuTableViewModel: ViewModelType {
         // Init the cart.
         data
             .take(1)
-            .map({ $0.cart })
+            .map({ $0.cart.asUI() })
             .bind(to: cart)
             .disposed(by: _bag)
 

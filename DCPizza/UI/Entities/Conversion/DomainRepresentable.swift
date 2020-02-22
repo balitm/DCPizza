@@ -7,3 +7,9 @@
 //
 
 import Foundation
+
+protocol DomainRepresentable {
+    associatedtype DomainType: UIConvertibleType
+
+    func asDomain() -> DomainType
+}
