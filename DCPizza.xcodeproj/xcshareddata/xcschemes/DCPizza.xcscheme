@@ -38,16 +38,6 @@
                ReferencedContainer = "container:DCPizza.xcodeproj">
             </BuildableReference>
          </TestableReference>
-         <TestableReference
-            skipped = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2941A42123FAFA28005838BA"
-               BuildableName = "DomainTests.xctest"
-               BlueprintName = "DomainTests"
-               ReferencedContainer = "container:DCPizza.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

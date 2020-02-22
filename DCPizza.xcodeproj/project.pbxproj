@@ -90,6 +90,7 @@
 		29B8ABE024007E4300A07816 /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B8ABDF24007E4300A07816 /* SuccessViewController.swift */; };
 		29EF9A642401C8A6002E8E4E /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A41A23FAFA28005838BA /* Domain.framework */; };
 		29EF9A652401C8A6002E8E4E /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A41A23FAFA28005838BA /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		29EF9A672401D1BE002E8E4E /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A45423FB196E005838BA /* RxSwift.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,13 +107,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 2941A41923FAFA28005838BA;
 			remoteInfo = Domain;
-		};
-		2941A42623FAFA28005838BA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2941A3E823FAF0DC005838BA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2941A3EF23FAF0DC005838BA;
-			remoteInfo = DCPizza;
 		};
 		2941A42D23FAFA28005838BA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -248,6 +242,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29EF9A672401D1BE002E8E4E /* RxSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -711,7 +706,6 @@
 			);
 			dependencies = (
 				2941A42523FAFA28005838BA /* PBXTargetDependency */,
-				2941A42723FAFA28005838BA /* PBXTargetDependency */,
 			);
 			name = DomainTests;
 			productName = DomainTests;
@@ -741,7 +735,6 @@
 					};
 					2941A42123FAFA28005838BA = {
 						CreatedOnToolsVersion = 11.3.1;
-						TestTargetID = 2941A3EF23FAF0DC005838BA;
 					};
 				};
 			};
@@ -949,11 +942,6 @@
 			target = 2941A41923FAFA28005838BA /* Domain */;
 			targetProxy = 2941A42423FAFA28005838BA /* PBXContainerItemProxy */;
 		};
-		2941A42723FAFA28005838BA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2941A3EF23FAF0DC005838BA /* DCPizza */;
-			targetProxy = 2941A42623FAFA28005838BA /* PBXContainerItemProxy */;
-		};
 		2941A42E23FAFA28005838BA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2941A41923FAFA28005838BA /* Domain */;
@@ -1148,6 +1136,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = DCPizzaTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1155,6 +1147,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				OTHER_LDFLAGS = "-F$(PROJECT_DIR)/Carthage/Build/iOS";
 				PRODUCT_BUNDLE_IDENTIFIER = "hu.kil-dev.DCPizzaTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1169,6 +1162,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = DCPizzaTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1176,6 +1173,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				OTHER_LDFLAGS = "-F$(PROJECT_DIR)/Carthage/Build/iOS";
 				PRODUCT_BUNDLE_IDENTIFIER = "hu.kil-dev.DCPizzaTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1267,13 +1265,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-F$(PROJECT_DIR)/Carthage/Build/iOS";
 				PRODUCT_BUNDLE_IDENTIFIER = "hu.kil-dev.DomainTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DCPizza.app/DCPizza";
 			};
 			name = Debug;
 		};
@@ -1292,13 +1290,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-F$(PROJECT_DIR)/Carthage/Build/iOS";
 				PRODUCT_BUNDLE_IDENTIFIER = "hu.kil-dev.DomainTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DCPizza.app/DCPizza";
 			};
 			name = Release;
 		};
