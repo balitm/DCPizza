@@ -15,7 +15,6 @@
 		2941A42323FAFA28005838BA /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A41A23FAFA28005838BA /* Domain.framework */; };
 		2941A42A23FAFA28005838BA /* DomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A42923FAFA28005838BA /* DomainTests.swift */; };
 		2941A42C23FAFA28005838BA /* Domain.h in Headers */ = {isa = PBXBuildFile; fileRef = 2941A41C23FAFA28005838BA /* Domain.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2941A42F23FAFA28005838BA /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A41A23FAFA28005838BA /* Domain.framework */; };
 		2941A43F23FAFC75005838BA /* DSDrink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A43E23FAFC75005838BA /* DSDrink.swift */; };
 		2941A44123FAFD03005838BA /* DSPizza.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A44023FAFD03005838BA /* DSPizza.swift */; };
 		2941A44323FAFD9B005838BA /* DSPizzas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A44223FAFD9B005838BA /* DSPizzas.swift */; };
@@ -84,6 +83,8 @@
 		2976A47523FDBB3400828A94 /* IngredientsItemCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A47423FDBB3400828A94 /* IngredientsItemCellViewModel.swift */; };
 		298F813E23FD4C5F001A925C /* DSCart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A44423FB0AD3005838BA /* DSCart.swift */; };
 		29B8ABE024007E4300A07816 /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B8ABDF24007E4300A07816 /* SuccessViewController.swift */; };
+		29EF9A642401C8A6002E8E4E /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A41A23FAFA28005838BA /* Domain.framework */; };
+		29EF9A652401C8A6002E8E4E /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A41A23FAFA28005838BA /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,6 +117,20 @@
 			remoteInfo = Domain;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		29EF9A662401C8A6002E8E4E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				29EF9A652401C8A6002E8E4E /* Domain.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2941A3F023FAF0DC005838BA /* DCPizza.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DCPizza.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -210,9 +225,9 @@
 				294ACFFC23FC7FE80027D0D4 /* AlamofireImage.framework in Frameworks */,
 				294ACFB423FC04FF0027D0D4 /* RxCocoa.framework in Frameworks */,
 				294ACFAC23FC04FF0027D0D4 /* RxSwift.framework in Frameworks */,
+				29EF9A642401C8A6002E8E4E /* Domain.framework in Frameworks */,
 				294ACFB223FC04FF0027D0D4 /* Differentiator.framework in Frameworks */,
 				294ACFB823FC04FF0027D0D4 /* RxDataSources.framework in Frameworks */,
-				2941A42F23FAFA28005838BA /* Domain.framework in Frameworks */,
 				294ACFB623FC04FF0027D0D4 /* RxRelay.framework in Frameworks */,
 				294ACFA823FC04FF0027D0D4 /* Alamofire.framework in Frameworks */,
 				294ACFAA23FC04FF0027D0D4 /* AlamofireNetworkActivityIndicator.framework in Frameworks */,
@@ -605,6 +620,7 @@
 				2941A3ED23FAF0DC005838BA /* Frameworks */,
 				2941A3EE23FAF0DC005838BA /* Resources */,
 				294ACFBA23FC07310027D0D4 /* Run Script  - Copy frameworks */,
+				29EF9A662401C8A6002E8E4E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1048,6 +1064,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6778949MWZ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -1071,6 +1088,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6778949MWZ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
