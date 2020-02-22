@@ -9,41 +9,18 @@
 import Foundation
 
 public struct Cart {
-    public private(set) var pizzas: [Pizza]
-    public private(set) var drinks: [Drink]
-    public private(set) var basePrice: Double
+    public let pizzas: [Pizza]
+    public let drinks: [Drink]
+    public let basePrice: Double
 
-    public mutating func add(pizza: Pizza) {
-        pizzas.append(pizza)
+    public init(
+        pizzas: [Pizza],
+        drinks: [Drink],
+        basePrice: Double
+    ) {
+        self.pizzas = pizzas
+        self.drinks = drinks
+        self.basePrice = basePrice
     }
 
-    public mutating func add(drink: Drink) {
-        drinks.append(drink)
-    }
-
-    public mutating func remove(at index: Int) {
-        let count = pizzas.count
-        if index < count {
-            pizzas.remove(at: index)
-        } else {
-            drinks.remove(at: index - count)
-        }
-    }
-
-    public mutating func empty() {
-        drinks = []
-        pizzas = []
-    }
-
-    public func totalPrice() -> Double {
-        let pizzaPrice = pizzas.reduce(0.0) {
-            return $0 + $1.ingredients.reduce(basePrice) {
-                return $0 + $1.price
-            }
-        }
-        let drinkPrice = drinks.reduce(0.0) {
-            $0 + $1.price
-        }
-        return pizzaPrice + drinkPrice
-    }
 }

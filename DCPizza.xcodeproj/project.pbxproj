@@ -82,6 +82,11 @@
 		2976A47323FDBA6700828A94 /* IngredientsItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A47223FDBA6700828A94 /* IngredientsItemTableViewCell.swift */; };
 		2976A47523FDBB3400828A94 /* IngredientsItemCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A47423FDBB3400828A94 /* IngredientsItemCellViewModel.swift */; };
 		298F813E23FD4C5F001A925C /* DSCart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A44423FB0AD3005838BA /* DSCart.swift */; };
+		29B13822240141E200A49C45 /* UIConvertibleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B13821240141E200A49C45 /* UIConvertibleType.swift */; };
+		29B138242401424800A49C45 /* DomainRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B138232401424800A49C45 /* DomainRepresentable.swift */; };
+		29B138262401437000A49C45 /* UIPizza.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B138252401437000A49C45 /* UIPizza.swift */; };
+		29B13828240145F800A49C45 /* UIDrink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B13827240145F800A49C45 /* UIDrink.swift */; };
+		29B1382A2401465E00A49C45 /* UICart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B138292401465E00A49C45 /* UICart.swift */; };
 		29B8ABE024007E4300A07816 /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B8ABDF24007E4300A07816 /* SuccessViewController.swift */; };
 		29EF9A642401C8A6002E8E4E /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A41A23FAFA28005838BA /* Domain.framework */; };
 		29EF9A652401C8A6002E8E4E /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A41A23FAFA28005838BA /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -214,6 +219,11 @@
 		2976A47023FDB6A300828A94 /* IngredientsHeaderCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsHeaderCellViewModel.swift; sourceTree = "<group>"; };
 		2976A47223FDBA6700828A94 /* IngredientsItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsItemTableViewCell.swift; sourceTree = "<group>"; };
 		2976A47423FDBB3400828A94 /* IngredientsItemCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsItemCellViewModel.swift; sourceTree = "<group>"; };
+		29B13821240141E200A49C45 /* UIConvertibleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIConvertibleType.swift; sourceTree = "<group>"; };
+		29B138232401424800A49C45 /* DomainRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainRepresentable.swift; sourceTree = "<group>"; };
+		29B138252401437000A49C45 /* UIPizza.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIPizza.swift; sourceTree = "<group>"; };
+		29B13827240145F800A49C45 /* UIDrink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDrink.swift; sourceTree = "<group>"; };
+		29B138292401465E00A49C45 /* UICart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICart.swift; sourceTree = "<group>"; };
 		29B8ABDF24007E4300A07816 /* SuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -343,7 +353,7 @@
 		2941A43923FAFB79005838BA /* Entities */ = {
 			isa = PBXGroup;
 			children = (
-				29711D6F23FD3CAA00783025 /* Convertion */,
+				29711D6F23FD3CAA00783025 /* Conversion */,
 				2941A43C23FAFBE4005838BA /* DSIngredient.swift */,
 				2941A43E23FAFC75005838BA /* DSDrink.swift */,
 				2941A44023FAFD03005838BA /* DSPizza.swift */,
@@ -421,6 +431,7 @@
 			children = (
 				294ACFA523FC024C0027D0D4 /* Common */,
 				294ACFE323FC56630027D0D4 /* Extensions */,
+				29B1381F2401413600A49C45 /* Entities */,
 				294ACFEC23FC5B080027D0D4 /* MainScene */,
 				2976A46323FD6B3200828A94 /* IngredientsScene */,
 				295C3D5F23FEF52E00D82655 /* CartScene */,
@@ -551,13 +562,13 @@
 			path = AddedScene;
 			sourceTree = "<group>";
 		};
-		29711D6F23FD3CAA00783025 /* Convertion */ = {
+		29711D6F23FD3CAA00783025 /* Conversion */ = {
 			isa = PBXGroup;
 			children = (
 				29711D7023FD3CFA00783025 /* DomainConvertibleType.swift */,
 				29711D7223FD3D8300783025 /* DSRepresentable.swift */,
 			);
-			path = Convertion;
+			path = Conversion;
 			sourceTree = "<group>";
 		};
 		2976A46323FD6B3200828A94 /* IngredientsScene */ = {
@@ -587,6 +598,26 @@
 				2976A47423FDBB3400828A94 /* IngredientsItemCellViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		29B1381F2401413600A49C45 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				29B13820240141B800A49C45 /* Conversion */,
+				29B138252401437000A49C45 /* UIPizza.swift */,
+				29B13827240145F800A49C45 /* UIDrink.swift */,
+				29B138292401465E00A49C45 /* UICart.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		29B13820240141B800A49C45 /* Conversion */ = {
+			isa = PBXGroup;
+			children = (
+				29B13821240141E200A49C45 /* UIConvertibleType.swift */,
+				29B138232401424800A49C45 /* DomainRepresentable.swift */,
+			);
+			path = Conversion;
 			sourceTree = "<group>";
 		};
 		29B8ABDE24007DE800A07816 /* SuccessScene */ = {
@@ -819,7 +850,9 @@
 				295C3D6D23FEFF7700D82655 /* PaddingCellViewModel.swift in Sources */,
 				294ACFE723FC56630027D0D4 /* UIStoryboard+load.swift in Sources */,
 				294ACFEE23FC5B3E0027D0D4 /* MenuTableViewController.swift in Sources */,
+				29B138262401437000A49C45 /* UIPizza.swift in Sources */,
 				294ACFFA23FC63530027D0D4 /* MenuCellViewModel.swift in Sources */,
+				29B13828240145F800A49C45 /* UIDrink.swift in Sources */,
 				294ACFF723FC60C50027D0D4 /* MenuTableViewModel.swift in Sources */,
 				294ACFF323FC5C270027D0D4 /* MenuTableViewCell.swift in Sources */,
 				294ACFE923FC56630027D0D4 /* UIColor+Extensions.swift in Sources */,
@@ -828,8 +861,10 @@
 				2944CAA324003F1400F4709F /* UIViewController+Rx.swift in Sources */,
 				2976A47323FDBA6700828A94 /* IngredientsItemTableViewCell.swift in Sources */,
 				295C3D7123FF03C900D82655 /* CartTotalCellViewModel.swift in Sources */,
+				29B1382A2401465E00A49C45 /* UICart.swift in Sources */,
 				2976A46D23FDB21B00828A94 /* IngredientsHeaderTableViewCell.swift in Sources */,
 				295C3D6323FEF7A300D82655 /* CartViewModel.swift in Sources */,
+				29B13822240141E200A49C45 /* UIConvertibleType.swift in Sources */,
 				294ACFEB23FC57130027D0D4 /* RoundedView.swift in Sources */,
 				29B8ABE024007E4300A07816 /* SuccessViewController.swift in Sources */,
 				295C3D6F23FF00D600D82655 /* CartItemCellViewModel.swift in Sources */,
@@ -845,6 +880,7 @@
 				295C3D6123FEF60000D82655 /* CartViewController.swift in Sources */,
 				294ACFA723FC026D0027D0D4 /* Constant.swift in Sources */,
 				2976A46523FD6B9300828A94 /* IngredientsViewController.swift in Sources */,
+				29B138242401424800A49C45 /* DomainRepresentable.swift in Sources */,
 				294ACFF523FC601A0027D0D4 /* ViewModelType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
