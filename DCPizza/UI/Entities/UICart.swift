@@ -39,6 +39,7 @@ extension UI {
         public mutating func empty() {
             drinks = []
             pizzas = []
+            Cart._additionNumber = 0
         }
 
         public func totalPrice() -> Double {

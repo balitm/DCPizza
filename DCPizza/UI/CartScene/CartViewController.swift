@@ -17,6 +17,7 @@ class CartViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var checkoutTap: UITapGestureRecognizer!
+    @IBOutlet weak var drinksButton: UIBarButtonItem!
 
     private var _navigator: Navigator!
     private var _viewModel: CartViewModel!
@@ -40,13 +41,19 @@ class CartViewController: UIViewController {
 
         tableView.tableFooterView = UIView()
 
-        _bind()
-
-        rx.viewWillDisappear
+        rx.methodInvoked(#selector(willMove(toParent:)))
+            .filter({
+                if $0[0] is NSNull {
+                    return true
+                }
+                return false
+            })
             .subscribe(onNext: { [unowned self] _ in
                 self._viewModel.cart.on(.completed)
             })
             .disposed(by: _bag)
+
+        _bind()
     }
 }
 
@@ -80,6 +87,15 @@ private extension CartViewController {
         out.tableData
             // .debug(trimOutput: true)
             .drive(tableView.rx.items(dataSource: dataSource))
+            .disposed(by: _bag)
+
+        // Add drinks.
+        drinksButton.rx.tap
+            .withLatestFrom(out.showDrinks)
+            .flatMap({ [unowned self] in
+                self._navigator.showDrinks(cart: $0.cart, drinks: $0.drinks)
+            })
+            .bind(to: _viewModel.cart)
             .disposed(by: _bag)
 
         // On checkout success.

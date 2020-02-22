@@ -91,6 +91,10 @@
 		29EF9A642401C8A6002E8E4E /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A41A23FAFA28005838BA /* Domain.framework */; };
 		29EF9A652401C8A6002E8E4E /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A41A23FAFA28005838BA /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		29EF9A672401D1BE002E8E4E /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A45423FB196E005838BA /* RxSwift.framework */; };
+		29EF9A732401D53C002E8E4E /* DrinksTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EF9A6D2401D53C002E8E4E /* DrinksTableViewController.swift */; };
+		29EF9A742401D53C002E8E4E /* DrinksTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EF9A6E2401D53C002E8E4E /* DrinksTableViewModel.swift */; };
+		29EF9A752401D53C002E8E4E /* DrinkCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EF9A702401D53C002E8E4E /* DrinkCellViewModel.swift */; };
+		29EF9A762401D53C002E8E4E /* DrinkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EF9A722401D53C002E8E4E /* DrinkTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -219,6 +223,10 @@
 		29B13827240145F800A49C45 /* UIDrink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDrink.swift; sourceTree = "<group>"; };
 		29B138292401465E00A49C45 /* UICart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICart.swift; sourceTree = "<group>"; };
 		29B8ABDF24007E4300A07816 /* SuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
+		29EF9A6D2401D53C002E8E4E /* DrinksTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrinksTableViewController.swift; sourceTree = "<group>"; };
+		29EF9A6E2401D53C002E8E4E /* DrinksTableViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrinksTableViewModel.swift; sourceTree = "<group>"; };
+		29EF9A702401D53C002E8E4E /* DrinkCellViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrinkCellViewModel.swift; sourceTree = "<group>"; };
+		29EF9A722401D53C002E8E4E /* DrinkTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrinkTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -430,6 +438,7 @@
 				294ACFEC23FC5B080027D0D4 /* MainScene */,
 				2976A46323FD6B3200828A94 /* IngredientsScene */,
 				295C3D5F23FEF52E00D82655 /* CartScene */,
+				29EF9A6C2401D53C002E8E4E /* DrinksScene */,
 				2969857A23FEB4D60024466E /* AddedScene */,
 				29B8ABDE24007DE800A07816 /* SuccessScene */,
 				2976A46823FD76F600828A94 /* Navigator.swift */,
@@ -621,6 +630,33 @@
 				29B8ABDF24007E4300A07816 /* SuccessViewController.swift */,
 			);
 			path = SuccessScene;
+			sourceTree = "<group>";
+		};
+		29EF9A6C2401D53C002E8E4E /* DrinksScene */ = {
+			isa = PBXGroup;
+			children = (
+				29EF9A712401D53C002E8E4E /* Views */,
+				29EF9A6F2401D53C002E8E4E /* ViewModels */,
+				29EF9A6D2401D53C002E8E4E /* DrinksTableViewController.swift */,
+				29EF9A6E2401D53C002E8E4E /* DrinksTableViewModel.swift */,
+			);
+			path = DrinksScene;
+			sourceTree = "<group>";
+		};
+		29EF9A6F2401D53C002E8E4E /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				29EF9A702401D53C002E8E4E /* DrinkCellViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		29EF9A712401D53C002E8E4E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				29EF9A722401D53C002E8E4E /* DrinkTableViewCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -839,17 +875,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29EF9A742401D53C002E8E4E /* DrinksTableViewModel.swift in Sources */,
 				295C3D6B23FEFDF900D82655 /* CartTotalTableViewCell.swift in Sources */,
 				295C3D6D23FEFF7700D82655 /* PaddingCellViewModel.swift in Sources */,
 				294ACFE723FC56630027D0D4 /* UIStoryboard+load.swift in Sources */,
 				294ACFEE23FC5B3E0027D0D4 /* MenuTableViewController.swift in Sources */,
 				29B138262401437000A49C45 /* UIPizza.swift in Sources */,
+				29EF9A752401D53C002E8E4E /* DrinkCellViewModel.swift in Sources */,
 				294ACFFA23FC63530027D0D4 /* MenuCellViewModel.swift in Sources */,
 				29B13828240145F800A49C45 /* UIDrink.swift in Sources */,
 				294ACFF723FC60C50027D0D4 /* MenuTableViewModel.swift in Sources */,
+				29EF9A732401D53C002E8E4E /* DrinksTableViewController.swift in Sources */,
 				294ACFF323FC5C270027D0D4 /* MenuTableViewCell.swift in Sources */,
 				294ACFE923FC56630027D0D4 /* UIColor+Extensions.swift in Sources */,
 				2976A47123FDB6A300828A94 /* IngredientsHeaderCellViewModel.swift in Sources */,
+				29EF9A762401D53C002E8E4E /* DrinkTableViewCell.swift in Sources */,
 				295C3D6723FEFB4900D82655 /* PaddingTableViewCell.swift in Sources */,
 				2944CAA324003F1400F4709F /* UIViewController+Rx.swift in Sources */,
 				2976A47323FDBA6700828A94 /* IngredientsItemTableViewCell.swift in Sources */,

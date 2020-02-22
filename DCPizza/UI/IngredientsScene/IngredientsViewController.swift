@@ -22,10 +22,12 @@ final class IngredientsViewController: UIViewController {
     @IBOutlet weak var cartLabel: UILabel!
 
     private var _viewModel: IngredientsViewModel!
+    private var _navigator: Navigator!
     private let _bag = DisposeBag()
 
     class func create(with navigator: Navigator, viewModel: IngredientsViewModel) -> IngredientsViewController {
         let vc = navigator.storyboard.load(type: IngredientsViewController.self)
+        vc._navigator = navigator
         vc._viewModel = viewModel
         return vc
     }
@@ -41,7 +43,13 @@ final class IngredientsViewController: UIViewController {
 
         tableView.tableFooterView = UIView()
 
-        rx.viewWillDisappear
+        rx.methodInvoked(#selector(willMove(toParent:)))
+            .filter({
+                if $0[0] is NSNull {
+                    return true
+                }
+                return false
+            })
             .subscribe(onNext: { [unowned self] _ in
                 self._viewModel.cart.on(.completed)
             })
@@ -79,6 +87,12 @@ private extension IngredientsViewController {
 
         out.cartText
             .drive(cartLabel.rx.text)
+            .disposed(by: _bag)
+
+        out.showAdded
+            .drive(onNext: { [unowned self] in
+                self._navigator.showAdded()
+            })
             .disposed(by: _bag)
     }
 

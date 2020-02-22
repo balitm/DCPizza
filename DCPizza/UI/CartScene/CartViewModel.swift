@@ -14,6 +14,8 @@ import RxDataSources
 import struct RxCocoa.Driver
 
 struct CartViewModel: ViewModelType {
+    typealias DrinksData = (cart: UI.Cart, drinks: [Drink])
+
     struct SectionModel {
         var items: [SectionItem]
     }
@@ -32,36 +34,43 @@ struct CartViewModel: ViewModelType {
     struct Output {
         let tableData: Driver<[SectionModel]>
         let showSuccess: Driver<Void>
+        let showDrinks: Driver<DrinksData>
     }
 
     var resultCart: Observable<UI.Cart> { cart.asObservable().skip(1) }
     let cart: BehaviorSubject<UI.Cart>
+    private let _drinks: [Drink]
     private let _bag = DisposeBag()
 
-    init(cart: UI.Cart) {
+    init(cart: UI.Cart, drinks: [Drink]) {
         self.cart = BehaviorSubject(value: cart)
+        _drinks = drinks
     }
 
     func transform(input: Input) -> Output {
         let models = cart
             .map({ cart -> [SectionModel] in
                 var items = [SectionItem.padding(viewModel: PaddingCellViewModel(height: 12))]
-                let elems = cart.pizzas.enumerated().map {
+                let pizzas = cart.pizzas.enumerated().map {
                     SectionItem.item(viewModel: CartItemCellViewModel(pizza: $0.element,
                                                                       basePrice: cart.basePrice)
                     )
                 }
-                items.append(contentsOf: elems)
+                let drinks = cart.drinks.enumerated().map {
+                    SectionItem.item(viewModel: CartItemCellViewModel(drink: $0.element))
+                }
+                items.append(contentsOf: pizzas)
+                items.append(contentsOf: drinks)
                 items.append(.padding(viewModel: PaddingCellViewModel(height: 24)))
                 items.append(.total(viewModel: CartTotalCellViewModel(price: cart.totalPrice())))
 
-                DLog(">>> cart items:\n")
-                for i in 1 ..< items.count - 2 {
-                    print("#", i, ">>>", items[i].identity, "-", items[i].unique)
-                }
+//                DLog(">>> cart items:\n")
+//                for i in 1 ..< items.count - 2 {
+//                    print("#", i, ">>>", items[i].identity, "-", items[i].unique)
+//                }
                 return [SectionModel(items: items)]
             })
-            .debug(trimOutput: true)
+            // .debug(trimOutput: true)
 
         input.selected
             .withLatestFrom(cart) { (index: $0, cart: $1) }
@@ -96,11 +105,16 @@ struct CartViewModel: ViewModelType {
             .bind(to: cart)
             .disposed(by: _bag)
 
+        let showDrinks = cart
+            .map({ [drinks = _drinks] in ($0, drinks) })
+            .asDriver(onErrorDriveWith: Driver<DrinksData>.never())
+
         return Output(
             tableData: models.asDriver(onErrorJustReturn: []),
             showSuccess: checkout
                 .map({ _ in () })
-                .asDriver(onErrorJustReturn: ())
+                .asDriver(onErrorJustReturn: ()),
+            showDrinks: showDrinks
         )
     }
 }

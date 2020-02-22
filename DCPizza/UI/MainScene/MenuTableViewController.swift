@@ -50,7 +50,8 @@ final class MenuTableViewController: UITableViewController {
                 return .map((ip.row, cell.pizzaView.image))
             })
 
-        let out = _viewModel.transform(input: MenuTableViewModel.Input(selected: selected))
+        let out = _viewModel.transform(input: MenuTableViewModel.Input(selected: selected,
+                                                                       cart: navigationItem.leftBarButtonItem!.rx.tap.asObservable()))
 
         let dataSource = RxTableViewSectionedReloadDataSource<SectionModel>(configureCell: { ds, tv, ip, _ in
             tv.createCell(MenuTableViewCell.self, ds[ip], ip)
@@ -60,6 +61,7 @@ final class MenuTableViewController: UITableViewController {
             .drive(tableView.rx.items(dataSource: dataSource))
             .disposed(by: _bag)
 
+        // Show ingredients.
         out.selection.asObservable()
             .flatMap({ [unowned self] in
                 self._navigator.showIngredients(of: $0.pizza,
@@ -70,18 +72,19 @@ final class MenuTableViewController: UITableViewController {
             .bind(to: _viewModel.cart)
             .disposed(by: _bag)
 
+        // Show cart.
+        out.showCart.asObservable()
+            .flatMap({ [unowned self] in
+                self._navigator.showCart($0.cart, drinks: $0.drinks)
+            })
+            .bind(to: _viewModel.cart)
+            .disposed(by: _bag)
+
+        // Show addedd.
         out.showAdded
             .drive(onNext: { [unowned self] _ in
                 self._navigator.showAdded()
             })
-            .disposed(by: _bag)
-
-        navigationItem.leftBarButtonItem?.rx.tap
-            .withLatestFrom(_viewModel.cart) { $1 }
-            .flatMap({ [unowned self] in
-                self._navigator.showCart($0)
-            })
-            .bind(to: _viewModel.cart)
             .disposed(by: _bag)
     }
 }

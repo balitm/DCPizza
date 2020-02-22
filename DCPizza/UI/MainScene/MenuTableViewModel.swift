@@ -15,6 +15,7 @@ import struct RxCocoa.Driver
 import class UIKit.UIImage
 
 struct MenuTableViewModel: ViewModelType {
+    typealias DrinksData = (cart: UI.Cart, drinks: [Drink])
     typealias Selected = (index: Int, image: UIImage?)
     typealias Selection = (
         pizza: Pizza,
@@ -25,12 +26,14 @@ struct MenuTableViewModel: ViewModelType {
 
     struct Input {
         let selected: Observable<Selected>
+        let cart: Observable<Void>
     }
 
     struct Output {
         let tableData: Driver<[SectionModel]>
         let selection: Driver<Selection>
         let showAdded: Driver<Void>
+        let showCart: Driver<DrinksData>
     }
 
     let cart = PublishRelay<UI.Cart>()
@@ -52,7 +55,6 @@ struct MenuTableViewModel: ViewModelType {
 
         // Init the cart.
         data
-            .take(1)
             .map({ $0.cart.asUI() })
             .bind(to: cart)
             .disposed(by: _bag)
@@ -73,7 +75,7 @@ struct MenuTableViewModel: ViewModelType {
         // Update cart.
         cartEvents
             .withLatestFrom(Observable.combineLatest(data, cart), resultSelector: { (cart: $1.1, data: $1.0, idx: $0) })
-//            .debug(trimOutput: true)
+            // .debug(trimOutput: true)
             .map({
                 var newCart = $0.cart
                 newCart.add(pizza: $0.data.pizzas.pizzas[$0.idx])
@@ -97,9 +99,18 @@ struct MenuTableViewModel: ViewModelType {
             })
             .asDriver(onErrorDriveWith: Driver<Selection>.never())
 
+        let showDrinks = input.cart
+            .withLatestFrom(Observable.combineLatest(data, cart), resultSelector: { (data: $1.0, cart: $1.1) })
+            .map({ t -> DrinksData in
+                (t.cart, t.data.drinks)
+            })
+            .asDriver(onErrorDriveWith: Driver<DrinksData>.never())
+
         return Output(tableData: sections,
                       selection: selection,
-                      showAdded: cartEvents.map { _ in () }.asDriver(onErrorJustReturn: ()))
+                      showAdded: cartEvents.map { _ in () }.asDriver(onErrorJustReturn: ()),
+                      showCart: showDrinks
+        )
     }
 }
 

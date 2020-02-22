@@ -19,4 +19,10 @@ struct CartItemCellViewModel {
         priceText = "$\(pizza.pizza.price(from: basePrice))"
         id = pizza.id
     }
+
+    init(drink: UI.Drink) {
+        name = drink.drink.name
+        priceText = "$\(drink.drink.price)"
+        id = drink.id
+    }
 }
