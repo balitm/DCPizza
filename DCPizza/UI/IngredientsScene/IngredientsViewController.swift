@@ -55,6 +55,7 @@ final class IngredientsViewController: UIViewController {
             })
             .disposed(by: _bag)
 
+        _footerTimer()
         _bind()
     }
 }
@@ -70,8 +71,6 @@ private extension IngredientsViewController {
         out.title
             .drive(rx.title)
             .dispose()
-
-        _footerTimer()
 
         let dataSource = RxTableViewSectionedReloadDataSource<SectionModel>(configureCell: { ds, tv, ip, _ in
             switch ds[ip] {
@@ -97,7 +96,10 @@ private extension IngredientsViewController {
     }
 
     func _footerTimer() {
-        Observable<Int>.timer(.seconds(3), scheduler: MainScheduler.instance)
+        rx.viewDidAppear
+            .flatMap({ _ in
+                Observable<Int>.timer(.seconds(3), scheduler: MainScheduler.instance)
+            })
             .subscribe(onNext: { [unowned self] _ in
                 self._hideFooter()
             })

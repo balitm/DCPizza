@@ -65,9 +65,10 @@ class DrinksTableViewController: UITableViewController {
 
         // Show addedd.
         out.showAdded
-            .debug()
-            .drive(onNext: { [unowned self] _ in
-                self._navigator.showAdded()
+            .drive(onNext: { [weak self] _ in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    self?._navigator.showAdded()
+                }
             })
             .disposed(by: _bag)
     }

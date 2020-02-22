@@ -39,7 +39,6 @@ struct DrinksTableViewModel: ViewModelType {
 
         // Add drink to cart.
         input.selected
-//            .debug()
             .withLatestFrom(cart) { (index: $0, cart: $1) }
             .map({ [drinks = _drinks] in
                 var newCart = $0.cart
@@ -51,7 +50,6 @@ struct DrinksTableViewModel: ViewModelType {
 
         let showAdded = input.selected
             .map { _ in () }
-            .debug()
             .asDriver(onErrorJustReturn: ())
 
         return Output(tableData: Driver.just([SectionModel(items: items)]),

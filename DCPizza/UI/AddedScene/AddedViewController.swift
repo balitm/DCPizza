@@ -22,13 +22,16 @@ final class AddedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        Observable<Int>.timer(.seconds(3), scheduler: MainScheduler.instance)
+        tapRecognizer.rx.event
             .subscribe(onNext: { [unowned self] _ in
                 self.dismiss(animated: true)
             })
             .disposed(by: _bag)
 
-        tapRecognizer.rx.event
+        rx.viewDidAppear
+            .flatMap({ _ in
+                Observable<Int>.timer(.seconds(3), scheduler: MainScheduler.instance)
+            })
             .subscribe(onNext: { [unowned self] _ in
                 self.dismiss(animated: true)
             })
