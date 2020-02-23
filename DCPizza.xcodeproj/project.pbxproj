@@ -29,6 +29,7 @@
 		29432A062402FC7400F4FC06 /* DatabaseUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29432A052402FC7400F4FC06 /* DatabaseUseCase.swift */; };
 		29432A0A2402FF1F00F4FC06 /* DatabaseRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29432A092402FF1F00F4FC06 /* DatabaseRepository.swift */; };
 		29432A0C2403009300F4FC06 /* RepositoryDatabaseUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29432A0B2403009300F4FC06 /* RepositoryDatabaseUseCase.swift */; };
+		29432A0E240312E800F4FC06 /* PriceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29432A0D240312E800F4FC06 /* PriceFormatter.swift */; };
 		2944CAA324003F1400F4709F /* UIViewController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2944CAA224003F1400F4709F /* UIViewController+Rx.swift */; };
 		2944CAA5240057AD00F4709F /* Checkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2944CAA4240057AD00F4709F /* Checkout.swift */; };
 		294ACF9723FBF7230027D0D4 /* GetIngredients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACF9623FBF7230027D0D4 /* GetIngredients.swift */; };
@@ -174,6 +175,7 @@
 		29432A052402FC7400F4FC06 /* DatabaseUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseUseCase.swift; sourceTree = "<group>"; };
 		29432A092402FF1F00F4FC06 /* DatabaseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseRepository.swift; sourceTree = "<group>"; };
 		29432A0B2403009300F4FC06 /* RepositoryDatabaseUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryDatabaseUseCase.swift; sourceTree = "<group>"; };
+		29432A0D240312E800F4FC06 /* PriceFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceFormatter.swift; sourceTree = "<group>"; };
 		2944CAA224003F1400F4709F /* UIViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Rx.swift"; sourceTree = "<group>"; };
 		2944CAA4240057AD00F4709F /* Checkout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkout.swift; sourceTree = "<group>"; };
 		294ACF9623FBF7230027D0D4 /* GetIngredients.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetIngredients.swift; sourceTree = "<group>"; };
@@ -476,7 +478,7 @@
 				294ACFEA23FC57120027D0D4 /* RoundedView.swift */,
 				294ACFF423FC601A0027D0D4 /* ViewModelType.swift */,
 				2976A46E23FDB58E00828A94 /* SeparableTableViewCell.swift */,
-				2944CAA224003F1400F4709F /* UIViewController+Rx.swift */,
+				29432A0D240312E800F4FC06 /* PriceFormatter.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -517,6 +519,7 @@
 		294ACFE323FC56630027D0D4 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				2944CAA224003F1400F4709F /* UIViewController+Rx.swift */,
 				294ACFE423FC56630027D0D4 /* UIStoryboard+load.swift */,
 				294ACFE523FC56630027D0D4 /* UITableView+Extension.swift */,
 				294ACFE623FC56630027D0D4 /* UIColor+Extensions.swift */,
@@ -908,6 +911,7 @@
 				294ACFF723FC60C50027D0D4 /* MenuTableViewModel.swift in Sources */,
 				29EF9A732401D53C002E8E4E /* DrinksTableViewController.swift in Sources */,
 				294ACFF323FC5C270027D0D4 /* MenuTableViewCell.swift in Sources */,
+				29432A0E240312E800F4FC06 /* PriceFormatter.swift in Sources */,
 				294ACFE923FC56630027D0D4 /* UIColor+Extensions.swift in Sources */,
 				2976A47123FDB6A300828A94 /* IngredientsHeaderCellViewModel.swift in Sources */,
 				29EF9A762401D53C002E8E4E /* DrinkTableViewCell.swift in Sources */,

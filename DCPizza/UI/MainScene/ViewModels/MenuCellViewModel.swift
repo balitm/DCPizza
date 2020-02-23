@@ -22,7 +22,7 @@ struct MenuCellViewModel {
     init(basePrice: Double, pizza: Pizza) {
         nameText = pizza.name
         let price = pizza.price(from: basePrice)
-        priceText = "$\(price)"
+        priceText = format(price: price)
         ingredientsText = pizza.ingredientNames()
         imageUrl = pizza.imageUrl
     }

@@ -16,13 +16,13 @@ struct CartItemCellViewModel {
 
     init(pizza: Pizza, basePrice: Double, id: Int) {
         name = pizza.name
-        priceText = "$\(pizza.price(from: basePrice))"
+        priceText = format(price: pizza.price(from: basePrice))
         self.id = id
     }
 
     init(drink: Drink, id: Int) {
         name = drink.name
-        priceText = "$\(drink.price)"
+        priceText = format(price: drink.price)
         self.id = id
     }
 }

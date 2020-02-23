@@ -47,7 +47,7 @@ struct IngredientsViewModel: ViewModelType {
         let vms = _ingredients.map { ing -> SectionItem in
             .ingredient(viewModel: IngredientsItemCellViewModel(
                 name: ing.name,
-                priceText: "$\(ing.price)",
+                priceText: format(price: ing.price),
                 isContained: isContained(ing)))
         }
         items.append(contentsOf: vms)

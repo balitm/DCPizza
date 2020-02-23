@@ -34,7 +34,7 @@ struct DrinksTableViewModel: ViewModelType {
 
     func transform(input: Input) -> Output {
         let items = _drinks.map {
-            DrinkCellViewModel(name: $0.name, priceText: "$\($0.price)")
+            DrinkCellViewModel(name: $0.name, priceText: format(price: $0.price))
         }
 
         // Add drink to cart.

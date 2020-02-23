@@ -10,5 +10,10 @@ import Foundation
 
 struct CartTotalCellViewModel {
     let price: Double
-    var priceText: String { "$\(price)" }
+    var priceText: String
+
+    init(price: Double) {
+        self.price = price
+        priceText = format(price: price)
+    }
 }
