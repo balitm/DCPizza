@@ -24,8 +24,8 @@ class DCPizzaTests: XCTestCase {
         useCase.getInitData()
             .subscribe(onNext: { [unowned self] in
                 self.initData = $0
-                }, onDisposed: {
-                    initialSetupFinished.fulfill()
+            }, onDisposed: {
+                initialSetupFinished.fulfill()
             })
             .disposed(by: _bag)
 
