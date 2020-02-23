@@ -14,15 +14,15 @@ struct CartItemCellViewModel {
     let priceText: String
     let id: Int
 
-    init(pizza: UI.Pizza, basePrice: Double) {
-        name = pizza.pizza.name
-        priceText = "$\(pizza.pizza.price(from: basePrice))"
-        id = pizza.id
+    init(pizza: Pizza, basePrice: Double, id: Int) {
+        name = pizza.name
+        priceText = "$\(pizza.price(from: basePrice))"
+        self.id = id
     }
 
-    init(drink: UI.Drink) {
-        name = drink.drink.name
-        priceText = "$\(drink.drink.price)"
-        id = drink.id
+    init(drink: Drink, id: Int) {
+        name = drink.name
+        priceText = "$\(drink.price)"
+        self.id = id
     }
 }

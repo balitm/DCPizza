@@ -9,80 +9,77 @@
 import Foundation
 import Domain
 
+enum UI {}
+
 extension UI {
     struct Cart {
         fileprivate static var _additionNumber = 0
 
-        public private(set) var pizzas: [UI.Pizza]
-        public private(set) var drinks: [UI.Drink]
-        public private(set) var basePrice: Double
+        private var _domainCart: Domain.Cart
+        private var _ids: [Int]
+        var basePrice: Double { _domainCart.basePrice }
+        var pizzas: [Pizza] { _domainCart.pizzas }
+        var drinks: [Drink] { _domainCart.drinks }
+        var pizzaIds: [Int] { Array(_ids[0 ..< _domainCart.pizzas.endIndex]) }
+        var drinkIds: [Int] { Array(_ids[_domainCart.pizzas.endIndex...]) }
 
-        public mutating func add(pizza: Domain.Pizza) {
-            pizzas.append(UI.Pizza(pizza: pizza, id: Cart._additionNumber))
+        fileprivate init(
+            domainCart: Domain.Cart,
+            ids: [Int]
+        ) {
+            _domainCart = domainCart
+            _ids = ids
+        }
+
+        mutating func add(pizza: Domain.Pizza) {
+            _ids.insert(Cart._additionNumber, at: _domainCart.pizzas.count)
+            _domainCart.add(pizza: pizza)
             Cart._additionNumber += 1
+            assert(drinkIds.count == drinks.count)
+            assert(pizzaIds.count == pizzas.count)
         }
 
         public mutating func add(drink: Domain.Drink) {
-            drinks.append(UI.Drink(drink: drink, id: Cart._additionNumber))
+            _ids.append(Cart._additionNumber)
+            _domainCart.add(drink: drink)
             Cart._additionNumber += 1
+            assert(drinkIds.count == drinks.count)
+            assert(pizzaIds.count == pizzas.count)
         }
 
         public mutating func remove(at index: Int) {
-            let count = pizzas.count
-            if index < count {
-                pizzas.remove(at: index)
-            } else {
-                drinks.remove(at: index - count)
-            }
+            _ids.remove(at: index)
+            _domainCart.remove(at: index)
+            assert(drinkIds.count == drinks.count)
+            assert(pizzaIds.count == pizzas.count)
         }
 
         public mutating func empty() {
-            drinks = []
-            pizzas = []
+            _domainCart.empty()
+            _ids = []
             Cart._additionNumber = 0
         }
 
         public func totalPrice() -> Double {
-            let pizzaPrice = pizzas.reduce(0.0) {
-                $0 + $1.pizza.ingredients.reduce(basePrice) {
-                    $0 + $1.price
-                }
-            }
-            let drinkPrice = drinks.reduce(0.0) {
-                $0 + $1.drink.price
-            }
-            return pizzaPrice + drinkPrice
+            return _domainCart.totalPrice()
         }
     }
 }
 
 extension Domain.Cart: UIConvertibleType {
     func asUI() -> UI.Cart {
-        var id = 0
+        let pizzaIds = (0 ..< pizzas.endIndex).map { $0 }
+        let offset = pizzaIds.count
+        let drinkIds = (0 ..< drinks.endIndex).map { offset + $0 }
 
-        let uiPizzas = pizzas.map { pizza -> UI.Pizza in
-            let uiPizza = UI.Pizza(pizza: pizza, id: id)
-            id += 1
-            return uiPizza
-        }
-
-        let uiDrinks = drinks.map { drink -> UI.Drink in
-            let uiDrink = UI.Drink(drink: drink, id: id)
-            id += 1
-            return uiDrink
-        }
-
-        UI.Cart._additionNumber = id
-        let uiCart = UI.Cart(pizzas: uiPizzas, drinks: uiDrinks, basePrice: basePrice)
+        UI.Cart._additionNumber = offset + drinkIds.count
+        let uiCart = UI.Cart(domainCart: self, ids: pizzaIds + drinkIds)
         return uiCart
     }
 }
 
 extension UI.Cart: DomainRepresentable {
     func asDomain() -> Domain.Cart {
-        let dPizzas = pizzas.map { $0.pizza }
-        let dDrinks = drinks.map { $0.drink }
-        let dCart = Domain.Cart(pizzas: dPizzas, drinks: dDrinks, basePrice: basePrice)
-        return dCart
+        return _domainCart
     }
 }
