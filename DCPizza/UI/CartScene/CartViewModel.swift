@@ -53,11 +53,14 @@ struct CartViewModel: ViewModelType {
                 var items = [SectionItem.padding(viewModel: PaddingCellViewModel(height: 12))]
                 let pizzas = cart.pizzas.enumerated().map {
                     SectionItem.item(viewModel: CartItemCellViewModel(pizza: $0.element,
-                                                                      basePrice: cart.basePrice)
+                                                                      basePrice: cart.basePrice,
+                                                                      id: cart.pizzaIds[$0.offset])
                     )
                 }
                 let drinks = cart.drinks.enumerated().map {
-                    SectionItem.item(viewModel: CartItemCellViewModel(drink: $0.element))
+                    SectionItem.item(viewModel: CartItemCellViewModel(drink: $0.element,
+                                                                      id: cart.drinkIds[$0.offset])
+                    )
                 }
                 items.append(contentsOf: pizzas)
                 items.append(contentsOf: drinks)

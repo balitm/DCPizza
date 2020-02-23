@@ -40,6 +40,37 @@ class DCPizzaTests: XCTestCase {
 
     override func tearDown() {}
 
+    func testCartSlices() {
+        var cart = initData.cart.asUI()
+        guard initData.drinks.count >= 2 && initData.pizzas.pizzas.count >= 2 else { return }
+
+        XCTAssertEqual(cart.pizzaIds.count, 0)
+        XCTAssertEqual(cart.drinkIds.count, 0)
+
+        cart.add(drink: initData.drinks[0])
+        cart.add(drink: initData.drinks[1])
+        XCTAssertEqual(cart.pizzaIds.count, 0)
+        XCTAssertEqual(cart.drinkIds.count, 2)
+        XCTAssertEqual(cart.drinkIds, [0, 1])
+
+        cart.empty()
+        cart.add(pizza: initData.pizzas.pizzas[0])
+        cart.add(pizza: initData.pizzas.pizzas[1])
+        XCTAssertEqual(cart.pizzaIds.count, 2)
+        XCTAssertEqual(cart.drinkIds.count, 0)
+        XCTAssertEqual(cart.pizzaIds, [0, 1])
+
+        cart.empty()
+        cart.add(drink: initData.drinks[0])
+        cart.add(drink: initData.drinks[1])
+        cart.add(pizza: initData.pizzas.pizzas[0])
+        cart.add(pizza: initData.pizzas.pizzas[1])
+        XCTAssertEqual(cart.pizzaIds.count, 2)
+        XCTAssertEqual(cart.drinkIds.count, 2)
+        XCTAssertEqual(cart.pizzaIds, [2, 3])
+        XCTAssertEqual(cart.drinkIds, [0, 1])
+    }
+
     func testCartConversion() {
         var cart = initData.cart.asUI()
         guard initData.drinks.count >= 2 && initData.pizzas.pizzas.count >= 2 else { return }
@@ -53,9 +84,9 @@ class DCPizzaTests: XCTestCase {
             .asDataSource()
             .asDomain(with: initData.ingredients, drinks: initData.drinks)
             .asUI()
-        DLog("converted:\n", converted.drinks.map { $0.drink.id }, "\norig:\n", cart.drinks.map { $0.id })
-        let isConverted = converted.pizzas.map({ $0.pizza.name }) == cart.pizzas.map({ $0.pizza.name })
-            && converted.drinks.map { $0.drink.id } == cart.drinks.map { $0.drink.id }
+        DLog("converted:\n", converted.drinks.map { $0.id }, "\norig:\n", cart.drinks.map { $0.id })
+        let isConverted = converted.pizzas.map({ $0.name }) == cart.pizzas.map({ $0.name })
+            && converted.drinks.map { $0.id } == cart.drinks.map { $0.id }
 
         XCTAssertTrue(isConverted)
     }
@@ -71,8 +102,8 @@ class DCPizzaTests: XCTestCase {
         cart.remove(at: 1)
         XCTAssertEqual(cart.pizzas.count, 1)
         XCTAssertEqual(cart.drinks.count, 1)
-        XCTAssertEqual(cart.pizzas[0].pizza.name, initData.pizzas.pizzas[0].name)
-        XCTAssertEqual(cart.drinks[0].drink.id, initData.drinks[1].id)
+        XCTAssertEqual(cart.pizzas[0].name, initData.pizzas.pizzas[0].name)
+        XCTAssertEqual(cart.drinks[0].id, initData.drinks[1].id)
     }
 
     func testCheckout() {
