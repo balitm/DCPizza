@@ -18,7 +18,16 @@ protocol RepositoryNetworkProtocol {
 }
 
 struct NetworkRepository: RepositoryNetworkProtocol {
-    init() {}
+    private let _container: Container?
+
+    init() {
+        do {
+            _container = try Container()
+        } catch {
+            DLog("# DB init failed.")
+            _container = nil
+        }
+    }
 
     func getInitData() -> Observable<InitData> {
         let netData = Observable.zip(API.GetPizzas().rx.perform(),
@@ -27,12 +36,15 @@ struct NetworkRepository: RepositoryNetworkProtocol {
                                      resultSelector: { (pizzas: $0, ingredients: $1, drinks: $2) })
             .map({ tuple -> InitData in
                 let ingredients = tuple.ingredients.sorted { $0.name < $1.name }
+                let container = try Container()
+                let dsCart = container.values(DS.Cart.self).first ?? DS.Cart(pizzas: [], drinks: [])
+                var cart = dsCart.asDomain(with: ingredients, drinks: tuple.drinks)
+                cart.basePrice = tuple.pizzas.basePrice
+
                 return InitData(pizzas: tuple.pizzas.asDomain(with: ingredients, drinks: tuple.drinks),
                                 ingredients: ingredients,
                                 drinks: tuple.drinks,
-                                cart: Domain.Cart(pizzas: [],
-                                                  drinks: [],
-                                                  basePrice: tuple.pizzas.basePrice))
+                                cart: cart)
             })
         return netData
     }
@@ -47,5 +59,20 @@ struct NetworkRepository: RepositoryNetworkProtocol {
 
     func checkout(cart: DS.Cart) -> Observable<Void> {
         API.Checkout(pizzas: cart.pizzas, drinks: cart.drinks).rx.perform()
+            .do(onNext: {
+                try? Container().delete(DS.Cart.self)
+            })
+    }
+
+    private func _execute(_ block: (Container) throws -> Void) {
+        guard let container = _container else {
+            DLog("# No usable DB container.")
+            return
+        }
+        do {
+            try block(container)
+        } catch {
+            DLog("# DB operation failed.")
+        }
     }
 }

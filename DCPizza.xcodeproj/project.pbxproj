@@ -26,6 +26,9 @@
 		294301C62402C78300E5F993 /* RMCart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294301C52402C78300E5F993 /* RMCart.swift */; };
 		294301C82402C89D00E5F993 /* Persistable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294301C72402C89D00E5F993 /* Persistable.swift */; };
 		294301CA2402CCD000E5F993 /* RealmMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294301C92402CCD000E5F993 /* RealmMapping.swift */; };
+		29432A062402FC7400F4FC06 /* DatabaseUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29432A052402FC7400F4FC06 /* DatabaseUseCase.swift */; };
+		29432A0A2402FF1F00F4FC06 /* DatabaseRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29432A092402FF1F00F4FC06 /* DatabaseRepository.swift */; };
+		29432A0C2403009300F4FC06 /* RepositoryDatabaseUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29432A0B2403009300F4FC06 /* RepositoryDatabaseUseCase.swift */; };
 		2944CAA324003F1400F4709F /* UIViewController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2944CAA224003F1400F4709F /* UIViewController+Rx.swift */; };
 		2944CAA5240057AD00F4709F /* Checkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2944CAA4240057AD00F4709F /* Checkout.swift */; };
 		294ACF9723FBF7230027D0D4 /* GetIngredients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACF9623FBF7230027D0D4 /* GetIngredients.swift */; };
@@ -46,8 +49,8 @@
 		294ACFBF23FC100B0027D0D4 /* ModelBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFBE23FC100B0027D0D4 /* ModelBase.swift */; };
 		294ACFC123FC13950027D0D4 /* GetPizzas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFC023FC13950027D0D4 /* GetPizzas.swift */; };
 		294ACFC623FC22090027D0D4 /* NetworkUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFC523FC22090027D0D4 /* NetworkUseCase.swift */; };
-		294ACFC823FC23050027D0D4 /* NetworkUseCaseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFC723FC23050027D0D4 /* NetworkUseCaseProvider.swift */; };
-		294ACFCA23FC24300027D0D4 /* RepositoryNetworkUseCaseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFC923FC24300027D0D4 /* RepositoryNetworkUseCaseProvider.swift */; };
+		294ACFC823FC23050027D0D4 /* UseCaseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFC723FC23050027D0D4 /* UseCaseProvider.swift */; };
+		294ACFCA23FC24300027D0D4 /* RepositoryUseCaseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFC923FC24300027D0D4 /* RepositoryUseCaseProvider.swift */; };
 		294ACFCC23FC30EA0027D0D4 /* NetworkRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFCB23FC30EA0027D0D4 /* NetworkRepository.swift */; };
 		294ACFD623FC43F60027D0D4 /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFD123FC43F50027D0D4 /* Ingredient.swift */; };
 		294ACFDF23FC461E0027D0D4 /* Drink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFDB23FC461E0027D0D4 /* Drink.swift */; };
@@ -168,6 +171,9 @@
 		294301C52402C78300E5F993 /* RMCart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMCart.swift; sourceTree = "<group>"; };
 		294301C72402C89D00E5F993 /* Persistable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistable.swift; sourceTree = "<group>"; };
 		294301C92402CCD000E5F993 /* RealmMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmMapping.swift; sourceTree = "<group>"; };
+		29432A052402FC7400F4FC06 /* DatabaseUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseUseCase.swift; sourceTree = "<group>"; };
+		29432A092402FF1F00F4FC06 /* DatabaseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseRepository.swift; sourceTree = "<group>"; };
+		29432A0B2403009300F4FC06 /* RepositoryDatabaseUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryDatabaseUseCase.swift; sourceTree = "<group>"; };
 		2944CAA224003F1400F4709F /* UIViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Rx.swift"; sourceTree = "<group>"; };
 		2944CAA4240057AD00F4709F /* Checkout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkout.swift; sourceTree = "<group>"; };
 		294ACF9623FBF7230027D0D4 /* GetIngredients.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetIngredients.swift; sourceTree = "<group>"; };
@@ -183,8 +189,8 @@
 		294ACFBE23FC100B0027D0D4 /* ModelBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelBase.swift; sourceTree = "<group>"; };
 		294ACFC023FC13950027D0D4 /* GetPizzas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPizzas.swift; sourceTree = "<group>"; };
 		294ACFC523FC22090027D0D4 /* NetworkUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUseCase.swift; sourceTree = "<group>"; };
-		294ACFC723FC23050027D0D4 /* NetworkUseCaseProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUseCaseProvider.swift; sourceTree = "<group>"; };
-		294ACFC923FC24300027D0D4 /* RepositoryNetworkUseCaseProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryNetworkUseCaseProvider.swift; sourceTree = "<group>"; };
+		294ACFC723FC23050027D0D4 /* UseCaseProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UseCaseProvider.swift; sourceTree = "<group>"; };
+		294ACFC923FC24300027D0D4 /* RepositoryUseCaseProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryUseCaseProvider.swift; sourceTree = "<group>"; };
 		294ACFCB23FC30EA0027D0D4 /* NetworkRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRepository.swift; sourceTree = "<group>"; };
 		294ACFCD23FC3D4A0027D0D4 /* RxTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxTest.framework; path = Carthage/Build/iOS/RxTest.framework; sourceTree = "<group>"; };
 		294ACFD123FC43F50027D0D4 /* Ingredient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ingredient.swift; sourceTree = "<group>"; };
@@ -440,7 +446,8 @@
 			isa = PBXGroup;
 			children = (
 				294ACFC523FC22090027D0D4 /* NetworkUseCase.swift */,
-				294ACFC723FC23050027D0D4 /* NetworkUseCaseProvider.swift */,
+				29432A052402FC7400F4FC06 /* DatabaseUseCase.swift */,
+				294ACFC723FC23050027D0D4 /* UseCaseProvider.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -453,8 +460,8 @@
 				29B1381F2401413600A49C45 /* Entities */,
 				294ACFEC23FC5B080027D0D4 /* MainScene */,
 				2976A46323FD6B3200828A94 /* IngredientsScene */,
-				295C3D5F23FEF52E00D82655 /* CartScene */,
 				29EF9A6C2401D53C002E8E4E /* DrinksScene */,
+				295C3D5F23FEF52E00D82655 /* CartScene */,
 				2969857A23FEB4D60024466E /* AddedScene */,
 				29B8ABDE24007DE800A07816 /* SuccessScene */,
 				2976A46823FD76F600828A94 /* Navigator.swift */,
@@ -492,6 +499,7 @@
 			children = (
 				294ACFC423FC21A40027D0D4 /* UseCases */,
 				294ACFCB23FC30EA0027D0D4 /* NetworkRepository.swift */,
+				29432A092402FF1F00F4FC06 /* DatabaseRepository.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -500,7 +508,8 @@
 			isa = PBXGroup;
 			children = (
 				294ACFA223FBFD640027D0D4 /* RepositoryNetworkUseCase.swift */,
-				294ACFC923FC24300027D0D4 /* RepositoryNetworkUseCaseProvider.swift */,
+				294ACFC923FC24300027D0D4 /* RepositoryUseCaseProvider.swift */,
+				29432A0B2403009300F4FC06 /* RepositoryDatabaseUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -942,6 +951,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29432A062402FC7400F4FC06 /* DatabaseUseCase.swift in Sources */,
 				294ACFCC23FC30EA0027D0D4 /* NetworkRepository.swift in Sources */,
 				294ACFC623FC22090027D0D4 /* NetworkUseCase.swift in Sources */,
 				294ACFBF23FC100B0027D0D4 /* ModelBase.swift in Sources */,
@@ -949,11 +959,13 @@
 				2941A44323FAFD9B005838BA /* DSPizzas.swift in Sources */,
 				2941A43F23FAFC75005838BA /* DSDrink.swift in Sources */,
 				29711D7123FD3CFA00783025 /* DomainConvertibleType.swift in Sources */,
+				29432A0A2402FF1F00F4FC06 /* DatabaseRepository.swift in Sources */,
+				29432A0C2403009300F4FC06 /* RepositoryDatabaseUseCase.swift in Sources */,
 				298F813E23FD4C5F001A925C /* DSCart.swift in Sources */,
 				29711D7323FD3D8300783025 /* DSRepresentable.swift in Sources */,
 				294ACFA023FBFCDC0027D0D4 /* Log.swift in Sources */,
 				294301CA2402CCD000E5F993 /* RealmMapping.swift in Sources */,
-				294ACFC823FC23050027D0D4 /* NetworkUseCaseProvider.swift in Sources */,
+				294ACFC823FC23050027D0D4 /* UseCaseProvider.swift in Sources */,
 				2941A47123FB1AA6005838BA /* Constants.swift in Sources */,
 				294ACF9723FBF7230027D0D4 /* GetIngredients.swift in Sources */,
 				294301C82402C89D00E5F993 /* Persistable.swift in Sources */,
@@ -966,7 +978,7 @@
 				294ACFE123FC461E0027D0D4 /* Cart.swift in Sources */,
 				294301C42402C62200E5F993 /* RMPizza.swift in Sources */,
 				294ACF9C23FBFC3F0027D0D4 /* RequestBase.swift in Sources */,
-				294ACFCA23FC24300027D0D4 /* RepositoryNetworkUseCaseProvider.swift in Sources */,
+				294ACFCA23FC24300027D0D4 /* RepositoryUseCaseProvider.swift in Sources */,
 				2969857723FE93130024466E /* InitData.swift in Sources */,
 				294ACFBD23FC0F6A0027D0D4 /* GetDrinks.swift in Sources */,
 				294ACF9923FBF7D80027D0D4 /* DataSource.swift in Sources */,

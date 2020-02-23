@@ -11,7 +11,7 @@ import Foundation
 public struct Cart {
     public private(set) var pizzas: [Pizza]
     public private(set) var drinks: [Drink]
-    public private(set) var basePrice: Double
+    public internal(set) var basePrice: Double
 
     public mutating func add(pizza: Pizza) {
         pizzas.append(pizza)

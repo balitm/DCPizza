@@ -8,6 +8,7 @@
 
 import Foundation
 
-public protocol NetworkUseCaseProvider {
+public protocol UseCaseProvider {
     func makeNetworkUseCase() -> NetworkUseCase
+    func makeDatabaseUseCase() -> DatabaseUseCase
 }

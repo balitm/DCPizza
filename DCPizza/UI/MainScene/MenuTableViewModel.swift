@@ -27,6 +27,7 @@ struct MenuTableViewModel: ViewModelType {
     struct Input {
         let selected: Observable<Selected>
         let cart: Observable<Void>
+        let saveCart: Observable<Void>
     }
 
     struct Output {
@@ -40,8 +41,10 @@ struct MenuTableViewModel: ViewModelType {
     private let _bag = DisposeBag()
 
     func transform(input: Input) -> Output {
-        let useCase = RepositoryNetworkUseCaseProvider().makeNetworkUseCase()
-        let data = useCase.getInitData().share()
+        let provider = RepositoryUseCaseProvider()
+        let netUseCase = provider.makeNetworkUseCase()
+        let dbUseCase = provider.makeDatabaseUseCase()
+        let data = netUseCase.getInitData().share()
 
         let viewModels = data
             .map({ data -> [MenuCellViewModel] in
@@ -79,7 +82,6 @@ struct MenuTableViewModel: ViewModelType {
             .map({
                 var newCart = $0.cart
                 newCart.add(pizza: $0.data.pizzas.pizzas[$0.idx])
-                DLog("new cart, pizzas: ", newCart.pizzas.count, ", drinks: ", newCart.drinks.count)
                 return newCart
             })
             .bind(to: cart)
@@ -105,6 +107,21 @@ struct MenuTableViewModel: ViewModelType {
                 (t.cart, t.data.drinks)
             })
             .asDriver(onErrorDriveWith: Driver<DrinksData>.never())
+
+        cart
+            .subscribe(onNext: {
+                DLog("current cart, pizzas: ", $0.pizzas.count, ", drinks: ", $0.drinks.count)
+            })
+            .disposed(by: _bag)
+
+        input.saveCart
+            .debug()
+            .withLatestFrom(cart)
+            .subscribe(onNext: {
+                DLog("save cart, pizzas: ", $0.pizzas.count, ", drinks: ", $0.drinks.count)
+                dbUseCase.save(cart: $0.asDomain())
+            })
+            .disposed(by: _bag)
 
         return Output(tableData: sections,
                       selection: selection,

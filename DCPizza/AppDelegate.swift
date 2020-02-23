@@ -22,4 +22,18 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         NetworkActivityIndicatorManager.shared.isEnabled = true
         return true
     }
+
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        _saveCart()
+    }
+
+    func applicationWillTerminate(_ application: UIApplication) {
+        _saveCart()
+    }
+
+    private func _saveCart() {
+        guard let nc = window?.rootViewController as? UINavigationController else { return }
+        guard let menuVC = nc.viewControllers.first as? MenuTableViewController else { return }
+        menuVC.saveCart()
+    }
 }

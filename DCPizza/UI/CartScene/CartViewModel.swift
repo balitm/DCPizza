@@ -66,11 +66,6 @@ struct CartViewModel: ViewModelType {
                 items.append(contentsOf: drinks)
                 items.append(.padding(viewModel: PaddingCellViewModel(height: 24)))
                 items.append(.total(viewModel: CartTotalCellViewModel(price: cart.totalPrice())))
-
-//                DLog(">>> cart items:\n")
-//                for i in 1 ..< items.count - 2 {
-//                    print("#", i, ">>>", items[i].identity, "-", items[i].unique)
-//                }
                 return [SectionModel(items: items)]
             })
             // .debug(trimOutput: true)
@@ -81,10 +76,10 @@ struct CartViewModel: ViewModelType {
                 assert(pair.index >= 1)
                 let index = pair.index - 1
 
-                DLog(">>> index: ", index)
+                // DLog(">>> index: ", index)
                 var newCart = pair.cart
                 newCart.remove(at: index)
-                DLog(">>> pizzas in cart: ", newCart.pizzas.count)
+                // DLog(">>> pizzas in cart: ", newCart.pizzas.count)
                 return .map(newCart)
             })
             .bind(to: cart)
@@ -93,7 +88,7 @@ struct CartViewModel: ViewModelType {
         let checkout = input.checkout
             .withLatestFrom(cart)
             .flatMap({ cart -> Observable<UI.Cart> in
-                let useCase = RepositoryNetworkUseCaseProvider().makeNetworkUseCase()
+                let useCase = RepositoryUseCaseProvider().makeNetworkUseCase()
                 return useCase.checkout(cart: cart.asDomain())
                     .map({ cart })
             })

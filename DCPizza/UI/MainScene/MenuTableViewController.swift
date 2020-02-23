@@ -25,6 +25,7 @@ final class MenuTableViewController: UITableViewController {
         DefaultNavigator(storyboard: self.storyboard!, navigationController: self.navigationController!)
     }()
 
+    private let _saveCart = PublishSubject<Void>()
     private let _bag = DisposeBag()
 
     // MARK: - View functions
@@ -41,6 +42,11 @@ final class MenuTableViewController: UITableViewController {
         DLog("Unwinded to menu.")
     }
 
+    /// Save the current cart.
+    func saveCart() {
+        _saveCart.on(.next(()))
+    }
+
     // MARK: - bind functions
 
     private func _bind() {
@@ -51,7 +57,8 @@ final class MenuTableViewController: UITableViewController {
             })
 
         let out = _viewModel.transform(input: MenuTableViewModel.Input(selected: selected,
-                                                                       cart: navigationItem.leftBarButtonItem!.rx.tap.asObservable()))
+                                                                       cart: navigationItem.leftBarButtonItem!.rx.tap.asObservable(),
+                                                                       saveCart: _saveCart))
 
         let dataSource = RxTableViewSectionedReloadDataSource<SectionModel>(configureCell: { ds, tv, ip, _ in
             tv.createCell(MenuTableViewCell.self, ds[ip], ip)
