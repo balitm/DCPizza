@@ -8,6 +8,7 @@
 
 import XCTest
 import RxSwift
+import RealmSwift
 @testable import Domain
 
 private struct _TestNetUseCase: NetworkUseCase {
@@ -243,6 +244,7 @@ class DomainTests: XCTestCase {
     private let _bag = DisposeBag()
     var initData: InitData!
     var useCase: NetworkUseCase!
+    var testCart: Cart!
 
     override func setUp() {
         super.setUp()
@@ -251,6 +253,16 @@ class DomainTests: XCTestCase {
         useCase.getInitData()
             .subscribe(onNext: { [unowned self] in
                 self.initData = $0
+                guard $0.drinks.count >= 2 && $0.pizzas.pizzas.count >= 2 else { return }
+                let pizzas = [
+                    $0.pizzas.pizzas[0],
+                    $0.pizzas.pizzas[1],
+                ]
+                let drinks = [
+                    $0.drinks[0],
+                    $0.drinks[1],
+                ]
+                self.testCart = Cart(pizzas: pizzas, drinks: drinks, basePrice: $0.pizzas.basePrice)
             })
             .disposed(by: _bag)
     }
@@ -283,22 +295,11 @@ class DomainTests: XCTestCase {
     }
 
     func testCartConversion() {
-        guard initData.drinks.count >= 2 && initData.pizzas.pizzas.count >= 2 else { return }
-        let pizzas = [
-            initData.pizzas.pizzas[0],
-            initData.pizzas.pizzas[1],
-        ]
-        let drinks = [
-            initData.drinks[0],
-            initData.drinks[1],
-        ]
-        let cart = Cart(pizzas: pizzas, drinks: drinks, basePrice: initData.pizzas.basePrice)
+        let cart = testCart!
 
         let converted = cart.asDataSource().asDomain(with: initData.ingredients, drinks: initData.drinks)
         DLog("converted:\n", converted.drinks.map { $0.id }, "\norig:\n", cart.drinks.map { $0.id })
-        let isConverted = converted.pizzas.map({ $0.name }) == cart.pizzas.map({ $0.name })
-            && converted.drinks.map { $0.id } == cart.drinks.map { $0.id }
-
+        let isConverted = _isEqual(converted, rhs: cart)
         XCTAssertTrue(isConverted)
     }
 
@@ -306,15 +307,7 @@ class DomainTests: XCTestCase {
         guard initData.drinks.count >= 2 && initData.pizzas.pizzas.count >= 2 else { return }
 
         let useCase = RepositoryNetworkUseCaseProvider().makeNetworkUseCase()
-        let pizzas = [
-            initData.pizzas.pizzas[0],
-            initData.pizzas.pizzas[1],
-        ]
-        let drinks = [
-            initData.drinks[0],
-            initData.drinks[1],
-        ]
-        let cart = Cart(pizzas: pizzas, drinks: drinks, basePrice: initData.pizzas.basePrice)
+        let cart = testCart!
 
         let expectation = XCTestExpectation(description: "checkout")
         useCase.checkout(cart: cart)
@@ -329,5 +322,54 @@ class DomainTests: XCTestCase {
             .disposed(by: _bag)
 
         wait(for: [expectation], timeout: 30.0)
+    }
+
+    func testDB() {
+        var _realmConfig: Realm.Configuration {
+            var config = Realm.Configuration.defaultConfiguration
+            DLog("Realm file: \(config.fileURL!.path)")
+            var fileURL = config.fileURL!
+            fileURL.deleteLastPathComponent()
+            fileURL.deleteLastPathComponent()
+            fileURL.appendPathComponent("tmp")
+            fileURL.appendPathComponent("test.realm")
+            DLog("Realm file: \(fileURL.path)")
+            config.fileURL = fileURL
+            return config
+        }
+
+        do {
+            let config = _realmConfig
+            let realm = try Realm.init(configuration: config)
+            let container = Container(realm: realm)
+
+            // Save the btest cart.
+            try container.write {
+                $0.add(testCart.asDataSource())
+            }
+
+            // Load saved cart.
+            guard let dCart = container.values(DS.Cart.self).first else {
+                XCTAssert(false)
+                return
+            }
+
+            // Delete from DB.
+            try container.delete(DS.Cart.self)
+
+            // Compare.
+            let converted = dCart.asDomain(with: initData.ingredients, drinks: initData.drinks)
+            XCTAssertTrue(_isEqual(converted, rhs: testCart))
+            return
+        } catch {
+            DLog(">>> error caught: ", error)
+        }
+        XCTAssert(false)
+    }
+
+    private func _isEqual(_ lhs: Domain.Cart, rhs: Domain.Cart) -> Bool {
+        return lhs.pizzas.map({ $0.name }) == rhs.pizzas.map({ $0.name })
+            && lhs.drinks.map { $0.id } == rhs.drinks.map { $0.id }
+
     }
 }

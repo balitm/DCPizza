@@ -22,6 +22,10 @@
 		2941A44E23FB1841005838BA /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A44D23FB1841005838BA /* Alamofire.framework */; };
 		2941A45523FB196E005838BA /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2941A45423FB196E005838BA /* RxSwift.framework */; };
 		2941A47123FB1AA6005838BA /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A47023FB1AA6005838BA /* Constants.swift */; };
+		294301C42402C62200E5F993 /* RMPizza.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294301C32402C62200E5F993 /* RMPizza.swift */; };
+		294301C62402C78300E5F993 /* RMCart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294301C52402C78300E5F993 /* RMCart.swift */; };
+		294301C82402C89D00E5F993 /* Persistable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294301C72402C89D00E5F993 /* Persistable.swift */; };
+		294301CA2402CCD000E5F993 /* RealmMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294301C92402CCD000E5F993 /* RealmMapping.swift */; };
 		2944CAA324003F1400F4709F /* UIViewController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2944CAA224003F1400F4709F /* UIViewController+Rx.swift */; };
 		2944CAA5240057AD00F4709F /* Checkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2944CAA4240057AD00F4709F /* Checkout.swift */; };
 		294ACF9723FBF7230027D0D4 /* GetIngredients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACF9623FBF7230027D0D4 /* GetIngredients.swift */; };
@@ -160,6 +164,10 @@
 		2941A45123FB1860005838BA /* AlamofireNetworkActivityIndicator.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlamofireNetworkActivityIndicator.framework; path = Carthage/Build/iOS/AlamofireNetworkActivityIndicator.framework; sourceTree = "<group>"; };
 		2941A45423FB196E005838BA /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		2941A47023FB1AA6005838BA /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		294301C32402C62200E5F993 /* RMPizza.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMPizza.swift; sourceTree = "<group>"; };
+		294301C52402C78300E5F993 /* RMCart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMCart.swift; sourceTree = "<group>"; };
+		294301C72402C89D00E5F993 /* Persistable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistable.swift; sourceTree = "<group>"; };
+		294301C92402CCD000E5F993 /* RealmMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmMapping.swift; sourceTree = "<group>"; };
 		2944CAA224003F1400F4709F /* UIViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Rx.swift"; sourceTree = "<group>"; };
 		2944CAA4240057AD00F4709F /* Checkout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkout.swift; sourceTree = "<group>"; };
 		294ACF9623FBF7230027D0D4 /* GetIngredients.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetIngredients.swift; sourceTree = "<group>"; };
@@ -365,6 +373,9 @@
 		2941A43A23FAFB8E005838BA /* Database */ = {
 			isa = PBXGroup;
 			children = (
+				294301C22402C5BD00E5F993 /* Entities */,
+				294301C72402C89D00E5F993 /* Persistable.swift */,
+				294301C92402CCD000E5F993 /* RealmMapping.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -395,6 +406,15 @@
 				2941A44D23FB1841005838BA /* Alamofire.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		294301C22402C5BD00E5F993 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				294301C32402C62200E5F993 /* RMPizza.swift */,
+				294301C52402C78300E5F993 /* RMCart.swift */,
+			);
+			path = Entities;
 			sourceTree = "<group>";
 		};
 		294ACF9523FBF6AA0027D0D4 /* Entities */ = {
@@ -932,9 +952,11 @@
 				298F813E23FD4C5F001A925C /* DSCart.swift in Sources */,
 				29711D7323FD3D8300783025 /* DSRepresentable.swift in Sources */,
 				294ACFA023FBFCDC0027D0D4 /* Log.swift in Sources */,
+				294301CA2402CCD000E5F993 /* RealmMapping.swift in Sources */,
 				294ACFC823FC23050027D0D4 /* NetworkUseCaseProvider.swift in Sources */,
 				2941A47123FB1AA6005838BA /* Constants.swift in Sources */,
 				294ACF9723FBF7230027D0D4 /* GetIngredients.swift in Sources */,
+				294301C82402C89D00E5F993 /* Persistable.swift in Sources */,
 				294ACFD623FC43F60027D0D4 /* Ingredient.swift in Sources */,
 				294ACF9A23FBFC090027D0D4 /* DSIngredient.swift in Sources */,
 				2941A44923FB0CC3005838BA /* API.swift in Sources */,
@@ -942,11 +964,13 @@
 				294ACFC123FC13950027D0D4 /* GetPizzas.swift in Sources */,
 				294ACFE023FC461E0027D0D4 /* Pizza.swift in Sources */,
 				294ACFE123FC461E0027D0D4 /* Cart.swift in Sources */,
+				294301C42402C62200E5F993 /* RMPizza.swift in Sources */,
 				294ACF9C23FBFC3F0027D0D4 /* RequestBase.swift in Sources */,
 				294ACFCA23FC24300027D0D4 /* RepositoryNetworkUseCaseProvider.swift in Sources */,
 				2969857723FE93130024466E /* InitData.swift in Sources */,
 				294ACFBD23FC0F6A0027D0D4 /* GetDrinks.swift in Sources */,
 				294ACF9923FBF7D80027D0D4 /* DataSource.swift in Sources */,
+				294301C62402C78300E5F993 /* RMCart.swift in Sources */,
 				294ACFE223FC461E0027D0D4 /* Pizzas.swift in Sources */,
 				294ACFDF23FC461E0027D0D4 /* Drink.swift in Sources */,
 				2941A44123FAFD03005838BA /* DSPizza.swift in Sources */,
