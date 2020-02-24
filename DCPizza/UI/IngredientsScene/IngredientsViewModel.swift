@@ -13,6 +13,8 @@ import RxDataSources
 import struct RxCocoa.Driver
 
 struct IngredientsViewModel: ViewModelType {
+    typealias Selected = (isOn: Bool, ingredient: Ingredient)
+
     struct Input {
         let selected: Observable<Int>
         let addEvent: Observable<Void>
@@ -40,32 +42,47 @@ struct IngredientsViewModel: ViewModelType {
     }
 
     func transform(input: Input) -> Output {
-        let items = _createItems()
+        let items = _createSels()
 
-        let models = Observable<[SectionModel]>.create { observer in
-            observer.onNext([SectionModel(items: items)])
+        // Create selections observable.
+        let sels = Observable<[Selected]>.create { observer in
+            observer.onNext(items)
             var ings = items
 
             let disp = input.selected
-                .map({ idx -> [SectionModel] in
-                    guard case let SectionItem.ingredient(row, viewModel) = ings[idx] else {
-                        return [SectionModel(items: items)]
-                    }
-                    assert(row == idx)
-                    let newVM = IngredientsItemCellViewModel(
-                        name: viewModel.name,
-                        priceText: viewModel.priceText,
-                        isContained: !viewModel.isContained)
-                    DLog("replace at ", idx, " ", viewModel.name, " - ", viewModel.isContained,
-                         " to ", newVM.name, " - ", newVM.isContained)
-                    ings[idx] = .ingredient(row: row, viewModel: newVM)
-                    return [SectionModel(items: ings)]
+                .filter({ $0 >= 1 })
+                .map({ i -> [Selected] in
+                    let idx = i - 1
+                    let item = ings[idx]
+                    ings[idx] = (!item.isOn, item.ingredient)
+                    DLog("replace at ", idx, " ", item.ingredient.name, " - ", item.isOn,
+                         " to ", !item.isOn)
+                    return ings
                 })
                 .do(onNext: { observer.onNext($0) })
                 .subscribe()
 
             return disp
         }
+        .share()
+
+        // Table data.
+        let tableData = sels
+            .map({ sels -> [SectionModel] in
+                let items = sels.enumerated().map { pair -> SectionItem in
+                    let offset = pair.offset
+                    let elem = pair.element
+                    return SectionItem.ingredient(
+                        row: 1 + offset,
+                        viewModel: IngredientsItemCellViewModel(name: elem.ingredient.name,
+                                                                priceText: format(price: elem.ingredient.price),
+                                                                isContained: elem.isOn)
+                    )
+                }
+                let header = [SectionItem.header(viewModel: IngredientsHeaderCellViewModel(image: self._image))]
+                return [SectionModel(items: header + items)]
+            })
+            .asDriver(onErrorJustReturn: [])
 
         // Add pizza to cart.
         input.addEvent
@@ -78,40 +95,27 @@ struct IngredientsViewModel: ViewModelType {
             .bind(to: cart)
             .disposed(by: _bag)
 
-//        // Toggle ingredient.
-//        input.selected
-//            .map({ self._ingredients[$0 - 1]}
-
         let title = _pizza
-            .map({ $0.name == "sketch" ? "CREATE A PIZZA" : $0.name.uppercased() })
+            .map({ $0.name == "scratch" ? "CREATE A PIZZA" : $0.name.uppercased() })
             .asDriver(onErrorJustReturn: "")
 
         let sum = (try? _pizza.value().ingredients.reduce(0.0, { $0 + $1.price })) ?? 0
         let cartText = "ADD TO CART ($\(sum))"
         return Output(title: title,
-                      tableData: models.asDriver(onErrorJustReturn: []),
+                      tableData: tableData,
                       cartText: Driver.just(cartText),
                       showAdded: input.addEvent.asDriver(onErrorJustReturn: ()))
     }
 
-    private func _createItems() -> [SectionItem] {
+    private func _createSels() -> [Selected] {
         func isContained(_ ingredient: Domain.Ingredient) -> Bool {
             return (try? _pizza.value().ingredients.contains { $0.id == ingredient.id }) ?? false
         }
 
-        var items: [SectionItem] = [.header(viewModel: IngredientsHeaderCellViewModel(image: _image))]
-        let vms = _ingredients.enumerated().map { ing -> SectionItem in
-            .ingredient(
-                row: 1 + ing.offset,
-                viewModel: IngredientsItemCellViewModel(
-                    name: ing.element.name,
-                    priceText: format(price: ing.element.price),
-                    isContained: isContained(ing.element)
-                )
-            )
+        let sels = _ingredients.map { ing -> Selected in
+            (isContained(ing), ing)
         }
-        items.append(contentsOf: vms)
-        return items
+        return sels
     }
 }
 
