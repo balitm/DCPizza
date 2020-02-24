@@ -14,6 +14,7 @@ import struct RxCocoa.Driver
 
 struct IngredientsViewModel: ViewModelType {
     struct Input {
+        let selected: Observable<Int>
         let addEvent: Observable<Void>
     }
 
@@ -25,50 +26,92 @@ struct IngredientsViewModel: ViewModelType {
     }
 
     var resultCart: Observable<UI.Cart> { cart.asObservable().skip(1) }
-    private let _pizza: Pizza
+    private let _pizza: BehaviorSubject<Pizza>
     private let _image: UIImage?
     private let _ingredients: [Ingredient]
     let cart: BehaviorSubject<UI.Cart>
     private let _bag = DisposeBag()
 
     init(pizza: Pizza, image: UIImage?, ingredients: [Ingredient], cart: UI.Cart) {
-        _pizza = pizza
+        _pizza = BehaviorSubject(value: pizza)
         _image = image
         _ingredients = ingredients
         self.cart = BehaviorSubject(value: cart)
     }
 
     func transform(input: Input) -> Output {
-        func isContained(_ ingredient: Domain.Ingredient) -> Bool {
-            return _pizza.ingredients.contains { $0.id == ingredient.id }
-        }
+        let items = _createItems()
 
-        var items: [SectionItem] = [.header(viewModel: IngredientsHeaderCellViewModel(image: _image))]
-        let vms = _ingredients.map { ing -> SectionItem in
-            .ingredient(viewModel: IngredientsItemCellViewModel(
-                name: ing.name,
-                priceText: format(price: ing.price),
-                isContained: isContained(ing)))
+        let models = Observable<[SectionModel]>.create { observer in
+            observer.onNext([SectionModel(items: items)])
+            var ings = items
+
+            let disp = input.selected
+                .map({ idx -> [SectionModel] in
+                    guard case let SectionItem.ingredient(row, viewModel) = ings[idx] else {
+                        return [SectionModel(items: items)]
+                    }
+                    assert(row == idx)
+                    let newVM = IngredientsItemCellViewModel(
+                        name: viewModel.name,
+                        priceText: viewModel.priceText,
+                        isContained: !viewModel.isContained)
+                    DLog("replace at ", idx, " ", viewModel.name, " - ", viewModel.isContained,
+                         " to ", newVM.name, " - ", newVM.isContained)
+                    ings[idx] = .ingredient(row: row, viewModel: newVM)
+                    return [SectionModel(items: ings)]
+                })
+                .do(onNext: { observer.onNext($0) })
+                .subscribe()
+
+            return disp
         }
-        items.append(contentsOf: vms)
 
         // Add pizza to cart.
         input.addEvent
-            .withLatestFrom(cart) { $1 }
+            .withLatestFrom(Observable.combineLatest(cart, _pizza)) { (cart: $1.0, pizza: $1.1) }
             .map({
-                var newCart = $0
-                newCart.add(pizza: self._pizza)
+                var newCart = $0.cart
+                newCart.add(pizza: $0.pizza)
                 return newCart
             })
             .bind(to: cart)
             .disposed(by: _bag)
 
-        let sum = _pizza.ingredients.reduce(0.0, { $0 + $1.price })
+//        // Toggle ingredient.
+//        input.selected
+//            .map({ self._ingredients[$0 - 1]}
+
+        let title = _pizza
+            .map({ $0.name == "sketch" ? "CREATE A PIZZA" : $0.name.uppercased() })
+            .asDriver(onErrorJustReturn: "")
+
+        let sum = (try? _pizza.value().ingredients.reduce(0.0, { $0 + $1.price })) ?? 0
         let cartText = "ADD TO CART ($\(sum))"
-        return Output(title: Driver.just(_pizza.name.uppercased()),
-                      tableData: Driver.just([SectionModel(items: items)]),
+        return Output(title: title,
+                      tableData: models.asDriver(onErrorJustReturn: []),
                       cartText: Driver.just(cartText),
                       showAdded: input.addEvent.asDriver(onErrorJustReturn: ()))
+    }
+
+    private func _createItems() -> [SectionItem] {
+        func isContained(_ ingredient: Domain.Ingredient) -> Bool {
+            return (try? _pizza.value().ingredients.contains { $0.id == ingredient.id }) ?? false
+        }
+
+        var items: [SectionItem] = [.header(viewModel: IngredientsHeaderCellViewModel(image: _image))]
+        let vms = _ingredients.enumerated().map { ing -> SectionItem in
+            .ingredient(
+                row: 1 + ing.offset,
+                viewModel: IngredientsItemCellViewModel(
+                    name: ing.element.name,
+                    priceText: format(price: ing.element.price),
+                    isContained: isContained(ing.element)
+                )
+            )
+        }
+        items.append(contentsOf: vms)
+        return items
     }
 }
 
@@ -79,14 +122,41 @@ extension IngredientsViewModel {
 
     enum SectionItem {
         case header(viewModel: IngredientsHeaderCellViewModel)
-        case ingredient(viewModel: IngredientsItemCellViewModel)
+        case ingredient(row: Int, viewModel: IngredientsItemCellViewModel)
     }
 }
 
-extension IngredientsViewModel.SectionModel: SectionModelType {
+extension IngredientsViewModel.SectionModel: AnimatableSectionModelType {
     typealias Item = IngredientsViewModel.SectionItem
 
-    init(original: IngredientsViewModel.SectionModel, items: [Item]) {
+    var identity: Int { return 0 }
+
+    init(original: IngredientsViewModel.SectionModel, items: [IngredientsViewModel.SectionItem]) {
+        self = original
         self.items = items
+    }
+}
+
+extension IngredientsViewModel.SectionItem: IdentifiableType, Equatable {
+    var identity: Int {
+        switch self {
+        case .header:
+            return 0
+        case let .ingredient(row, _):
+            return row
+        }
+    }
+
+    var unique: Bool {
+        switch self {
+        case .header:
+            return false
+        case let .ingredient(_, viewModel):
+            return viewModel.isContained
+        }
+    }
+
+    static func ==(lhs: IngredientsViewModel.SectionItem, rhs: IngredientsViewModel.SectionItem) -> Bool {
+        return lhs.identity == rhs.identity && lhs.unique == rhs.unique
     }
 }

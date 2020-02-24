@@ -65,18 +65,19 @@ final class IngredientsViewController: UIViewController {
 private extension IngredientsViewController {
     func _bind() {
         let out = _viewModel.transform(
-            input: IngredientsViewModel.Input(addEvent: addTap.rx.event.map { _ in () })
+            input: IngredientsViewModel.Input(selected: tableView.rx.itemSelected.map { $0.row },
+                                              addEvent: addTap.rx.event.map { _ in () })
         )
 
         out.title
             .drive(rx.title)
             .dispose()
 
-        let dataSource = RxTableViewSectionedReloadDataSource<SectionModel>(configureCell: { ds, tv, ip, _ in
+        let dataSource = RxTableViewSectionedAnimatedDataSource<SectionModel>(configureCell: { ds, tv, ip, _ in
             switch ds[ip] {
             case let .header(viewModel):
                 return tv.createCell(IngredientsHeaderTableViewCell.self, viewModel, ip)
-            case let .ingredient(viewModel):
+            case let .ingredient(_, viewModel):
                 return tv.createCell(IngredientsItemTableViewCell.self, viewModel, ip)
             }
         })
