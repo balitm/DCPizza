@@ -35,6 +35,10 @@ public struct Cart {
         pizzas = []
     }
 
+    public var isEmpty: Bool {
+        pizzas.isEmpty && drinks.isEmpty
+    }
+
     public func totalPrice() -> Double {
         let pizzaPrice = pizzas.reduce(0.0) {
             return $0 + $1.ingredients.reduce(basePrice) {

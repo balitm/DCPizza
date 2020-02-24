@@ -39,7 +39,7 @@ extension UI {
             assert(pizzaIds.count == pizzas.count)
         }
 
-        public mutating func add(drink: Domain.Drink) {
+        mutating func add(drink: Domain.Drink) {
             _ids.append(Cart._additionNumber)
             _domainCart.add(drink: drink)
             Cart._additionNumber += 1
@@ -47,18 +47,20 @@ extension UI {
             assert(pizzaIds.count == pizzas.count)
         }
 
-        public mutating func remove(at index: Int) {
+        mutating func remove(at index: Int) {
             _ids.remove(at: index)
             _domainCart.remove(at: index)
             assert(drinkIds.count == drinks.count)
             assert(pizzaIds.count == pizzas.count)
         }
 
-        public mutating func empty() {
+        mutating func empty() {
             _domainCart.empty()
             _ids = []
             Cart._additionNumber = 0
         }
+
+        var isEmpty: Bool { _domainCart.isEmpty }
 
         public func totalPrice() -> Double {
             return _domainCart.totalPrice()

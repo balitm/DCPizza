@@ -18,6 +18,7 @@ class CartViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var checkoutTap: UITapGestureRecognizer!
     @IBOutlet weak var drinksButton: UIBarButtonItem!
+    @IBOutlet weak var checkoutLabel: UILabel!
 
     private var _navigator: Navigator!
     private var _viewModel: CartViewModel!
@@ -102,6 +103,14 @@ private extension CartViewController {
         out.showSuccess
             .drive(onNext: { [unowned self] _ in
                 self._navigator.showSuccess()
+            })
+            .disposed(by: _bag)
+
+        // Enable checkout.
+        out.canCheckout
+            .drive(onNext: { [unowned self] in
+                self.checkoutTap.isEnabled = $0
+                self.checkoutLabel.alpha = $0 ? 1.0 : 0.5
             })
             .disposed(by: _bag)
     }

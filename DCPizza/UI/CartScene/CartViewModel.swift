@@ -35,6 +35,7 @@ struct CartViewModel: ViewModelType {
         let tableData: Driver<[SectionModel]>
         let showSuccess: Driver<Void>
         let showDrinks: Driver<DrinksData>
+        let canCheckout: Driver<Bool>
     }
 
     var resultCart: Observable<UI.Cart> { cart.asObservable().skip(1) }
@@ -107,12 +108,17 @@ struct CartViewModel: ViewModelType {
             .map({ [drinks = _drinks] in ($0, drinks) })
             .asDriver(onErrorDriveWith: Driver<DrinksData>.never())
 
+        let canCheckout = cart
+            .map({ !$0.isEmpty })
+            .asDriver(onErrorJustReturn: false)
+
         return Output(
             tableData: models.asDriver(onErrorJustReturn: []),
             showSuccess: checkout
                 .map({ _ in () })
                 .asDriver(onErrorJustReturn: ()),
-            showDrinks: showDrinks
+            showDrinks: showDrinks,
+            canCheckout: canCheckout
         )
     }
 }
