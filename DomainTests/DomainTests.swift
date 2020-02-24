@@ -270,7 +270,7 @@ class DomainTests: XCTestCase {
     override func tearDown() {}
 
     func testNetwork() {
-        let useCase = RepositoryNetworkUseCaseProvider().makeNetworkUseCase()
+        let useCase = RepositoryUseCaseProvider().makeNetworkUseCase()
         useCase.getIngredients()
             .subscribe()
             .disposed(by: _bag)
@@ -306,7 +306,7 @@ class DomainTests: XCTestCase {
     func testCheckout() {
         guard initData.drinks.count >= 2 && initData.pizzas.pizzas.count >= 2 else { return }
 
-        let useCase = RepositoryNetworkUseCaseProvider().makeNetworkUseCase()
+        let useCase = RepositoryUseCaseProvider().makeNetworkUseCase()
         let cart = testCart!
 
         let expectation = XCTestExpectation(description: "checkout")
@@ -341,7 +341,7 @@ class DomainTests: XCTestCase {
         do {
             let config = _realmConfig
             let realm = try Realm.init(configuration: config)
-            let container = Container(realm: realm)
+            let container = DS.Container(realm: realm)
 
             // Save the btest cart.
             try container.write {
@@ -355,7 +355,9 @@ class DomainTests: XCTestCase {
             }
 
             // Delete from DB.
-            try container.delete(DS.Cart.self)
+            try container.write({
+                $0.delete(DS.Cart.self)
+            })
 
             // Compare.
             let converted = dCart.asDomain(with: initData.ingredients, drinks: initData.drinks)

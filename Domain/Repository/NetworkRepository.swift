@@ -17,16 +17,11 @@ protocol RepositoryNetworkProtocol {
     func checkout(cart: DS.Cart) -> Observable<Void>
 }
 
-struct NetworkRepository: RepositoryNetworkProtocol {
-    private let _container: Container?
+struct NetworkRepository: RepositoryNetworkProtocol, DatabaseContainerProtocol {
+    let container: DS.Container?
 
     init() {
-        do {
-            _container = try Container()
-        } catch {
-            DLog("# DB init failed.")
-            _container = nil
-        }
+        container = NetworkRepository.initContainer()
     }
 
     func getInitData() -> Observable<InitData> {
@@ -34,10 +29,9 @@ struct NetworkRepository: RepositoryNetworkProtocol {
                                      API.GetIngredients().rx.perform(),
                                      API.GetDrinks().rx.perform(),
                                      resultSelector: { (pizzas: $0, ingredients: $1, drinks: $2) })
-            .map({ tuple -> InitData in
+            .map({ [container] tuple -> InitData in
                 let ingredients = tuple.ingredients.sorted { $0.name < $1.name }
-                let container = try Container()
-                let dsCart = container.values(DS.Cart.self).first ?? DS.Cart(pizzas: [], drinks: [])
+                let dsCart = container?.values(DS.Cart.self).first ?? DS.Cart(pizzas: [], drinks: [])
                 var cart = dsCart.asDomain(with: ingredients, drinks: tuple.drinks)
                 cart.basePrice = tuple.pizzas.basePrice
 
@@ -59,20 +53,14 @@ struct NetworkRepository: RepositoryNetworkProtocol {
 
     func checkout(cart: DS.Cart) -> Observable<Void> {
         API.Checkout(pizzas: cart.pizzas, drinks: cart.drinks).rx.perform()
-            .do(onNext: {
-                try? Container().delete(DS.Cart.self)
+            .do(onNext: { [weak container = container] in
+                do {
+                    try container?.write {
+                    $0.delete(DS.Cart.self)
+                    }
+                } catch {
+                    DLog("# Database write failed with: ", error)
+                }
             })
-    }
-
-    private func _execute(_ block: (Container) throws -> Void) {
-        guard let container = _container else {
-            DLog("# No usable DB container.")
-            return
-        }
-        do {
-            try block(container)
-        } catch {
-            DLog("# DB operation failed.")
-        }
     }
 }

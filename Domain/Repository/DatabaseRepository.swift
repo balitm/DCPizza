@@ -13,41 +13,27 @@ protocol RepositoryDatabaseProtocol {
     func save(cart: DS.Cart )
 }
 
-struct DatabaseRepository: RepositoryDatabaseProtocol {
-    private let _container: Container?
+struct DatabaseRepository: RepositoryDatabaseProtocol, DatabaseContainerProtocol {
+    let container: DS.Container?
 
     init() {
-        do {
-            _container = try Container()
-        } catch {
-            DLog("# DB init failed.")
-            _container = nil
-        }
+        container = DatabaseRepository.initContainer()
     }
 
     func deleteCart() {
-        _execute {
-            try $0.delete(DS.Cart.self)
+        execute {
+            try $0.write({
+                $0.delete(DS.Cart.self)
+            })
         }
     }
 
     func save(cart: DS.Cart) {
-        _execute {
+        execute {
             try $0.write {
+                $0.delete(DS.Cart.self)
                 $0.add(cart)
             }
-        }
-    }
-
-    private func _execute(_ block: (Container) throws -> Void) {
-        guard let container = _container else {
-            DLog("# No usable DB container.")
-            return
-        }
-        do {
-            try block(container)
-        } catch {
-            DLog("# DB operation failed.")
         }
     }
 }

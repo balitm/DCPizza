@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		290CC7D42403DAE900A17BBB /* DatabaseContainerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 290CC7D32403DAE900A17BBB /* DatabaseContainerProtocol.swift */; };
 		2941A3F423FAF0DC005838BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A3F323FAF0DC005838BA /* AppDelegate.swift */; };
 		2941A3FB23FAF0DC005838BA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2941A3F923FAF0DC005838BA /* Main.storyboard */; };
 		2941A3FD23FAF0DE005838BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2941A3FC23FAF0DE005838BA /* Assets.xcassets */; };
@@ -142,6 +143,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		290CC7D32403DAE900A17BBB /* DatabaseContainerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseContainerProtocol.swift; sourceTree = "<group>"; };
 		2941A3F023FAF0DC005838BA /* DCPizza.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DCPizza.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2941A3F323FAF0DC005838BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2941A3FA23FAF0DC005838BA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -384,6 +386,7 @@
 				294301C22402C5BD00E5F993 /* Entities */,
 				294301C72402C89D00E5F993 /* Persistable.swift */,
 				294301C92402CCD000E5F993 /* RealmMapping.swift */,
+				290CC7D32403DAE900A17BBB /* DatabaseContainerProtocol.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -979,6 +982,7 @@
 				294ACFA323FBFD640027D0D4 /* RepositoryNetworkUseCase.swift in Sources */,
 				294ACFC123FC13950027D0D4 /* GetPizzas.swift in Sources */,
 				294ACFE023FC461E0027D0D4 /* Pizza.swift in Sources */,
+				290CC7D42403DAE900A17BBB /* DatabaseContainerProtocol.swift in Sources */,
 				294ACFE123FC461E0027D0D4 /* Cart.swift in Sources */,
 				294301C42402C62200E5F993 /* RMPizza.swift in Sources */,
 				294ACF9C23FBFC3F0027D0D4 /* RequestBase.swift in Sources */,

@@ -19,7 +19,7 @@ class DCPizzaTests: XCTestCase {
     lazy var initialSetupFinished: XCTestExpectation = {
         let initialSetupFinished = expectation(description: "initial setup finished")
 
-        let useCase = RepositoryNetworkUseCaseProvider().makeNetworkUseCase()
+        let useCase = RepositoryUseCaseProvider().makeNetworkUseCase()
         self.useCase = useCase
         useCase.getInitData()
             .subscribe(onNext: { [unowned self] in
