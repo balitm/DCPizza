@@ -41,7 +41,7 @@ class DCPizzaTests: XCTestCase {
     override func tearDown() {}
 
     func testCartSlices() {
-        var cart = initData.cart.asUI()
+        var cart = Cart(pizzas: [], drinks: [], basePrice: 0).asUI()
         guard initData.drinks.count >= 2 && initData.pizzas.pizzas.count >= 2 else { return }
 
         XCTAssertEqual(cart.pizzaIds.count, 0)

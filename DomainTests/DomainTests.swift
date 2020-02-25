@@ -304,8 +304,6 @@ class DomainTests: XCTestCase {
     }
 
     func testCheckout() {
-        guard initData.drinks.count >= 2 && initData.pizzas.pizzas.count >= 2 else { return }
-
         let useCase = RepositoryUseCaseProvider().makeNetworkUseCase()
         let cart = testCart!
 
