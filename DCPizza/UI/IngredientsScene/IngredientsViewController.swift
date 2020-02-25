@@ -10,14 +10,16 @@ import UIKit
 import Domain
 import RxSwift
 import RxCocoa
+import RxSwiftExt
 import RxDataSources
 
 final class IngredientsViewController: UIViewController {
     typealias SectionModel = IngredientsViewModel.SectionModel
+    typealias FooterEvent = IngredientsViewModel.FooterEvent
 
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var showLayout: NSLayoutConstraint!
-    @IBOutlet weak var hideLayout: NSLayoutConstraint!
+    @IBOutlet weak var showConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideConstraint: NSLayoutConstraint!
     @IBOutlet weak var addTap: UITapGestureRecognizer!
     @IBOutlet weak var cartLabel: UILabel!
 
@@ -55,7 +57,6 @@ final class IngredientsViewController: UIViewController {
             })
             .disposed(by: _bag)
 
-        _footerTimer()
         _bind()
     }
 }
@@ -94,26 +95,40 @@ private extension IngredientsViewController {
                 self._navigator.showAdded()
             })
             .disposed(by: _bag)
-    }
 
-    func _footerTimer() {
-        rx.viewDidAppear
-            .flatMap({ _ in
-                Observable<Int>.timer(.seconds(3), scheduler: MainScheduler.instance)
-            })
-            .subscribe(onNext: { [unowned self] _ in
-                self._hideFooter()
-            })
+        // Pause footer events until view appeared.
+        let pauser = rx.viewDidAppear
+            .map { _ in true }
+
+        out.footerEvent.asObservable()
+            .distinctUntilChanged()
+            .pausableBuffered(pauser, limit: 1)
+            .bind(to: rx._footer)
             .disposed(by: _bag)
     }
 
-    func _hideFooter() {
+    func _displayFooter(_ event: FooterEvent) {
         guard let parent = view else { return }
         parent.layoutIfNeeded()
-        hideLayout.priority = UILayoutPriority.defaultHigh
-        showLayout.priority = UILayoutPriority.defaultLow
+        switch event {
+        case .show:
+            hideConstraint.priority = UILayoutPriority.defaultLow
+            showConstraint.priority = UILayoutPriority.defaultHigh
+        case .hide:
+            hideConstraint.priority = UILayoutPriority.defaultHigh
+            showConstraint.priority = UILayoutPriority.defaultLow
+        }
         UIView.animate(withDuration: 0.3, animations: {
             parent.layoutIfNeeded()
         })
+    }
+}
+
+private extension Reactive where Base: IngredientsViewController {
+    /// Bindable sink for `_footer` property.
+    var _footer: Binder<IngredientsViewController.FooterEvent> {
+        return Binder(base) { vc, event in
+            vc._displayFooter(event)
+        }
     }
 }

@@ -14,6 +14,22 @@ public struct Pizza {
     public let ingredients: [Ingredient]
     public let imageUrl: URL?
 
+    public init(copy other: Pizza, with ingredients: [Ingredient]) {
+        name = other.name
+        imageUrl = other.imageUrl
+        self.ingredients = ingredients
+    }
+
+    init(
+        name: String,
+        ingredients: [Ingredient],
+        imageUrl: URL?
+    ) {
+        self.name = name
+        self.ingredients = ingredients
+        self.imageUrl = imageUrl
+    }
+
     public func price(from basePrice: Double) -> Double {
         let price = ingredients.reduce(basePrice) {
             $0 + $1.price

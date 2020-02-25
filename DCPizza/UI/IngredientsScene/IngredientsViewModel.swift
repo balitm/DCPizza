@@ -9,11 +9,19 @@
 import Foundation
 import Domain
 import RxSwift
+import RxSwiftExt
+import RxRelay
 import RxDataSources
 import struct RxCocoa.Driver
 
 struct IngredientsViewModel: ViewModelType {
+    /// Ingredient with selectcion flag.
     typealias Selected = (isOn: Bool, ingredient: Ingredient)
+
+    /// Event to drive the buy footer of the controller.
+    enum FooterEvent {
+        case show, hide
+    }
 
     struct Input {
         let selected: Observable<Int>
@@ -25,49 +33,33 @@ struct IngredientsViewModel: ViewModelType {
         let tableData: Driver<[SectionModel]>
         let cartText: Driver<String>
         let showAdded: Driver<Void>
+        let footerEvent: Driver<FooterEvent>
     }
 
     var resultCart: Observable<UI.Cart> { cart.asObservable().skip(1) }
-    private let _pizza: BehaviorSubject<Pizza>
+    let cart: BehaviorSubject<UI.Cart>
+    private let _pizza: Pizza
     private let _image: UIImage?
     private let _ingredients: [Ingredient]
-    let cart: BehaviorSubject<UI.Cart>
     private let _bag = DisposeBag()
 
     init(pizza: Pizza, image: UIImage?, ingredients: [Ingredient], cart: UI.Cart) {
-        _pizza = BehaviorSubject(value: pizza)
+        _pizza = pizza
         _image = image
         _ingredients = ingredients
         self.cart = BehaviorSubject(value: cart)
     }
 
     func transform(input: Input) -> Output {
-        let items = _createSels()
-
         // Create selections observable.
-        let sels = Observable<[Selected]>.create { observer in
-            observer.onNext(items)
-            var ings = items
-
-            let disp = input.selected
-                .filter({ $0 >= 1 })
-                .map({ i -> [Selected] in
-                    let idx = i - 1
-                    let item = ings[idx]
-                    ings[idx] = (!item.isOn, item.ingredient)
-                    DLog("replace at ", idx, " ", item.ingredient.name, " - ", item.isOn,
-                         " to ", !item.isOn)
-                    return ings
-                })
-                .do(onNext: { observer.onNext($0) })
-                .subscribe()
-
-            return disp
-        }
-        .share()
+        let selecteds = _makeSelectionObservable(
+            input.selected
+                .filterMap({ $0 >= 1 ? .map($0 - 1) : .ignore })
+        )
+            .share(replay: 1)
 
         // Table data.
-        let tableData = sels
+        let tableData = selecteds
             .map({ sels -> [SectionModel] in
                 let items = sels.enumerated().map { pair -> SectionItem in
                     let offset = pair.offset
@@ -84,32 +76,54 @@ struct IngredientsViewModel: ViewModelType {
             })
             .asDriver(onErrorJustReturn: [])
 
+        // Selected ingredients.
+        let selectedIngredients = selecteds
+            .map { $0.compactMap { $0.isOn ? $0.ingredient : nil } }
+            .share(replay: 1)
+
         // Add pizza to cart.
         input.addEvent
-            .withLatestFrom(Observable.combineLatest(cart, _pizza)) { (cart: $1.0, pizza: $1.1) }
+            .withLatestFrom(Observable.combineLatest(cart, selectedIngredients)) { (cart: $1.0, ingredients: $1.1) }
             .map({
                 var newCart = $0.cart
-                newCart.add(pizza: $0.pizza)
+                let pizza = Pizza(copy: self._pizza, with: $0.ingredients)
+                newCart.add(pizza: pizza)
                 return newCart
             })
             .bind(to: cart)
             .disposed(by: _bag)
 
-        let title = _pizza
-            .map({ $0.name == "scratch" ? "CREATE A PIZZA" : $0.name.uppercased() })
+        // Title for the scene.
+        let title = Driver.just(_pizza)
+            .map({ $0.ingredients.isEmpty ? "CREATE A PIZZA" : $0.name.uppercased() })
             .asDriver(onErrorJustReturn: "")
 
-        let sum = (try? _pizza.value().ingredients.reduce(0.0, { $0 + $1.price })) ?? 0
-        let cartText = "ADD TO CART ($\(sum))"
+        let cartText = selectedIngredients
+            .map({ ings -> String in
+                // TODO: sketch suggest to show only ingredient prices
+                //       but + cart.basePrice would be better IMHO.
+                let sum = ings.reduce(0.0, { $0 + $1.price })
+                return "ADD TO CART (\(format(price: sum)))"
+            })
+            .asDriver(onErrorJustReturn: "")
+
+        let footerEvent = _makeFooterObservable(selecteds.map { _ in () })
+            .asDriver(onErrorJustReturn: .hide)
+
         return Output(title: title,
                       tableData: tableData,
-                      cartText: Driver.just(cartText),
-                      showAdded: input.addEvent.asDriver(onErrorJustReturn: ()))
+                      cartText: cartText,
+                      showAdded: input.addEvent.asDriver(onErrorJustReturn: ()),
+                      footerEvent: footerEvent
+        )
     }
+}
 
-    private func _createSels() -> [Selected] {
+private extension IngredientsViewModel {
+    /// Create array of Ingredients with selectcion flag.
+    func _createSelecteds() -> [Selected] {
         func isContained(_ ingredient: Domain.Ingredient) -> Bool {
-            return (try? _pizza.value().ingredients.contains { $0.id == ingredient.id }) ?? false
+            return _pizza.ingredients.contains { $0.id == ingredient.id }
         }
 
         let sels = _ingredients.map { ing -> Selected in
@@ -117,7 +131,55 @@ struct IngredientsViewModel: ViewModelType {
         }
         return sels
     }
+
+    /// Create selections observable.
+    func _makeSelectionObservable(_ selected: Observable<Int>) -> Observable<[Selected]> {
+        let items = _createSelecteds()
+
+        return Observable<[Selected]>.create { observer in
+            observer.onNext(items)
+            var ings = items
+
+            let disposable = selected
+                .map({ idx -> [Selected] in
+                    let item = ings[idx]
+                    ings[idx] = (!item.isOn, item.ingredient)
+                    return ings
+                })
+                .do(onNext: { observer.onNext($0) })
+                .subscribe()
+
+            return disposable
+        }
+    }
+
+    /// Create footer event observable.
+    func _makeFooterObservable(_ observable: Observable<Void>) -> Observable<FooterEvent> {
+        return Observable<FooterEvent>.create { [unowned bag = _bag] observer in
+            var timerBag = DisposeBag()
+            let footerEvent = PublishRelay<FooterEvent>()
+
+            let disposable = footerEvent
+                .bind(to: observer)
+
+            observable
+                .subscribe(onNext: { _ in
+                    footerEvent.accept(.show)
+
+                    timerBag = DisposeBag()
+                    Observable<Int>.timer(.seconds(3), scheduler: MainScheduler.instance)
+                        .map { _ in FooterEvent.hide }
+                        .bind(to: footerEvent)
+                        .disposed(by: timerBag)
+                })
+                .disposed(by: bag)
+
+            return disposable
+        }
+    }
 }
+
+// MARK: - Table model types
 
 extension IngredientsViewModel {
     struct SectionModel {

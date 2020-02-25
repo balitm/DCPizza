@@ -285,7 +285,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fUy-qr-Hoa">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="617"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="IngredientsHeaderTableViewCell" id="NzG-on-dnA" customClass="IngredientsHeaderTableViewCell" customModule="DCPizza" customModuleProvider="target">
@@ -365,7 +365,7 @@
                                 </prototypes>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lqC-uz-9jV" userLabel="Footer View">
-                                <rect key="frame" x="0.0" y="617" width="375" height="90"/>
+                                <rect key="frame" x="0.0" y="667" width="375" height="90"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ADD TO CART" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l7j-1w-iXY">
                                         <rect key="frame" x="16" y="15" width="343" height="19.5"/>
@@ -393,8 +393,8 @@
                             <constraint firstItem="lqC-uz-9jV" firstAttribute="top" secondItem="fUy-qr-Hoa" secondAttribute="bottom" id="Bj8-FS-ozD"/>
                             <constraint firstItem="fUy-qr-Hoa" firstAttribute="leading" secondItem="RcJ-vn-fIr" secondAttribute="leading" id="I6Y-yD-SbK"/>
                             <constraint firstItem="lqC-uz-9jV" firstAttribute="leading" secondItem="RcJ-vn-fIr" secondAttribute="leading" id="abz-zf-6Ns"/>
-                            <constraint firstItem="lqC-uz-9jV" firstAttribute="top" secondItem="sUg-uC-wZX" secondAttribute="bottom" priority="250" id="ajO-84-OjG"/>
-                            <constraint firstItem="lqC-uz-9jV" firstAttribute="top" secondItem="RcJ-vn-fIr" secondAttribute="bottom" priority="750" constant="-50" id="eDn-bO-yjh"/>
+                            <constraint firstItem="lqC-uz-9jV" firstAttribute="top" secondItem="sUg-uC-wZX" secondAttribute="bottom" priority="750" id="ajO-84-OjG"/>
+                            <constraint firstItem="lqC-uz-9jV" firstAttribute="top" secondItem="RcJ-vn-fIr" secondAttribute="bottom" priority="250" constant="-50" id="eDn-bO-yjh"/>
                             <constraint firstItem="RcJ-vn-fIr" firstAttribute="trailing" secondItem="fUy-qr-Hoa" secondAttribute="trailing" id="fle-K2-fvQ"/>
                             <constraint firstItem="fUy-qr-Hoa" firstAttribute="top" secondItem="sUg-uC-wZX" secondAttribute="top" id="hqf-Vp-bkr"/>
                         </constraints>
@@ -404,8 +404,8 @@
                     <connections>
                         <outlet property="addTap" destination="ZKB-ok-YTf" id="CNZ-oh-gTf"/>
                         <outlet property="cartLabel" destination="l7j-1w-iXY" id="Lf3-wc-JJ6"/>
-                        <outlet property="hideLayout" destination="ajO-84-OjG" id="njX-V4-PS4"/>
-                        <outlet property="showLayout" destination="eDn-bO-yjh" id="lYV-YX-YDL"/>
+                        <outlet property="hideConstraint" destination="ajO-84-OjG" id="njX-V4-PS4"/>
+                        <outlet property="showConstraint" destination="eDn-bO-yjh" id="lYV-YX-YDL"/>
                         <outlet property="tableView" destination="fUy-qr-Hoa" id="psa-MG-Clt"/>
                     </connections>
                 </viewController>
