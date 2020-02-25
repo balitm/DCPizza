@@ -26,9 +26,9 @@ extension DataSource {
 }
 
 extension DataSource.Pizzas: DomainConvertibleType {
-    func asDomain(with ingredients: [Ingredient]) -> Domain.Pizzas {
+    func asDomain(with ingredients: [Ingredient], drinks: [DS.Drink]) -> Domain.Pizzas {
         let dPizzas = pizzas.map { pizza -> Domain.Pizza in
-            pizza.asDomain(with: ingredients)
+            pizza.asDomain(with: ingredients, drinks: drinks)
         }
         return Domain.Pizzas(pizzas: dPizzas, basePrice: basePrice)
     }

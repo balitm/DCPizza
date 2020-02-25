@@ -21,20 +21,9 @@ struct MenuCellViewModel {
 
     init(basePrice: Double, pizza: Pizza) {
         nameText = pizza.name
-        let price = basePrice + pizza.ingredients.reduce(0.0) {
-            $0 + $1.price
-        }
-        priceText = "$\(price)"
-        var iNames = ""
-        var it = pizza.ingredients.makeIterator()
-        if let first = it.next() {
-            iNames = first.name
-            while let ingredient = it.next() {
-                iNames += ", " + ingredient.name
-            }
-            iNames += "."
-        }
-        ingredientsText = iNames
+        let price = pizza.price(from: basePrice)
+        priceText = format(price: price)
+        ingredientsText = pizza.ingredientNames()
         imageUrl = pizza.imageUrl
     }
 }

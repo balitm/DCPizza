@@ -104,8 +104,13 @@ extension API {
         func handleError(_ error: Error) {
             guard let handlers: _HandlerBlocks<Model> = _removeHandlers(key: handlerKey) else { return }
 
-            let isProcessed = DispatchQueue.main.sync {
-                handlers.errorBlock(error)
+            let isProcessed: Bool
+            if !Thread.isMainThread {
+                isProcessed = DispatchQueue.main.sync {
+                    handlers.errorBlock(error)
+                }
+            } else {
+                isProcessed = handlers.errorBlock(error)
             }
 
             if !isProcessed {

@@ -14,21 +14,23 @@ protocol EntityModel: Decodable {
 
 extension Array: EntityModel where Element: Decodable {}
 
-struct ModelBase<Entity: EntityModel>: ModelProtocol {
-    typealias Result = Entity
+extension API {
+    struct ModelBase<Entity: EntityModel>: ModelProtocol {
+        typealias Result = Entity
 
-    init() {}
+        init() {}
 
-    func process(json: Data) throws -> Result {
-        // DLog("Recved json data:\n", json)
+        func process(json: Data) throws -> Result {
+            // DLog("Recved json data:\n", json)
 
-        let decoder = JSONDecoder()
-        do {
-            let object = try decoder.decode(Result.self, from: json)
-            return object
-        } catch {
-            DLog("Decoding error: ", error)
+            let decoder = JSONDecoder()
+            do {
+                let object = try decoder.decode(Result.self, from: json)
+                return object
+            } catch {
+                DLog("Decoding error: ", error)
+            }
+            return Result()
         }
-        return Result()
     }
 }

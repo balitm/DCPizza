@@ -16,8 +16,11 @@ protocol Navigator {
     func showIngredients(of pizza: Pizza,
                          image: UIImage?,
                          ingredients: [Ingredient],
-                         cart: Cart) -> Observable<Cart>
+                         cart: UI.Cart) -> Observable<UI.Cart>
+    func showCart(_ cart: UI.Cart, drinks: [Drink]) -> Observable<UI.Cart>
+    func showDrinks(cart: UI.Cart, drinks: [Drink]) -> Observable<UI.Cart>
     func showAdded()
+    func showSuccess()
 }
 
 final class DefaultNavigator: Navigator {
@@ -33,11 +36,30 @@ final class DefaultNavigator: Navigator {
     func showIngredients(of pizza: Pizza,
                          image: UIImage?,
                          ingredients: [Ingredient],
-                         cart: Cart) -> Observable<Cart> {
+                         cart: UI.Cart) -> Observable<UI.Cart> {
         let vm = IngredientsViewModel(pizza: pizza, image: image, ingredients: ingredients, cart: cart)
         let vc = IngredientsViewController.create(with: self, viewModel: vm)
         _navigationController.pushViewController(vc, animated: true)
-        return vm.cart
+        return vm.resultCart
+    }
+
+    func showCart(_ cart: UI.Cart, drinks: [Drink]) -> Observable<UI.Cart> {
+        let vm = CartViewModel(cart: cart, drinks: drinks)
+        let vc = CartViewController.create(with: self, viewModel: vm)
+        _navigationController.pushViewController(vc, animated: true)
+        return vm.resultCart
+    }
+
+    func showDrinks(cart: UI.Cart, drinks: [Drink]) -> Observable<UI.Cart> {
+        let vm = DrinksTableViewModel(drinks: drinks, cart: cart)
+        let vc = DrinksTableViewController.create(with: self, viewModel: vm)
+        _navigationController.pushViewController(vc, animated: true)
+        return vm.resultCart
+    }
+
+    func showSuccess() {
+        let vc = SuccessViewController.create(with: storyboard)
+        _navigationController.present(vc, animated: true)
     }
 
     func showAdded() {

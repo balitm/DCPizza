@@ -16,15 +16,20 @@ extension DataSource {
 }
 
 extension DataSource.Cart: DomainConvertibleType {
-    func asDomain(with ingredients: [DS.Ingredient]) -> Domain.Cart {
-        Domain.Cart(pizzas: pizzas.map { $0.asDomain(with: ingredients) },
-                    drinks: drinks)
+    func asDomain(with ingredients: [DS.Ingredient], drinks: [DS.Drink]) -> Domain.Cart {
+        let related = self.drinks.compactMap { id in
+            drinks.first(where: { $0.id == id })
+        }
+        return Domain.Cart(
+            pizzas: pizzas.map { $0.asDomain(with: ingredients, drinks: drinks) },
+            drinks: related,
+            basePrice: 0.0)
     }
 }
 
 extension Domain.Cart: DSRepresentable {
     func asDataSource() -> DS.Cart {
         DS.Cart(pizzas: pizzas.map { $0.asDataSource() },
-                drinks: drinks)
+                drinks: drinks.map { $0.id })
     }
 }

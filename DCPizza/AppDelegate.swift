@@ -18,16 +18,22 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Setup UI tint colors.
-        let navigationBarAppearace = UINavigationBar.appearance()
-        navigationBarAppearace.tintColor = KColors.tint
-        navigationBarAppearace.barTintColor = KColors.barTint
-        // Change navigation item title color.
-        navigationBarAppearace.titleTextAttributes = [.font: UIFont.systemFont(ofSize: 17), .foregroundColor: KColors.tint]
-
         NetworkActivityIndicatorManager.shared.startDelay = 0.0
         NetworkActivityIndicatorManager.shared.isEnabled = true
-
         return true
+    }
+
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        _saveCart()
+    }
+
+    func applicationWillTerminate(_ application: UIApplication) {
+        _saveCart()
+    }
+
+    private func _saveCart() {
+        guard let nc = window?.rootViewController as? UINavigationController else { return }
+        guard let menuVC = nc.viewControllers.first as? MenuTableViewController else { return }
+        menuVC.saveCart()
     }
 }

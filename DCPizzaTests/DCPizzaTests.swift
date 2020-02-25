@@ -7,28 +7,148 @@
 //
 
 import XCTest
+import RxSwift
+@testable import Domain
 @testable import DCPizza
 
 class DCPizzaTests: XCTestCase {
+    private let _bag = DisposeBag()
+    var initData: InitData!
+    var useCase: NetworkUseCase!
+
+    lazy var initialSetupFinished: XCTestExpectation = {
+        let initialSetupFinished = expectation(description: "initial setup finished")
+
+        let useCase = RepositoryUseCaseProvider().makeNetworkUseCase()
+        self.useCase = useCase
+        useCase.getInitData()
+            .subscribe(onNext: { [unowned self] in
+                self.initData = $0
+            }, onDisposed: {
+                initialSetupFinished.fulfill()
+            })
+            .disposed(by: _bag)
+
+        return initialSetupFinished
+    }()
 
     override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        super.setUp()
+
+        wait(for: [initialSetupFinished], timeout: 30.0)
     }
 
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    override func tearDown() {}
+
+    func testCartSlices() {
+        var cart = Cart(pizzas: [], drinks: [], basePrice: 0).asUI()
+        guard initData.drinks.count >= 2 && initData.pizzas.pizzas.count >= 2 else { return }
+
+        XCTAssertEqual(cart.pizzaIds.count, 0)
+        XCTAssertEqual(cart.drinkIds.count, 0)
+
+        cart.add(drink: initData.drinks[0])
+        cart.add(drink: initData.drinks[1])
+        XCTAssertEqual(cart.pizzaIds.count, 0)
+        XCTAssertEqual(cart.drinkIds.count, 2)
+        XCTAssertEqual(cart.drinkIds, [0, 1])
+
+        cart.empty()
+        cart.add(pizza: initData.pizzas.pizzas[0])
+        cart.add(pizza: initData.pizzas.pizzas[1])
+        XCTAssertEqual(cart.pizzaIds.count, 2)
+        XCTAssertEqual(cart.drinkIds.count, 0)
+        XCTAssertEqual(cart.pizzaIds, [0, 1])
+
+        cart.empty()
+        cart.add(drink: initData.drinks[0])
+        cart.add(drink: initData.drinks[1])
+        cart.add(pizza: initData.pizzas.pizzas[0])
+        cart.add(pizza: initData.pizzas.pizzas[1])
+        XCTAssertEqual(cart.pizzaIds.count, 2)
+        XCTAssertEqual(cart.drinkIds.count, 2)
+        XCTAssertEqual(cart.pizzaIds, [2, 3])
+        XCTAssertEqual(cart.drinkIds, [0, 1])
     }
 
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testCartConversion() {
+        var cart = initData.cart.asUI()
+        guard initData.drinks.count >= 2 && initData.pizzas.pizzas.count >= 2 else { return }
+        cart.add(drink: initData.drinks[0])
+        cart.add(drink: initData.drinks[1])
+        cart.add(pizza: initData.pizzas.pizzas[0])
+        cart.add(pizza: initData.pizzas.pizzas[1])
+
+        let converted = cart
+            .asDomain()
+            .asDataSource()
+            .asDomain(with: initData.ingredients, drinks: initData.drinks)
+            .asUI()
+        DLog("converted:\n", converted.drinks.map { $0.id }, "\norig:\n", cart.drinks.map { $0.id })
+        let isConverted = converted.pizzas.map({ $0.name }) == cart.pizzas.map({ $0.name })
+            && converted.drinks.map { $0.id } == cart.drinks.map { $0.id }
+
+        XCTAssertTrue(isConverted)
     }
 
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    func testCartRemove() {
+        var cart = initData.cart.asUI()
+        guard initData.drinks.count >= 2 && initData.pizzas.pizzas.count >= 2 else { return }
+        cart.add(drink: initData.drinks[0])
+        cart.add(drink: initData.drinks[1])
+        cart.add(pizza: initData.pizzas.pizzas[0])
+        cart.add(pizza: initData.pizzas.pizzas[1])
+        cart.remove(at: 1)
+        cart.remove(at: 1)
+        XCTAssertEqual(cart.pizzas.count, 1)
+        XCTAssertEqual(cart.drinks.count, 1)
+        XCTAssertEqual(cart.pizzas[0].name, initData.pizzas.pizzas[0].name)
+        XCTAssertEqual(cart.drinks[0].id, initData.drinks[1].id)
+    }
+
+    func testCheckout() {
+        var cart = initData.cart.asUI()
+        guard initData.drinks.count >= 2 && initData.pizzas.pizzas.count >= 2 else { return }
+        cart.add(drink: initData.drinks[0])
+        cart.add(drink: initData.drinks[1])
+        cart.add(pizza: initData.pizzas.pizzas[0])
+        cart.add(pizza: initData.pizzas.pizzas[1])
+
+        do {
+            let container = try DS.Container()
+            try container.write {
+                $0.add(cart.asDomain().asDataSource())
+            }
+            XCTAssert(
+                container.values(DS.Cart.self).count != 0
+                    && container.values(DS.Pizza.self).count != 0
+            )
+
+            let expectation = XCTestExpectation(description: "checkout")
+
+            useCase.checkout(cart: cart.asDomain())
+                .subscribe(onNext: { _ in
+                    DLog("Checkout succeeded.")
+
+                    XCTAssert(true)
+                }, onError: { _ in
+                    XCTAssert(false)
+                }, onDisposed: {
+                    expectation.fulfill()
+                })
+                .disposed(by: _bag)
+
+            wait(for: [expectation], timeout: 30.0)
+
+            XCTAssert(
+                container.values(DS.Cart.self).count == 0
+                    && container.values(DS.Pizza.self).count == 0
+            )
+        } catch {
+            XCTAssert(false)
+            return
         }
-    }
 
+
+    }
 }

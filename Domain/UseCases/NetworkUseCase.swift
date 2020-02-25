@@ -13,4 +13,5 @@ public protocol NetworkUseCase {
     func getIngredients() -> Observable<[Ingredient]>
     func getDrinks() -> Observable<[Drink]>
     func getInitData() -> Observable<InitData>
+    func checkout(cart: Cart) -> Observable<Void>
 }
