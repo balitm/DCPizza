@@ -271,13 +271,19 @@ class DomainTests: XCTestCase {
 
     func testNetwork() {
         let useCase = RepositoryUseCaseProvider().makeNetworkUseCase()
-        useCase.getIngredients()
-            .subscribe()
+        let expectation = XCTestExpectation(description: "net")
+
+        Observable.zip(
+            useCase.getIngredients(),
+            useCase.getDrinks()
+        )
+            .subscribe(onDisposed: {
+                XCTAssert(true)
+                expectation.fulfill()
+            })
             .disposed(by: _bag)
 
-        useCase.getDrinks()
-            .subscribe()
-            .disposed(by: _bag)
+        wait(for: [expectation], timeout: 30.0)
     }
 
     func testPizzaConversion() {
@@ -355,6 +361,7 @@ class DomainTests: XCTestCase {
             // Delete from DB.
             try container.write({
                 $0.delete(DS.Cart.self)
+                $0.delete(DS.Pizza.self)
             })
 
             // Compare.

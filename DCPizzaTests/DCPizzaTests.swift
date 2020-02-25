@@ -113,19 +113,42 @@ class DCPizzaTests: XCTestCase {
         cart.add(drink: initData.drinks[1])
         cart.add(pizza: initData.pizzas.pizzas[0])
         cart.add(pizza: initData.pizzas.pizzas[1])
-        let expectation = XCTestExpectation(description: "checkout")
 
-        useCase.checkout(cart: cart.asDomain())
-            .subscribe(onNext: { _ in
-                DLog("Checkout succeeded.")
-                XCTAssert(true)
-            }, onError: { _ in
-                XCTAssert(false)
-            }, onDisposed: {
-                expectation.fulfill()
-            })
-            .disposed(by: _bag)
+        do {
+            let container = try DS.Container()
+            try container.write {
+                $0.add(cart.asDomain().asDataSource())
+            }
+            XCTAssert(
+                container.values(DS.Cart.self).count != 0
+                    && container.values(DS.Pizza.self).count != 0
+            )
 
-        wait(for: [expectation], timeout: 30.0)
+            let expectation = XCTestExpectation(description: "checkout")
+
+            useCase.checkout(cart: cart.asDomain())
+                .subscribe(onNext: { _ in
+                    DLog("Checkout succeeded.")
+
+                    XCTAssert(true)
+                }, onError: { _ in
+                    XCTAssert(false)
+                }, onDisposed: {
+                    expectation.fulfill()
+                })
+                .disposed(by: _bag)
+
+            wait(for: [expectation], timeout: 30.0)
+
+            XCTAssert(
+                container.values(DS.Cart.self).count == 0
+                    && container.values(DS.Pizza.self).count == 0
+            )
+        } catch {
+            XCTAssert(false)
+            return
+        }
+
+
     }
 }
