@@ -57,6 +57,7 @@ final class MenuTableViewController: UITableViewController {
             })
 
         let out = _viewModel.transform(input: MenuTableViewModel.Input(selected: selected,
+                                                                       scratch: navigationItem.rightBarButtonItem!.rx.tap.asObservable(),
                                                                        cart: navigationItem.leftBarButtonItem!.rx.tap.asObservable(),
                                                                        saveCart: _saveCart))
 

@@ -79,6 +79,7 @@ struct IngredientsViewModel: ViewModelType {
         // Selected ingredients.
         let selectedIngredients = selecteds
             .map { $0.compactMap { $0.isOn ? $0.ingredient : nil } }
+            .skipWhile({ $0.isEmpty })
             .share(replay: 1)
 
         // Add pizza to cart.
@@ -107,7 +108,7 @@ struct IngredientsViewModel: ViewModelType {
             })
             .asDriver(onErrorJustReturn: "")
 
-        let footerEvent = _makeFooterObservable(selecteds.map { _ in () })
+        let footerEvent = _makeFooterObservable(selectedIngredients.map { _ in () })
             .asDriver(onErrorJustReturn: .hide)
 
         return Output(title: title,

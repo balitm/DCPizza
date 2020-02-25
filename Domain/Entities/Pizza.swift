@@ -20,6 +20,12 @@ public struct Pizza {
         self.ingredients = ingredients
     }
 
+    public init() {
+        name = "Custom"
+        imageUrl = nil
+        ingredients = []
+    }
+    
     init(
         name: String,
         ingredients: [Ingredient],

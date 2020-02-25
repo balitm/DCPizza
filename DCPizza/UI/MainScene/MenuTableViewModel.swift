@@ -26,6 +26,7 @@ struct MenuTableViewModel: ViewModelType {
 
     struct Input {
         let selected: Observable<Selected>
+        let scratch: Observable<Void>
         let cart: Observable<Void>
         let saveCart: Observable<Void>
     }
@@ -77,7 +78,7 @@ struct MenuTableViewModel: ViewModelType {
 
         // Update cart.
         cartEvents
-            .withLatestFrom(Observable.combineLatest(data, cart), resultSelector: { (cart: $1.1, data: $1.0, idx: $0) })
+            .withLatestFrom(Observable.combineLatest(data, cart)) { (cart: $1.1, data: $1.0, idx: $0) }
             // .debug(trimOutput: true)
             .map({
                 var newCart = $0.cart
@@ -91,14 +92,26 @@ struct MenuTableViewModel: ViewModelType {
             .map({ [SectionModel(items: $0)] })
             .asDriver(onErrorJustReturn: [])
 
-        let selection = input.selected
-            .withLatestFrom(Observable.combineLatest(data, cart), resultSelector: { (data: $1.0, selected: $0, cart: $1.1) })
+        // A pizza is selected.
+        let selected = input.selected
+            .withLatestFrom(Observable.combineLatest(data, cart)) { (data: $1.0, selected: $0, cart: $1.1) }
             .map({ t -> Selection in
                 let pizza = t.data.pizzas.pizzas[t.selected.index]
                 let image = t.selected.image
                 let ingredients = t.data.ingredients
                 return (pizza, image, ingredients, t.cart)
             })
+
+        // Pizza from scratch is selected.
+        let scratch = input.scratch
+            .withLatestFrom(Observable.combineLatest(data, cart)) { (data: $1.0, cart: $1.1) }
+            .map({ t -> Selection in
+                let pizza = Pizza()
+                let ingredients = t.data.ingredients
+                return (pizza, nil, ingredients, t.cart)
+            })
+
+        let selection = Observable.merge(selected, scratch)
             .asDriver(onErrorDriveWith: Driver<Selection>.never())
 
         let showDrinks = input.cart
@@ -108,17 +121,10 @@ struct MenuTableViewModel: ViewModelType {
             })
             .asDriver(onErrorDriveWith: Driver<DrinksData>.never())
 
-        cart
-            .subscribe(onNext: {
-                DLog("current cart, pizzas: ", $0.pizzas.count, ", drinks: ", $0.drinks.count)
-            })
-            .disposed(by: _bag)
-
         input.saveCart
-            .debug()
             .withLatestFrom(cart)
             .subscribe(onNext: {
-                DLog("save cart, pizzas: ", $0.pizzas.count, ", drinks: ", $0.drinks.count)
+                // DLog("save cart, pizzas: ", $0.pizzas.count, ", drinks: ", $0.drinks.count)
                 dbUseCase.save(cart: $0.asDomain())
             })
             .disposed(by: _bag)
