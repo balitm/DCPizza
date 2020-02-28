@@ -17,16 +17,15 @@ final class MenuTableViewController: UITableViewController {
     typealias SectionModel = MenuTableViewModel.SectionModel
     typealias Selected = MenuTableViewModel.Selected
 
-    private lazy var _viewModel: MenuTableViewModel = {
-        MenuTableViewModel()
-    }()
-
-    private lazy var _navigator: Navigator = {
-        DefaultNavigator(storyboard: self.storyboard!, navigationController: self.navigationController!)
-    }()
-
+    private var _viewModel: MenuTableViewModel!
+    private var _navigator: Navigator!
     private let _saveCart = PublishSubject<Void>()
     private let _bag = DisposeBag()
+
+    func setup(with navigator: Navigator, viewModel: MenuTableViewModel) {
+        _navigator = navigator
+        _viewModel = viewModel
+    }
 
     // MARK: - View functions
 

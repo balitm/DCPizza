@@ -40,11 +40,13 @@ struct CartViewModel: ViewModelType {
 
     var resultCart: Observable<UI.Cart> { cart.asObservable().skip(1) }
     let cart: BehaviorSubject<UI.Cart>
+    private let _networkUseCase: NetworkUseCase
     private let _drinks: [Drink]
     private let _bag = DisposeBag()
 
-    init(cart: UI.Cart, drinks: [Drink]) {
+    init(networkUseCase: NetworkUseCase, cart: UI.Cart, drinks: [Drink]) {
         self.cart = BehaviorSubject(value: cart)
+        _networkUseCase = networkUseCase
         _drinks = drinks
     }
 
@@ -88,10 +90,9 @@ struct CartViewModel: ViewModelType {
 
         let checkout = input.checkout
             .withLatestFrom(cart)
-            .flatMap({ cart -> Observable<UI.Cart> in
-                let useCase = RepositoryUseCaseProvider().makeNetworkUseCase()
-                return useCase.checkout(cart: cart.asDomain())
-                    .map({ cart })
+            .flatMap({ [useCase = _networkUseCase] cart -> Observable<UI.Cart> in
+                useCase.checkout(cart: cart.asDomain())
+                    .map { cart }
             })
             .share()
 
