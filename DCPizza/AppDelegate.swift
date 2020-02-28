@@ -12,6 +12,7 @@ import AlamofireNetworkActivityIndicator
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
+    private let _injectionContainer = AppDependencyContainer()
 
     class var shared: AppDelegate {
         return UIApplication.shared.delegate as! AppDelegate
@@ -20,6 +21,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         NetworkActivityIndicatorManager.shared.startDelay = 0.0
         NetworkActivityIndicatorManager.shared.isEnabled = true
+        guard let menuViewController = _menuViewController else { return false }
+        menuViewController.setup(with: _injectionContainer.makeNavigator(by: menuViewController),
+                                 viewModel: _injectionContainer.makeMenuTableViewModel())
         return true
     }
 
@@ -32,8 +36,12 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func _saveCart() {
-        guard let nc = window?.rootViewController as? UINavigationController else { return }
-        guard let menuVC = nc.viewControllers.first as? MenuTableViewController else { return }
-        menuVC.saveCart()
+        _menuViewController?.saveCart()
+    }
+
+    private var _menuViewController: MenuTableViewController? {
+        guard let nc = window?.rootViewController as? UINavigationController
+            , let menuVC = nc.viewControllers.first as? MenuTableViewController else { return nil }
+        return menuVC
     }
 }

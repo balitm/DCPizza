@@ -25,12 +25,15 @@ protocol Navigator {
 
 final class DefaultNavigator: Navigator {
     let storyboard: UIStoryboard
+    private weak var _dependencyContainer: AppDependencyContainer!
     private weak var _navigationController: UINavigationController!
 
     init(storyboard: UIStoryboard,
-         navigationController: UINavigationController) {
+         navigationController: UINavigationController,
+         dependencyContainer: AppDependencyContainer) {
         self.storyboard = storyboard
         _navigationController = navigationController
+        _dependencyContainer = dependencyContainer
     }
 
     func showIngredients(of pizza: Pizza,
@@ -44,7 +47,7 @@ final class DefaultNavigator: Navigator {
     }
 
     func showCart(_ cart: UI.Cart, drinks: [Drink]) -> Observable<UI.Cart> {
-        let vm = CartViewModel(cart: cart, drinks: drinks)
+        let vm = _dependencyContainer.makeCartViewModel(cart: cart, drinks: drinks)
         let vc = CartViewController.create(with: self, viewModel: vm)
         _navigationController.pushViewController(vc, animated: true)
         return vm.resultCart

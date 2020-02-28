@@ -29,7 +29,7 @@ struct NetworkRepository: RepositoryNetworkProtocol, DatabaseContainerProtocol {
                                      API.GetIngredients().rx.perform(),
                                      API.GetDrinks().rx.perform(),
                                      resultSelector: { (pizzas: $0, ingredients: $1, drinks: $2) })
-            .map({ [container] tuple -> InitData in
+            .map({ [weak container] tuple -> InitData in
                 let ingredients = tuple.ingredients.sorted { $0.name < $1.name }
                 let dsCart = container?.values(DS.Cart.self).first ?? DS.Cart(pizzas: [], drinks: [])
                 var cart = dsCart.asDomain(with: ingredients, drinks: tuple.drinks)
@@ -53,7 +53,7 @@ struct NetworkRepository: RepositoryNetworkProtocol, DatabaseContainerProtocol {
 
     func checkout(cart: DS.Cart) -> Observable<Void> {
         API.Checkout(pizzas: cart.pizzas, drinks: cart.drinks).rx.perform()
-            .do(onNext: { [container] in
+            .do(onNext: { [weak container] in
                 do {
                     try container?.write {
                         $0.delete(DS.Cart.self)

@@ -39,13 +39,17 @@ struct MenuTableViewModel: ViewModelType {
     }
 
     let cart = PublishRelay<UI.Cart>()
+    private let _networkUseCase: NetworkUseCase
+    private let _databaseUseCase: DatabaseUseCase
     private let _bag = DisposeBag()
 
+    init(networkUseCase: NetworkUseCase, databaseUseCase: DatabaseUseCase) {
+        _networkUseCase = networkUseCase
+        _databaseUseCase = databaseUseCase
+    }
+
     func transform(input: Input) -> Output {
-        let provider = RepositoryUseCaseProvider()
-        let netUseCase = provider.makeNetworkUseCase()
-        let dbUseCase = provider.makeDatabaseUseCase()
-        let data = netUseCase.getInitData().share()
+        let data = _networkUseCase.getInitData().share()
 
         let viewModels = data
             .map({ data -> [MenuCellViewModel] in
@@ -114,7 +118,7 @@ struct MenuTableViewModel: ViewModelType {
         let selection = Observable.merge(selected, scratch)
             .asDriver(onErrorDriveWith: Driver<Selection>.never())
 
-        let showDrinks = input.cart
+        let showCart = input.cart
             .withLatestFrom(Observable.combineLatest(data, cart), resultSelector: { (data: $1.0, cart: $1.1) })
             .map({ t -> DrinksData in
                 (t.cart, t.data.drinks)
@@ -123,7 +127,7 @@ struct MenuTableViewModel: ViewModelType {
 
         input.saveCart
             .withLatestFrom(cart)
-            .subscribe(onNext: {
+            .subscribe(onNext: { [dbUseCase = _databaseUseCase] in
                 // DLog("save cart, pizzas: ", $0.pizzas.count, ", drinks: ", $0.drinks.count)
                 dbUseCase.save(cart: $0.asDomain())
             })
@@ -132,7 +136,7 @@ struct MenuTableViewModel: ViewModelType {
         return Output(tableData: sections,
                       selection: selection,
                       showAdded: cartEvents.map { _ in () }.asDriver(onErrorJustReturn: ()),
-                      showCart: showDrinks
+                      showCart: showCart
         )
     }
 }
