@@ -53,14 +53,12 @@ struct NetworkRepository: RepositoryNetworkProtocol, DatabaseContainerProtocol {
 
     func checkout(cart: DS.Cart) -> Observable<Void> {
         API.Checkout(pizzas: cart.pizzas, drinks: cart.drinks).rx.perform()
-            .do(onNext: { [weak container] in
-                do {
-                    try container?.write {
+            .do(onNext: {
+                self.execute {
+                    try $0.write {
                         $0.delete(DS.Cart.self)
                         $0.delete(DS.Pizza.self)
                     }
-                } catch {
-                    DLog("# Database write failed with: ", error)
                 }
             })
     }
