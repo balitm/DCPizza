@@ -13,6 +13,7 @@ import RxSwiftExt
 import RxRelay
 import RxDataSources
 import struct RxCocoa.Driver
+import class UIKit.UIImage
 
 struct IngredientsViewModel: ViewModelType {
     /// Ingredient with selectcion flag.

@@ -272,6 +272,11 @@ class DomainTests: XCTestCase {
         }
     }
 
+
+    static var allTests = [
+        ("testNetwork", testNetwork),
+    ]
+
     override func setUp() {
         super.setUp()
 
@@ -310,7 +315,7 @@ class DomainTests: XCTestCase {
             })
             .disposed(by: _bag)
 
-        wait(for: [expectation], timeout: 30.0)
+        wait(for: [expectation], timeout: 120.0)
     }
 
     func testPizzaConversion() {

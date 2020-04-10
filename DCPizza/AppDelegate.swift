@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import AlamofireNetworkActivityIndicator
+// import AlamofireNetworkActivityIndicator
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,8 +19,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        NetworkActivityIndicatorManager.shared.startDelay = 0.0
-        NetworkActivityIndicatorManager.shared.isEnabled = true
+//        NetworkActivityIndicatorManager.shared.startDelay = 0.0
+//        NetworkActivityIndicatorManager.shared.isEnabled = true
         guard let menuViewController = _menuViewController else { return false }
         menuViewController.setup(with: _injectionContainer.makeNavigator(by: menuViewController),
                                  viewModel: _injectionContainer.makeMenuTableViewModel())
