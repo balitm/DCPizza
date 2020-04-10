@@ -1,6 +1,0 @@
-github "Alamofire/Alamofire" "4.9.1"
-github "Alamofire/AlamofireNetworkActivityIndicator" "2.4.0"
-github "Alamofire/AlamofireImage" ~> 3.5
-github "realm/realm-cocoa"
-github "RxSwiftCommunity/RxSwiftExt"
-github "RxSwiftCommunity/RxDataSources"
