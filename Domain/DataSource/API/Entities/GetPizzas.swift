@@ -16,7 +16,7 @@ extension API {
     class GetPizzas: RequestBase<PizzasModel> {
         required init() {
             super.init()
-            mainPath = "https://api.myjson.com/bins/dokm7"
+            mainPath = "https://api.jsonbin.io/b/5e91f1a0cc62be4369c2e408"
             fallbackPath = "http://next.json-generator.com/api/json/get/NybelGcjz"
         }
     }
