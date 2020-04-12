@@ -76,14 +76,14 @@ private extension CartViewController {
                 .animated
             },
             configureCell: { ds, tv, ip, _ in
-            switch ds[ip] {
-            case let .padding(viewModel):
-                return tv.createCell(PaddingTableViewCell.self, viewModel, ip)
-            case let .item(viewModel):
-                return tv.createCell(CartItemTableViewCell.self, viewModel, ip)
-            case let .total(viewModel):
-                return tv.createCell(CartTotalTableViewCell.self, viewModel, ip)
-            }
+                switch ds[ip] {
+                case let .padding(viewModel):
+                    return tv.createCell(PaddingTableViewCell.self, viewModel, ip)
+                case let .item(viewModel):
+                    return tv.createCell(CartItemTableViewCell.self, viewModel, ip)
+                case let .total(viewModel):
+                    return tv.createCell(CartTotalTableViewCell.self, viewModel, ip)
+                }
         })
         out.tableData
             // .debug(trimOutput: true)

@@ -28,32 +28,32 @@ enum ViewControllerViewState: Equatable {
 
 extension RxSwift.Reactive where Base: UIViewController {
     var viewDidLoad: Observable<Void> {
-        return methodInvoked(#selector(UIViewController.viewDidLoad))
+        methodInvoked(#selector(UIViewController.viewDidLoad))
             .map { _ in }
     }
 
     var viewDidLayoutSubviews: Observable<Void> {
-        return methodInvoked(#selector(UIViewController.viewDidLayoutSubviews))
+        methodInvoked(#selector(UIViewController.viewDidLayoutSubviews))
             .map { _ in }
     }
 
     var viewWillAppear: Observable<Bool> {
-        return methodInvoked(#selector(UIViewController.viewWillAppear))
+        methodInvoked(#selector(UIViewController.viewWillAppear))
             .map { $0.first as? Bool ?? false }
     }
 
     var viewDidAppear: Observable<Bool> {
-        return methodInvoked(#selector(UIViewController.viewDidAppear))
+        methodInvoked(#selector(UIViewController.viewDidAppear))
             .map { $0.first as? Bool ?? false }
     }
 
     var viewWillDisappear: Observable<Bool> {
-        return methodInvoked(#selector(UIViewController.viewWillDisappear))
+        methodInvoked(#selector(UIViewController.viewWillDisappear))
             .map { $0.first as? Bool ?? false }
     }
 
     var viewDidDisappear: Observable<Bool> {
-        return methodInvoked(#selector(UIViewController.viewDidDisappear))
+        methodInvoked(#selector(UIViewController.viewDidDisappear))
             .map { $0.first as? Bool ?? false }
     }
 
@@ -65,7 +65,7 @@ extension RxSwift.Reactive where Base: UIViewController {
      - returns: Observable sequence of AppStates
      */
     var viewState: Observable<ViewControllerViewState> {
-        return Observable.of(
+        Observable.of(
             viewDidLoad.map { _ in ViewControllerViewState.viewDidLoad },
             viewDidLayoutSubviews.map { _ in ViewControllerViewState.viewDidLayoutSubviews },
             viewWillAppear.map { _ in ViewControllerViewState.viewWillAppear },
@@ -73,6 +73,6 @@ extension RxSwift.Reactive where Base: UIViewController {
             viewWillDisappear.map { _ in ViewControllerViewState.viewWillDisappear },
             viewDidDisappear.map { _ in ViewControllerViewState.viewDidDisappear }
         )
-            .merge()
+        .merge()
     }
 }

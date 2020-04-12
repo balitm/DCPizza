@@ -12,8 +12,8 @@ import RxSwift
 final class RepositoryNetworkUseCase: NetworkUseCase {
     let _repository: RepositoryNetworkProtocol
 
-    init() {
-        _repository = NetworkRepository()
+    init(container: DS.Container?) {
+        _repository = NetworkRepository(container: container)
     }
 
     func getInitData() -> Observable<InitData> {

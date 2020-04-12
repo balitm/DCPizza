@@ -30,52 +30,52 @@ private struct _TestNetUseCase: NetworkUseCase {
             {
                 "id": 1,
                 "name": "Mozzarella",
-                "price": 1,
+                "price": 1
             },
                 {
                 "id": 2,
                 "name": "Tomato Sauce",
-                "price": 0.5,
+                "price": 0.5
             },
                 {
                 "id": 3,
                 "name": "Salami",
-                "price": 1.5,
+                "price": 1.5
             },
                 {
                 "id": 4,
                 "name": "Mushrooms",
-                "price": 2,
+                "price": 2
             },
                 {
                 "id": 5,
                 "name": "Ricci",
-                "price": 4,
+                "price": 4
             },
                 {
                 "id": 6,
                 "name": "Asparagus",
-                "price": 2,
+                "price": 2
             },
                 {
                 "id": 7,
                 "name": "Pineapple",
-                "price": 1,
+                "price": 1
             },
                 {
                 "id": 8,
                 "name": "Speck",
-                "price": 3,
+                "price": 3
             },
                 {
                 "id": 9,
                 "name": "Bottarga",
-                "price": 2.5,
+                "price": 2.5
             },
                 {
                 "id": 10,
                 "name": "Tuna",
-                "price": 2.2,
+                "price": 2.2
             }
         ]
         """
@@ -126,7 +126,7 @@ private struct _TestNetUseCase: NetworkUseCase {
                         1,
                         2
                     ],
-                    "name": "Margherita",
+                    "name": "Margherita"
                 },
                         {
                     "imageUrl": "https://i.ibb.co/GpyPfSC/ricci.png",
@@ -134,7 +134,7 @@ private struct _TestNetUseCase: NetworkUseCase {
                         1,
                         5
                     ],
-                    "name": "Ricci",
+                    "name": "Ricci"
                 },
                         {
                     "imageUrl": "https://i.ibb.co/9T8jyLt/boscaiola.png",
@@ -144,7 +144,7 @@ private struct _TestNetUseCase: NetworkUseCase {
                         3,
                         4
                     ],
-                    "name": "Boscaiola",
+                    "name": "Boscaiola"
                 },
                         {
                     "imageUrl": "https://i.ibb.co/XD5kYNd/primavera.png",
@@ -153,7 +153,7 @@ private struct _TestNetUseCase: NetworkUseCase {
                         5,
                         6
                     ],
-                    "name": "Primavera",
+                    "name": "Primavera"
                 },
                         {
                     "imageUrl": "https://i.ibb.co/k5qWjBW/hawaii.png",
@@ -163,7 +163,7 @@ private struct _TestNetUseCase: NetworkUseCase {
                         7,
                         8
                     ],
-                    "name": "Hawaii",
+                    "name": "Hawaii"
                 },
                         {
                     "ingredients": [
@@ -171,7 +171,7 @@ private struct _TestNetUseCase: NetworkUseCase {
                         9,
                         10
                     ],
-                    "name": "Mare Bianco",
+                    "name": "Mare Bianco"
                 },
                         {
                     "imageUrl": "https://i.ibb.co/tM9Hrtz/mari-e-monti.png",
@@ -183,7 +183,7 @@ private struct _TestNetUseCase: NetworkUseCase {
                         9,
                         10
                     ],
-                    "name": "Mari e monti",
+                    "name": "Mari e monti"
                 },
                         {
                     "imageUrl": "https://i.ibb.co/nzmhrbs/bottarga.png",
@@ -191,7 +191,7 @@ private struct _TestNetUseCase: NetworkUseCase {
                         1,
                         9
                     ],
-                    "name": "Bottarga",
+                    "name": "Bottarga"
                 },
                         {
                     "imageUrl": "https://i.ibb.co/FH6MGxT/bottarga-e-asparagus.png",
@@ -201,7 +201,7 @@ private struct _TestNetUseCase: NetworkUseCase {
                         9,
                         6
                     ],
-                    "name": "Boottarga e Asparagi",
+                    "name": "Boottarga e Asparagi"
                 },
                         {
                     "imageUrl": "https://i.ibb.co/KX0FG9V/ricci-asparagus.png",
@@ -210,7 +210,7 @@ private struct _TestNetUseCase: NetworkUseCase {
                         5,
                         6
                     ],
-                    "name": "Ricci e Asparagi",
+                    "name": "Ricci e Asparagi"
                 }
             ]
         }
@@ -245,10 +245,37 @@ class DomainTests: XCTestCase {
     var initData: InitData!
     var useCase: NetworkUseCase!
     var testCart: Cart!
+    static var realm: Realm!
+    private var _container: DS.Container?
+
+    override class func setUp() {
+        super.setUp()
+
+        var _realmConfig: Realm.Configuration {
+            var config = Realm.Configuration.defaultConfiguration
+            DLog("Realm file: \(config.fileURL!.path)")
+            var fileURL = config.fileURL!
+            fileURL.deleteLastPathComponent()
+            fileURL.deleteLastPathComponent()
+            fileURL.appendPathComponent("tmp")
+            fileURL.appendPathComponent("test.realm")
+            DLog("Realm file: \(fileURL.path)")
+            config.fileURL = fileURL
+            return config
+        }
+
+        do {
+            let config = _realmConfig
+            realm = try Realm.init(configuration: config)
+        } catch {
+            fatalError("test realm can't be inited:\n\(error)")
+        }
+    }
 
     override func setUp() {
         super.setUp()
 
+        _container = DS.Container(realm: DomainTests.realm)
         useCase = _TestNetUseCase()
         useCase.getInitData()
             .subscribe(onNext: { [unowned self] in
@@ -270,7 +297,7 @@ class DomainTests: XCTestCase {
     override func tearDown() {}
 
     func testNetwork() {
-        let useCase = RepositoryUseCaseProvider().makeNetworkUseCase()
+        let useCase = RepositoryUseCaseProvider(container: _container).makeNetworkUseCase()
         let expectation = XCTestExpectation(description: "net")
 
         Observable.zip(
@@ -310,7 +337,7 @@ class DomainTests: XCTestCase {
     }
 
     func testCheckout() {
-        let useCase = RepositoryUseCaseProvider().makeNetworkUseCase()
+        let useCase = RepositoryUseCaseProvider(container: _container).makeNetworkUseCase()
         let cart = testCart!
 
         let expectation = XCTestExpectation(description: "checkout")
@@ -329,22 +356,8 @@ class DomainTests: XCTestCase {
     }
 
     func testDB() {
-        var _realmConfig: Realm.Configuration {
-            var config = Realm.Configuration.defaultConfiguration
-            DLog("Realm file: \(config.fileURL!.path)")
-            var fileURL = config.fileURL!
-            fileURL.deleteLastPathComponent()
-            fileURL.deleteLastPathComponent()
-            fileURL.appendPathComponent("tmp")
-            fileURL.appendPathComponent("test.realm")
-            DLog("Realm file: \(fileURL.path)")
-            config.fileURL = fileURL
-            return config
-        }
-
         do {
-            let config = _realmConfig
-            let realm = try Realm.init(configuration: config)
+            let realm = DomainTests.realm!
             let container = DS.Container(realm: realm)
 
             // Save the btest cart.

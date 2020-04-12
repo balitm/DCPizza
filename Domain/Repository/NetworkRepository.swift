@@ -20,8 +20,8 @@ protocol RepositoryNetworkProtocol {
 struct NetworkRepository: RepositoryNetworkProtocol, DatabaseContainerProtocol {
     let container: DS.Container?
 
-    init() {
-        container = NetworkRepository.initContainer()
+    init(container: DS.Container?) {
+        self.container = container
     }
 
     func getInitData() -> Observable<InitData> {

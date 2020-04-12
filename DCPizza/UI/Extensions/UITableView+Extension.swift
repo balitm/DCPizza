@@ -13,7 +13,7 @@ protocol ReuseID {
 
 extension ReuseID {
     static var kReuseID: String {
-        return String(describing: Self.self)
+        String(describing: Self.self)
     }
 }
 
@@ -39,8 +39,8 @@ protocol CellViewModelProtocol: AnyObject, ReuseID {
 extension UITableView {
     func createCell<Cell, ViewModel>(_ type: Cell.Type, _ viewModel: ViewModel, _ indexPath: IndexPath) -> Cell
         where Cell: UITableViewCell, Cell: CellViewModelProtocol, Cell.ViewModel == ViewModel {
-            let cell = dequeue(type: Cell.self, for: indexPath)
-            cell.config(with: viewModel)
-            return cell
+        let cell = dequeue(type: Cell.self, for: indexPath)
+        cell.config(with: viewModel)
+        return cell
     }
 }

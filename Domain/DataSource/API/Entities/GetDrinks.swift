@@ -14,7 +14,7 @@ extension API {
     class GetDrinks: RequestBase<DrinksModel> {
         required init() {
             super.init()
-            mainPath = "https://api.myjson.com/bins/150da7"
+            mainPath = "https://api.jsonbin.io/b/5e91ef298e85c84370147b21"
             fallbackPath = "http://next.json-generator.com/api/json/get/N1mnOA_oz"
         }
     }

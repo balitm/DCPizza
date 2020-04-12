@@ -71,7 +71,7 @@ struct CartViewModel: ViewModelType {
                 items.append(.total(viewModel: CartTotalCellViewModel(price: cart.totalPrice())))
                 return [SectionModel(items: items)]
             })
-            // .debug(trimOutput: true)
+        // .debug(trimOutput: true)
 
         input.selected
             .withLatestFrom(cart) { (index: $0, cart: $1) }
@@ -125,7 +125,7 @@ struct CartViewModel: ViewModelType {
 }
 
 extension CartViewModel.SectionModel: AnimatableSectionModelType {
-    var identity: Int { return 0 }
+    var identity: Int { 0 }
 
     typealias Item = CartViewModel.SectionItem
 
@@ -154,6 +154,6 @@ extension CartViewModel.SectionItem: IdentifiableType, Equatable {
     }
 
     static func ==(lhs: CartViewModel.SectionItem, rhs: CartViewModel.SectionItem) -> Bool {
-        return lhs.identity == rhs.identity && lhs.unique == rhs.unique
+        lhs.identity == rhs.identity && lhs.unique == rhs.unique
     }
 }

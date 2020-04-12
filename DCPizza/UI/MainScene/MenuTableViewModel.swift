@@ -49,7 +49,10 @@ struct MenuTableViewModel: ViewModelType {
     }
 
     func transform(input: Input) -> Output {
-        let data = _networkUseCase.getInitData().share()
+        let data = _networkUseCase
+            .getInitData()
+            .catchErrorJustComplete()
+            .share()
 
         let viewModels = data
             .map({ data -> [MenuCellViewModel] in
