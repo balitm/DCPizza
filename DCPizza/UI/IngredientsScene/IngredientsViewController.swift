@@ -127,7 +127,7 @@ private extension IngredientsViewController {
 private extension Reactive where Base: IngredientsViewController {
     /// Bindable sink for `_footer` property.
     var _footer: Binder<IngredientsViewController.FooterEvent> {
-        return Binder(base) { vc, event in
+        Binder(base) { vc, event in
             vc._displayFooter(event)
         }
     }

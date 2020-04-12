@@ -63,7 +63,7 @@ extension UI {
         var isEmpty: Bool { _domainCart.isEmpty }
 
         public func totalPrice() -> Double {
-            return _domainCart.totalPrice()
+            _domainCart.totalPrice()
         }
     }
 }
@@ -82,6 +82,6 @@ extension Domain.Cart: UIConvertibleType {
 
 extension UI.Cart: DomainRepresentable {
     func asDomain() -> Domain.Cart {
-        return _domainCart
+        _domainCart
     }
 }

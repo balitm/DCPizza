@@ -56,7 +56,7 @@ struct IngredientsViewModel: ViewModelType {
             input.selected
                 .filterMap({ $0 >= 1 ? .map($0 - 1) : .ignore })
         )
-            .share(replay: 1)
+        .share(replay: 1)
 
         // Table data.
         let tableData = selecteds
@@ -124,7 +124,7 @@ private extension IngredientsViewModel {
     /// Create array of Ingredients with selectcion flag.
     func _createSelecteds() -> [Selected] {
         func isContained(_ ingredient: Domain.Ingredient) -> Bool {
-            return _pizza.ingredients.contains { $0.id == ingredient.id }
+            _pizza.ingredients.contains { $0.id == ingredient.id }
         }
 
         let sels = _ingredients.map { ing -> Selected in
@@ -156,7 +156,7 @@ private extension IngredientsViewModel {
 
     /// Create footer event observable.
     func _makeFooterObservable(_ observable: Observable<Void>) -> Observable<FooterEvent> {
-        return Observable<FooterEvent>.create { [unowned bag = _bag] observer in
+        Observable<FooterEvent>.create { [unowned bag = _bag] observer in
             var timerBag = DisposeBag()
             let footerEvent = PublishRelay<FooterEvent>()
 
@@ -196,7 +196,7 @@ extension IngredientsViewModel {
 extension IngredientsViewModel.SectionModel: AnimatableSectionModelType {
     typealias Item = IngredientsViewModel.SectionItem
 
-    var identity: Int { return 0 }
+    var identity: Int { 0 }
 
     init(original: IngredientsViewModel.SectionModel, items: [IngredientsViewModel.SectionItem]) {
         self = original
@@ -224,6 +224,6 @@ extension IngredientsViewModel.SectionItem: IdentifiableType, Equatable {
     }
 
     static func ==(lhs: IngredientsViewModel.SectionItem, rhs: IngredientsViewModel.SectionItem) -> Bool {
-        return lhs.identity == rhs.identity && lhs.unique == rhs.unique
+        lhs.identity == rhs.identity && lhs.unique == rhs.unique
     }
 }
