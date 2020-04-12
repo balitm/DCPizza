@@ -9,10 +9,22 @@
 import Foundation
 
 public struct RepositoryUseCaseProvider: UseCaseProvider {
-    public init() {}
-    
+    let _container: DS.Container?
+
+    public init() {
+        _container = NetworkRepository.initContainer()
+    }
+
+    init(container: DS.Container? = nil) {
+        if let container = container {
+            _container = container
+        } else {
+            _container = NetworkRepository.initContainer()
+        }
+    }
+
     public func makeNetworkUseCase() -> NetworkUseCase {
-        return RepositoryNetworkUseCase()
+        return RepositoryNetworkUseCase(container: _container)
     }
 
     public func makeDatabaseUseCase() -> DatabaseUseCase {

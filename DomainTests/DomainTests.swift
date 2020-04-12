@@ -245,10 +245,37 @@ class DomainTests: XCTestCase {
     var initData: InitData!
     var useCase: NetworkUseCase!
     var testCart: Cart!
+    static var realm: Realm!
+    private var _container: DS.Container?
+
+    override class func setUp() {
+        super.setUp()
+
+        var _realmConfig: Realm.Configuration {
+            var config = Realm.Configuration.defaultConfiguration
+            DLog("Realm file: \(config.fileURL!.path)")
+            var fileURL = config.fileURL!
+            fileURL.deleteLastPathComponent()
+            fileURL.deleteLastPathComponent()
+            fileURL.appendPathComponent("tmp")
+            fileURL.appendPathComponent("test.realm")
+            DLog("Realm file: \(fileURL.path)")
+            config.fileURL = fileURL
+            return config
+        }
+
+        do {
+            let config = _realmConfig
+            realm = try Realm.init(configuration: config)
+        } catch {
+            fatalError("test realm can't be inited:\n\(error)")
+        }
+    }
 
     override func setUp() {
         super.setUp()
 
+        _container = DS.Container(realm: DomainTests.realm)
         useCase = _TestNetUseCase()
         useCase.getInitData()
             .subscribe(onNext: { [unowned self] in
@@ -270,7 +297,7 @@ class DomainTests: XCTestCase {
     override func tearDown() {}
 
     func testNetwork() {
-        let useCase = RepositoryUseCaseProvider().makeNetworkUseCase()
+        let useCase = RepositoryUseCaseProvider(container: _container).makeNetworkUseCase()
         let expectation = XCTestExpectation(description: "net")
 
         Observable.zip(
@@ -310,7 +337,7 @@ class DomainTests: XCTestCase {
     }
 
     func testCheckout() {
-        let useCase = RepositoryUseCaseProvider().makeNetworkUseCase()
+        let useCase = RepositoryUseCaseProvider(container: _container).makeNetworkUseCase()
         let cart = testCart!
 
         let expectation = XCTestExpectation(description: "checkout")
@@ -329,22 +356,8 @@ class DomainTests: XCTestCase {
     }
 
     func testDB() {
-        var _realmConfig: Realm.Configuration {
-            var config = Realm.Configuration.defaultConfiguration
-            DLog("Realm file: \(config.fileURL!.path)")
-            var fileURL = config.fileURL!
-            fileURL.deleteLastPathComponent()
-            fileURL.deleteLastPathComponent()
-            fileURL.appendPathComponent("tmp")
-            fileURL.appendPathComponent("test.realm")
-            DLog("Realm file: \(fileURL.path)")
-            config.fileURL = fileURL
-            return config
-        }
-
         do {
-            let config = _realmConfig
-            let realm = try Realm.init(configuration: config)
+            let realm = DomainTests.realm!
             let container = DS.Container(realm: realm)
 
             // Save the btest cart.
