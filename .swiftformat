@@ -1,4 +1,3 @@
---swiftversion 5
 --disable andOperator
 --disable leadingDelimiters
 --disable linebreakAtEndOfFile
@@ -14,3 +13,12 @@
 # rules
 
 --enable isEmpty
+--enable redundantExtensionACL
+--enable redundantFileprivate
+--enable redundantGet
+--enable redundantInit
+--enable redundantLet
+--enable redundantLetError
+--enable redundantNilInit
+--enable redundantRawValues
+--enable redundantReturn

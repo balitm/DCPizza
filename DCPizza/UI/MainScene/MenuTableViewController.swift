@@ -64,6 +64,10 @@ final class MenuTableViewController: UITableViewController {
             tv.createCell(MenuTableViewCell.self, ds[ip], ip)
         })
 
+        DLog("dataSource: ", tableView.dataSource?.description ?? "nil")
+        if tableView.dataSource != nil {
+            tableView.dataSource = nil
+        }
         out.tableData
             .drive(tableView.rx.items(dataSource: dataSource))
             .disposed(by: _bag)

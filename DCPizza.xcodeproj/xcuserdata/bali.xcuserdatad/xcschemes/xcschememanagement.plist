@@ -9,7 +9,7 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
-		<key>Domain.xcscheme_^#shared#^_</key>
+		<key>DomainTest.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
