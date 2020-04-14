@@ -58,6 +58,16 @@
 		29EF9A762401D53C002E8E4E /* DrinkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EF9A722401D53C002E8E4E /* DrinkTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		29D3B5E724435508009CD6CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2941A3E823FAF0DC005838BA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2941A3EF23FAF0DC005838BA;
+			remoteInfo = DCPizza;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		2941A3F023FAF0DC005838BA /* DCPizza.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DCPizza.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2941A3F323FAF0DC005838BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -411,6 +421,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				29D3B5E824435508009CD6CD /* PBXTargetDependency */,
 			);
 			name = DCPizzaTests;
 			productName = DCPizzaTests;
@@ -432,6 +443,7 @@
 					};
 					2941A40523FAF0DE005838BA = {
 						CreatedOnToolsVersion = 11.3.1;
+						TestTargetID = 2941A3EF23FAF0DC005838BA;
 					};
 				};
 			};
@@ -557,6 +569,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		29D3B5E824435508009CD6CD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2941A3EF23FAF0DC005838BA /* DCPizza */;
+			targetProxy = 29D3B5E724435508009CD6CD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		2941A3F923FAF0DC005838BA /* Main.storyboard */ = {
@@ -743,6 +763,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -760,6 +781,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DCPizza.app/DCPizza";
 			};
 			name = Debug;
 		};
@@ -767,6 +789,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -784,6 +807,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DCPizza.app/DCPizza";
 			};
 			name = Release;
 		};
