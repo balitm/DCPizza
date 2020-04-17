@@ -9,13 +9,7 @@
 import Foundation
 
 extension DataSource {
-    public struct Drink: Codable {
-        public typealias ID = Int64
-
-        public let id: ID
-        public let name: String
-        public let price: Double
-    }
+    typealias Drink = Domain.Drink
 }
 
 extension DataSource.Drink: DomainConvertibleType {

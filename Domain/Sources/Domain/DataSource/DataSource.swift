@@ -8,5 +8,5 @@
 
 import Foundation
 
-public enum DataSource {}
+enum DataSource {}
 typealias DS = DataSource
