@@ -9,12 +9,12 @@ import Foundation
 import Alamofire
 import RxSwift
 
-public protocol RequestReportCallback {
+protocol RequestReportCallback {
     func handleConnetionLost(request: RequestBaseProtocol) -> Bool
     func handleNetError(request: RequestBaseProtocol, error: Error)
 }
 
-public protocol RequestBaseProtocol: AnyObject {
+protocol RequestBaseProtocol: AnyObject {
     var id: Int { get set }
     var path: String { get }
     var httpParams: [String: Any]? { get }
@@ -27,7 +27,7 @@ public protocol RequestBaseProtocol: AnyObject {
     func removeHandlers()
 }
 
-public protocol HandlerBlockTypesProtocol {
+protocol HandlerBlockTypesProtocol {
     associatedtype Target
 
     typealias SuccessBlock = (Target) -> Void
@@ -39,7 +39,7 @@ protocol HandlerBlockProtocol: HandlerBlockTypesProtocol {
     var errorBlock: ErrorBlock { get set }
 }
 
-public protocol ModelProtocol {
+protocol ModelProtocol {
     associatedtype Result
 
     init()
@@ -48,36 +48,36 @@ public protocol ModelProtocol {
     func process(json: Data) throws -> Result
 }
 
-public protocol PerformProtocol: AnyObject {
+protocol PerformProtocol: AnyObject {
     func _performIn()
 }
 
 extension API {
-    public static var reportHandler: RequestReportCallback?
+    static var reportHandler: RequestReportCallback?
     private static var _instanceNum = 0
 
-    open class _BaseRequest<Model>: RequestBaseProtocol {
+    class _BaseRequest<Model>: RequestBaseProtocol {
         typealias ErrorModel = Error
 
-        public var httpParams: [String: Any]? { return nil }
-        public var method: Alamofire.HTTPMethod = .get
-        public var headers: [String: String]?
+        var httpParams: [String: Any]? { return nil }
+        var method: Alamofire.HTTPMethod = .get
+        var headers: [String: String]?
 
         // RequestBaseProtocol
-        public var path = ""
-        public var retryOnTimeout = 1
-        public var id = 0
-        public var handlerKey = 0
-        public var isRenewable = true
-        public var timeout = KNetwork.defaultTimeout
-        public var isDirect = false
-        public var isSync = false
-        public var isShowError = true
-        public var afRequest: Request?
+        var path = ""
+        var retryOnTimeout = 1
+        var id = 0
+        var handlerKey = 0
+        var isRenewable = true
+        var timeout = KNetwork.defaultTimeout
+        var isDirect = false
+        var isSync = false
+        var isShowError = true
+        var afRequest: Request?
 
         var encoding: ParameterEncoding
 
-        public required init() {
+        required init() {
             encoding = URLEncoding.default
             _instanceNum += 1; DLog(">>>> Instance num: ", _instanceNum)
         }
@@ -118,7 +118,7 @@ extension API {
             }
         }
 
-        public func removeHandlers() {
+        func removeHandlers() {
             guard let handlers: _HandlerBlocks<Model> = _removeHandlers(key: handlerKey) else { return }
             if let observer = handlers.observer {
                 // DLog("##### Complete ", path)
@@ -127,11 +127,11 @@ extension API {
             // DLog("##### Drop handlers for: ", handlerKey, " of ", path)
         }
 
-        /* fileprivate */ public func _performIn() {
+        /* fileprivate */ func _performIn() {
             _perform()
         }
 
-        public func _perform() {}
+        func _perform() {}
 
         // MARK: Error handling
 
@@ -206,9 +206,9 @@ extension API {
 
     // MARK: - Request base class
 
-    public class RequestBase<M: ModelProtocol>: _BaseRequest<M.Result>, RxAbleType {
-        public typealias Target = M.Result
-        public typealias Model = M
+    class RequestBase<M: ModelProtocol>: _BaseRequest<M.Result>, RxAbleType {
+        typealias Target = M.Result
+        typealias Model = M
         typealias ResponseParser = (_ request: URLRequest?, _ response: HTTPURLResponse?, _ data: Data?, _ error: Error?) -> Alamofire.Result<Target>
 
         var mainPath = ""
@@ -219,7 +219,7 @@ extension API {
             .failure(error!)
         }
 
-        public required init() {
+        required init() {
             super.init()
 
             encoding = JSONEncoding.default
@@ -233,7 +233,7 @@ extension API {
             return Model()
         }
 
-        public override func _perform() {
+        override func _perform() {
             if path.isEmpty { path = mainPath }
 
             let request = sessionManager
@@ -297,12 +297,12 @@ extension API._BaseRequest: ReactiveCompatible {}
 
 /// A protocol representing a minimal interface for a model request.
 /// Used by the reactive provider extensions.
-public protocol RxAbleType: HandlerBlockTypesProtocol, RequestBaseProtocol, PerformProtocol {
+protocol RxAbleType: HandlerBlockTypesProtocol, RequestBaseProtocol, PerformProtocol {
     /// Designated request-making method.
     func perform(onSuccess: @escaping SuccessBlock, onError: @escaping ErrorBlock)
 }
 
-public extension Reactive where Base: RxAbleType {
+extension Reactive where Base: RxAbleType {
     func perform() -> Observable<Base.Target> {
         return base.rxPerform()
     }
@@ -315,7 +315,7 @@ protocol CancelableObserver {
 extension AnyObserver: CancelableObserver {}
 
 extension RxAbleType {
-    public func perform(onSuccess: @escaping SuccessBlock = { _ in }, onError: @escaping ErrorBlock = { _ in false }) {
+    func perform(onSuccess: @escaping SuccessBlock = { _ in }, onError: @escaping ErrorBlock = { _ in false }) {
         _perform(observer: nil, onSuccess: onSuccess, onError: onError)
     }
 

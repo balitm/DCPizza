@@ -1,6 +1,6 @@
 //
 //  API.swift
-//  wizz-air
+//  kil-dev
 //
 //  Created by Balázs Kilvády on 7/14/17.
 //  Copyright © 2017 Balázs Kilvády. All rights reserved.
@@ -9,8 +9,8 @@
 import Foundation
 import Alamofire
 
-public struct API {
-    public enum ErrorType: Error {
+struct API {
+    enum ErrorType: Error {
         case invalidURL
         case disabled
         case invalidJSON
