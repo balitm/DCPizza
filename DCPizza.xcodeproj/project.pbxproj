@@ -390,7 +390,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2941A40F23FAF0DE005838BA /* Build configuration list for PBXNativeTarget "DCPizza" */;
 			buildPhases = (
-				294ACFBB23FC07E80027D0D4 /* Run Script - Format */,
+				294ACFBB23FC07E80027D0D4 /* Format code */,
 				2941A3EC23FAF0DC005838BA /* Sources */,
 				2941A3ED23FAF0DC005838BA /* Frameworks */,
 				2941A3EE23FAF0DC005838BA /* Resources */,
@@ -491,7 +491,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		294ACFBB23FC07E80027D0D4 /* Run Script - Format */ = {
+		294ACFBB23FC07E80027D0D4 /* Format code */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -500,7 +500,7 @@
 			);
 			inputPaths = (
 			);
-			name = "Run Script - Format";
+			name = "Format code";
 			outputFileListPaths = (
 			);
 			outputPaths = (
