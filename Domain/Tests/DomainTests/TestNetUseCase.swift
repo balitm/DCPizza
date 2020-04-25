@@ -1,4 +1,4 @@
-//
+ //
 //  TestNetUseCase.swift
 //  
 //
@@ -6,23 +6,23 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 @testable import Domain
 
 struct TestNetUseCase: NetworkUseCase {
-    private func _decode<T: Decodable>(_ type: T.Type, _ jsonStr: String) -> Observable<T> {
+    private func _decode<T: Decodable>(_ type: T.Type, _ jsonStr: String) -> AnyPublisher<T, Error> {
         do {
             let jsonData = jsonStr.data(using: .utf8)!
             let decoder = JSONDecoder()
             let object = try decoder.decode(T.self, from: jsonData)
-            return Observable<T>.just(object)
+            return Result.Publisher(object).eraseToAnyPublisher()
         } catch {
             DLog(">>> decode error: ", error)
         }
-        return Observable<T>.empty()
+        return Empty<T, Error>().eraseToAnyPublisher()
     }
 
-    func getIngredients() -> Observable<[Ingredient]> {
+    func getIngredients() -> AnyPublisher<[Ingredient], Error> {
         let jsonStr = """
         [
             {
@@ -80,7 +80,7 @@ struct TestNetUseCase: NetworkUseCase {
         return _decode([DS.Ingredient].self, jsonStr)
     }
 
-    func getDrinks() -> Observable<[DS.Drink]> {
+    func getDrinks() -> AnyPublisher<[DS.Drink], Error> {
         let jsonStr = """
         [
             {
@@ -113,7 +113,7 @@ struct TestNetUseCase: NetworkUseCase {
         return _decode([DS.Drink].self, jsonStr)
     }
 
-    func getPizzas() -> Observable<DS.Pizzas> {
+    func getPizzas() -> AnyPublisher<DS.Pizzas, Error> {
         let jsonStr = """
         {
             "basePrice": 4,
@@ -216,12 +216,11 @@ struct TestNetUseCase: NetworkUseCase {
         return _decode(DS.Pizzas.self, jsonStr)
     }
 
-    func getInitData() -> Observable<InitData> {
-        let netData = Observable.zip(getPizzas(),
-                                     getIngredients(),
-                                     getDrinks(),
-                                     resultSelector: { (pizzas: $0, ingredients: $1, drinks: $2) })
-            .map({ tuple -> InitData in
+    func getInitData() -> AnyPublisher<InitData, Error> {
+        let netData = Publishers.Zip3(getPizzas(),
+                                      getIngredients(),
+                                      getDrinks())
+            .map({ (tuple: (pizzas: DS.Pizzas, ingredients: [DS.Ingredient], drinks: [DS.Drink])) -> InitData in
                 let ingredients = tuple.ingredients.sorted { $0.name < $1.name }
                 return InitData(pizzas: tuple.pizzas.asDomain(with: ingredients, drinks: tuple.drinks),
                                 ingredients: ingredients,
@@ -230,11 +229,11 @@ struct TestNetUseCase: NetworkUseCase {
                                                   drinks: [],
                                                   basePrice: tuple.pizzas.basePrice))
             })
-        return netData
+        return netData.eraseToAnyPublisher()
     }
 
-    func checkout(cart: Cart) -> Observable<Void> {
-        return Observable.just(())
+    func checkout(cart: Cart) -> AnyPublisher<Void, Error> {
+        return Result.Publisher(()).eraseToAnyPublisher()
     }
 }
 

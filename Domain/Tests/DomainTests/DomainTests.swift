@@ -7,12 +7,12 @@
 //
 
 import XCTest
-import RxSwift
+import Combine
 import RealmSwift
 @testable import Domain
 
 class DomainTests: XCTestCase {
-    private let _bag = DisposeBag()
+    private var _bag = Set<AnyCancellable>()
     var initData: InitData!
     var useCase: NetworkUseCase!
     var testCart: Cart!
@@ -43,18 +43,15 @@ class DomainTests: XCTestCase {
         }
     }
 
-
-    static var allTests = [
-        ("testNetwork", testNetwork),
-    ]
-
     override func setUp() {
         super.setUp()
 
         _container = DS.Container(realm: DomainTests.realm)
         useCase = TestNetUseCase()
         useCase.getInitData()
-            .subscribe(onNext: { [unowned self] in
+            .sink(receiveCompletion: {
+                DLog("received: ", $0)
+            }, receiveValue: { [unowned self] in
                 self.initData = $0
                 guard $0.drinks.count >= 2 && $0.pizzas.pizzas.count >= 2 else { return }
                 let pizzas = [
@@ -67,26 +64,51 @@ class DomainTests: XCTestCase {
                 ]
                 self.testCart = Cart(pizzas: pizzas, drinks: drinks, basePrice: $0.pizzas.basePrice)
             })
-            .disposed(by: _bag)
+            .store(in: &_bag)
     }
 
-    override func tearDown() {}
+    override func tearDown() {
+        DLog("cancellables: ", _bag.count)
+    }
 
     func testNetwork() {
         let useCase = RepositoryUseCaseProvider(container: _container).makeNetworkUseCase()
         let expectation = XCTestExpectation(description: "net")
 
-        Observable.zip(
+        Publishers.Zip(
             useCase.getIngredients(),
             useCase.getDrinks()
         )
-            .subscribe(onDisposed: {
+            .sink(receiveCompletion: { _ in
                 XCTAssert(true)
                 expectation.fulfill()
+            }, receiveValue: { _ in
             })
-            .disposed(by: _bag)
+            .store(in: &_bag)
 
         wait(for: [expectation], timeout: 120.0)
+    }
+
+    func testCombinableNetwork() {
+        let expectation = XCTestExpectation(description: "combine")
+
+        func success() {
+            XCTAssert(true)
+            expectation.fulfill()
+        }
+
+        let cancellable = Publishers.Zip(API.GetIngredients().cmb.perform(),
+                                         API.GetDrinks().cmb.perform())
+            .sink(receiveCompletion: {
+                DLog("Received comletion: ", $0)
+                success()
+            }, receiveValue: {
+                DLog("Received #(ingredients: ", $0.0.count, ", drinks: ", $0.1.count, ").")
+                success()
+            })
+
+        wait(for: [expectation], timeout: 120.0)
+        cancellable.cancel()
     }
 
     func testPizzaConversion() {
@@ -118,15 +140,19 @@ class DomainTests: XCTestCase {
 
         let expectation = XCTestExpectation(description: "checkout")
         useCase.checkout(cart: cart)
-            .subscribe(onNext: { _ in
+            .sink(receiveCompletion: {
+                switch $0 {
+                case .failure:
+                    XCTAssert(false)
+                case .finished:
+                    break
+                }
+                expectation.fulfill()
+            }, receiveValue: { _ in
                 DLog("Checkout succeeded.")
                 XCTAssert(true)
-            }, onError: { _ in
-                XCTAssert(false)
-            }, onDisposed: {
-                expectation.fulfill()
             })
-            .disposed(by: _bag)
+            .store(in: &_bag)
 
         wait(for: [expectation], timeout: 30.0)
     }

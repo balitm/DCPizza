@@ -7,14 +7,13 @@
 //
 
 import Foundation
-import RxSwift
-
+import Combine
 
 protocol RepositoryNetworkProtocol {
-    func getInitData() -> Observable<InitData>
-    func getIngredients() -> Observable<[Ingredient]>
-    func getDrinks() -> Observable<[Drink]>
-    func checkout(cart: DS.Cart) -> Observable<Void>
+    func getInitData() -> AnyPublisher<InitData, Error>
+    func getIngredients() -> AnyPublisher<[Ingredient], Error>
+    func getDrinks() -> AnyPublisher<[Drink], Error>
+    func checkout(cart: DS.Cart) -> AnyPublisher<Void, Error>
 }
 
 struct NetworkRepository: RepositoryNetworkProtocol, DatabaseContainerProtocol {
@@ -24,12 +23,11 @@ struct NetworkRepository: RepositoryNetworkProtocol, DatabaseContainerProtocol {
         self.container = container
     }
 
-    func getInitData() -> Observable<InitData> {
-        let netData = Observable.zip(API.GetPizzas().rx.perform(),
-                                     API.GetIngredients().rx.perform(),
-                                     API.GetDrinks().rx.perform(),
-                                     resultSelector: { (pizzas: $0, ingredients: $1, drinks: $2) })
-            .map({ [weak container] tuple -> InitData in
+    func getInitData() -> AnyPublisher<InitData, Error> {
+        let netData = Publishers.Zip3(API.GetPizzas().cmb.perform(),
+                                      API.GetIngredients().cmb.perform(),
+                                      API.GetDrinks().cmb.perform())
+            .map({ [weak container] (tuple: (pizzas: DS.Pizzas, ingredients: [DS.Ingredient], drinks: [DS.Drink])) -> InitData in
                 let ingredients = tuple.ingredients.sorted { $0.name < $1.name }
                 let dsCart = container?.values(DS.Cart.self).first ?? DS.Cart(pizzas: [], drinks: [])
                 var cart = dsCart.asDomain(with: ingredients, drinks: tuple.drinks)
@@ -40,20 +38,20 @@ struct NetworkRepository: RepositoryNetworkProtocol, DatabaseContainerProtocol {
                                 drinks: tuple.drinks,
                                 cart: cart)
             })
-        return netData
+        return netData.eraseToAnyPublisher()
     }
 
-    func getIngredients() -> Observable<[Ingredient]> {
-        API.GetIngredients().rx.perform()
+    func getIngredients() -> AnyPublisher<[Ingredient], Error> {
+        API.GetIngredients().cmb.perform()
     }
 
-    func getDrinks() -> Observable<[Drink]> {
-        API.GetDrinks().rx.perform()
+    func getDrinks() -> AnyPublisher<[Drink], Error> {
+        API.GetDrinks().cmb.perform()
     }
 
-    func checkout(cart: DS.Cart) -> Observable<Void> {
-        API.Checkout(pizzas: cart.pizzas, drinks: cart.drinks).rx.perform()
-            .do(onNext: {
+    func checkout(cart: DS.Cart) -> AnyPublisher<Void, Error> {
+        API.Checkout(pizzas: cart.pizzas, drinks: cart.drinks).cmb.perform()
+            .handleEvents(receiveOutput: {
                 self.execute {
                     try $0.write {
                         $0.delete(DS.Cart.self)
@@ -61,5 +59,6 @@ struct NetworkRepository: RepositoryNetworkProtocol, DatabaseContainerProtocol {
                     }
                 }
             })
+            .eraseToAnyPublisher()
     }
 }

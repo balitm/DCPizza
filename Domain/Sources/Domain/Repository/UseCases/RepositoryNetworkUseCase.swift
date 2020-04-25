@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 final class RepositoryNetworkUseCase: NetworkUseCase {
     let _repository: RepositoryNetworkProtocol
@@ -16,19 +16,19 @@ final class RepositoryNetworkUseCase: NetworkUseCase {
         _repository = NetworkRepository(container: container)
     }
 
-    func getInitData() -> Observable<InitData> {
+    func getInitData() -> AnyPublisher<InitData, Error> {
         _repository.getInitData()
     }
 
-    func getIngredients() -> Observable<[Ingredient]> {
+    func getIngredients() -> AnyPublisher<[Ingredient], Error> {
         _repository.getIngredients()
     }
 
-    func getDrinks() -> Observable<[Drink]> {
+    func getDrinks() -> AnyPublisher<[Drink], Error> {
         _repository.getDrinks()
     }
 
-    func checkout(cart: Cart) -> Observable<Void> {
+    func checkout(cart: Cart) -> AnyPublisher<Void, Error> {
         _repository.checkout(cart: cart.asDataSource())
     }
 }

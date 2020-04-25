@@ -7,7 +7,7 @@
 
 import Foundation
 import Alamofire
-import RxSwift
+import Combine
 
 protocol RequestReportCallback {
     func handleConnetionLost(request: RequestBaseProtocol) -> Bool
@@ -15,7 +15,6 @@ protocol RequestReportCallback {
 }
 
 protocol RequestBaseProtocol: AnyObject {
-    var id: Int { get set }
     var path: String { get }
     var httpParams: [String: Any]? { get }
     var timeout: TimeInterval { get }
@@ -206,7 +205,7 @@ extension API {
 
     // MARK: - Request base class
 
-    class RequestBase<M: ModelProtocol>: _BaseRequest<M.Result>, RxAbleType {
+    class RequestBase<M: ModelProtocol>: _BaseRequest<M.Result>, CombinableType {
         typealias Target = M.Result
         typealias Model = M
         typealias ResponseParser = (_ request: URLRequest?, _ response: HTTPURLResponse?, _ data: Data?, _ error: Error?) -> Alamofire.Result<Target>
@@ -243,7 +242,7 @@ extension API {
                          encoding: TimeoutParameterEncoding(encoding: encoding, timeout: timeout),
                          headers: headers)
 
-            DLog("Requesting: ", path, " - ", id)
+            DLog("Requesting: ", path)
             responseParser = _responeParser()
 
             afRequest = request
@@ -293,28 +292,22 @@ extension API {
     }
 }
 
-extension API._BaseRequest: ReactiveCompatible {}
+// MARK: - Combinable
+
+extension API._BaseRequest: CombinableCompatible {}
 
 /// A protocol representing a minimal interface for a model request.
 /// Used by the reactive provider extensions.
-protocol RxAbleType: HandlerBlockTypesProtocol, RequestBaseProtocol, PerformProtocol {
+protocol CombinableType: HandlerBlockTypesProtocol, RequestBaseProtocol, PerformProtocol {
     /// Designated request-making method.
     func perform(onSuccess: @escaping SuccessBlock, onError: @escaping ErrorBlock)
-}
-
-extension Reactive where Base: RxAbleType {
-    func perform() -> Observable<Base.Target> {
-        return base.rxPerform()
-    }
 }
 
 protocol CancelableObserver {
     func onCompleted()
 }
 
-extension AnyObserver: CancelableObserver {}
-
-extension RxAbleType {
+extension CombinableType {
     func perform(onSuccess: @escaping SuccessBlock = { _ in }, onError: @escaping ErrorBlock = { _ in false }) {
         _perform(observer: nil, onSuccess: onSuccess, onError: onError)
     }
@@ -326,18 +319,80 @@ extension RxAbleType {
         _performIn()
     }
 
-    func rxPerform() -> Observable<Target> {
-        return Observable.create { observer in
-            self._perform(observer: observer, onSuccess: { result in
-                observer.onNext(result)
-                observer.onCompleted()
-            }, onError: { error in
-                observer.onError(error)
+    fileprivate func _cmbPerform() -> AnyPublisher<Target, Error> {
+//        Deferred {
+//            return Future<Target, Error> { promise in
+//                self._perform(onSuccess: { result in
+//                    promise(.success(result))
+//                }, onError: { error in
+//                    promise(.failure(error))
+//                    return false
+//                })
+//            }
+//        }
+//        .eraseToAnyPublisher()
+        Subscribers._APIPublisher(request: self).eraseToAnyPublisher()
+    }
+}
+
+extension Combinable where Base: CombinableType {
+    func perform() -> AnyPublisher<Base.Target, Error> {
+        return base._cmbPerform()
+    }
+}
+
+// MARK: - Publisher
+
+private extension Subscribers {
+    final class _APISubscription<S: Subscriber, R: CombinableType>: Subscription, CancelableObserver where S.Input == R.Target, S.Failure == Error {
+        private let _request: R
+        private var _subscriber: S?
+
+        init(request: R, subscriber: S) {
+            _request = request
+            _subscriber = subscriber
+            _sendRequest()
+        }
+
+        func request(_ demand: Subscribers.Demand) {
+            //TODO: - Optionaly Adjust The Demand
+        }
+
+        func cancel() {
+            _subscriber = nil
+        }
+
+        func onCompleted() {
+            cancel()
+        }
+
+        private func _sendRequest() {
+            guard let subscriber = _subscriber else { return }
+
+            _request._perform(observer: self, onSuccess: {
+                _ = subscriber.receive($0)
+                subscriber.receive(completion: .finished)
+            }, onError: {
+                subscriber.receive(completion: .failure($0))
                 return false
             })
-            return Disposables.create { // [weak self] in
-                self.afRequest?.cancel()
-            }
+        }
+    }
+
+    struct _APIPublisher<R: CombinableType>: Publisher {
+        typealias Output = R.Target
+        typealias Failure = Error
+
+        private let _request: R
+
+        init(request: R) {
+            _request = request
+        }
+
+        func receive<S: Subscriber>(subscriber: S) where Failure == S.Failure, Output == S.Input {
+            let subscription = _APISubscription(request: _request,
+                                                subscriber: subscriber)
+            subscriber.receive(subscription: subscription)
         }
     }
 }
