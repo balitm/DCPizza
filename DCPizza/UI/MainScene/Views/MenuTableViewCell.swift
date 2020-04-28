@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Combine
 import AlamofireImage
 
 final class MenuTableViewCell: UITableViewCell {
@@ -17,13 +18,24 @@ final class MenuTableViewCell: UITableViewCell {
     @IBOutlet weak var cartView: RoundedView!
 
     private weak var _tap: UITapGestureRecognizer!
+    private let _tapEvent = PassthroughSubject<Void, Never>()
+    private var _bag = Set<AnyCancellable>()
 
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        let tap = UITapGestureRecognizer()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(_actionTap))
         cartView.addGestureRecognizer(tap)
         _tap = tap
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        _bag = Set<AnyCancellable>()
+    }
+
+    @objc private func _actionTap() {
+        _tapEvent.send(())
     }
 }
 
@@ -36,9 +48,8 @@ extension MenuTableViewCell: CellViewModelProtocol {
             pizzaView.af_setImage(withURL: url)
         }
 
-        _tap.rx.event
-            .map({ _ in () })
-            .bind(to: viewModel.tap)
-            .disposed(by: rx.reuseBag)
+        _tapEvent
+            .bind(subscriber: AnySubscriber(viewModel.tap))
+            .store(in: &_bag)
     }
 }

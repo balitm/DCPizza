@@ -13,12 +13,12 @@ import RxSwift
 protocol Navigator {
     var storyboard: UIStoryboard { get }
 
-    func showIngredients(of pizza: Pizza,
-                         image: UIImage?,
-                         ingredients: [Ingredient],
-                         cart: UI.Cart) -> Observable<UI.Cart>
-    func showCart(_ cart: UI.Cart, drinks: [Drink]) -> Observable<UI.Cart>
-    func showDrinks(cart: UI.Cart, drinks: [Drink]) -> Observable<UI.Cart>
+//    func showIngredients(of pizza: Pizza,
+//                         image: UIImage?,
+//                         ingredients: [Ingredient],
+//                         cart: UI.Cart) -> Observable<UI.Cart>
+//    func showCart(_ cart: UI.Cart, drinks: [Drink]) -> Observable<UI.Cart>
+//    func showDrinks(cart: UI.Cart, drinks: [Drink]) -> Observable<UI.Cart>
     func showAdded()
     func showSuccess()
 }
@@ -36,29 +36,29 @@ final class DefaultNavigator: Navigator {
         _dependencyContainer = dependencyContainer
     }
 
-    func showIngredients(of pizza: Pizza,
-                         image: UIImage?,
-                         ingredients: [Ingredient],
-                         cart: UI.Cart) -> Observable<UI.Cart> {
-        let vm = IngredientsViewModel(pizza: pizza, image: image, ingredients: ingredients, cart: cart)
-        let vc = IngredientsViewController.create(with: self, viewModel: vm)
-        _navigationController.pushViewController(vc, animated: true)
-        return vm.resultCart
-    }
-
-    func showCart(_ cart: UI.Cart, drinks: [Drink]) -> Observable<UI.Cart> {
-        let vm = _dependencyContainer.makeCartViewModel(cart: cart, drinks: drinks)
-        let vc = CartViewController.create(with: self, viewModel: vm)
-        _navigationController.pushViewController(vc, animated: true)
-        return vm.resultCart
-    }
-
-    func showDrinks(cart: UI.Cart, drinks: [Drink]) -> Observable<UI.Cart> {
-        let vm = DrinksTableViewModel(drinks: drinks, cart: cart)
-        let vc = DrinksTableViewController.create(with: self, viewModel: vm)
-        _navigationController.pushViewController(vc, animated: true)
-        return vm.resultCart
-    }
+//    func showIngredients(of pizza: Pizza,
+//                         image: UIImage?,
+//                         ingredients: [Ingredient],
+//                         cart: UI.Cart) -> Observable<UI.Cart> {
+//        let vm = IngredientsViewModel(pizza: pizza, image: image, ingredients: ingredients, cart: cart)
+//        let vc = IngredientsViewController.create(with: self, viewModel: vm)
+//        _navigationController.pushViewController(vc, animated: true)
+//        return vm.resultCart
+//    }
+//
+//    func showCart(_ cart: UI.Cart, drinks: [Drink]) -> Observable<UI.Cart> {
+//        let vm = _dependencyContainer.makeCartViewModel(cart: cart, drinks: drinks)
+//        let vc = CartViewController.create(with: self, viewModel: vm)
+//        _navigationController.pushViewController(vc, animated: true)
+//        return vm.resultCart
+//    }
+//
+//    func showDrinks(cart: UI.Cart, drinks: [Drink]) -> Observable<UI.Cart> {
+//        let vm = DrinksTableViewModel(drinks: drinks, cart: cart)
+//        let vc = DrinksTableViewController.create(with: self, viewModel: vm)
+//        _navigationController.pushViewController(vc, animated: true)
+//        return vm.resultCart
+//    }
 
     func showSuccess() {
         let vc = SuccessViewController.create(with: storyboard)

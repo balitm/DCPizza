@@ -9,15 +9,14 @@
 import Foundation
 import Domain
 import class UIKit.UIImage
-import RxSwift
-import RxRelay
+import Combine
 
 struct MenuCellViewModel {
     let nameText: String
     let ingredientsText: String
     let priceText: String
     let imageUrl: URL?
-    let tap = PublishRelay<Void>()
+    let tap = PassthroughSubject<Void, Never>()
 
     init(basePrice: Double, pizza: Pizza) {
         nameText = pizza.name
@@ -25,5 +24,15 @@ struct MenuCellViewModel {
         priceText = format(price: price)
         ingredientsText = pizza.ingredientNames()
         imageUrl = pizza.imageUrl
+    }
+}
+
+extension MenuCellViewModel: Hashable {
+    static func == (lhs: MenuCellViewModel, rhs: MenuCellViewModel) -> Bool {
+        lhs.nameText == rhs.nameText
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(nameText.hash)
     }
 }

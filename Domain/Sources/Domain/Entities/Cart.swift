@@ -9,6 +9,8 @@
 import Foundation
 
 public struct Cart {
+    public static var empty: Cart { Cart(pizzas: [], drinks: [], basePrice: 0) }
+
     public private(set) var pizzas: [Pizza]
     public private(set) var drinks: [Drink]
     public internal(set) var basePrice: Double

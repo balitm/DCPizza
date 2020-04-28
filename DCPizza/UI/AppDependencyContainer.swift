@@ -30,8 +30,8 @@ class AppDependencyContainer {
                          dependencyContainer: self)
     }
 
-    func makeCartViewModel(cart: UI.Cart, drinks: [Drink]) -> CartViewModel {
-        let dependencyContainer = CartDependencyContainer(appDependencyContainer: self)
-        return dependencyContainer.makeCartViewModel(cart: cart, drinks: drinks)
-    }
+//    func makeCartViewModel(cart: UI.Cart, drinks: [Drink]) -> CartViewModel {
+//        let dependencyContainer = CartDependencyContainer(appDependencyContainer: self)
+//        return dependencyContainer.makeCartViewModel(cart: cart, drinks: drinks)
+//    }
 }

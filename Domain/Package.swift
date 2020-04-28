@@ -16,7 +16,6 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "4.9.1")),
         .package(url: "https://github.com/Alamofire/AlamofireImage", .upToNextMajor(from: "3.6.0")),
-        .package(url: "https://github.com/ReactiveX/RxSwift.git", from: "5.0.0"),
         .package(name: "Realm", url: "https://github.com/realm/realm-cocoa", from: "4.4.0"),
     ],
     targets: [
@@ -26,7 +25,6 @@ let package = Package(
             name: "Domain",
             dependencies: [
                 "Alamofire", "AlamofireImage",
-                "RxSwift",
                 .product(name: "RealmSwift", package: "Realm"),
             ]
         ),

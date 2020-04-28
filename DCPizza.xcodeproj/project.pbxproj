@@ -24,23 +24,23 @@
 		294ACFF523FC601A0027D0D4 /* ViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFF423FC601A0027D0D4 /* ViewModelType.swift */; };
 		294ACFF723FC60C50027D0D4 /* MenuTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFF623FC60C50027D0D4 /* MenuTableViewModel.swift */; };
 		294ACFFA23FC63530027D0D4 /* MenuCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294ACFF923FC63530027D0D4 /* MenuCellViewModel.swift */; };
+		295351272458857E0069D426 /* UIBarButtonItem+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295351262458857E0069D426 /* UIBarButtonItem+Combine.swift */; };
+		2955A4CA24574A1A0093E3F2 /* CombineDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 2955A4C924574A1A0093E3F2 /* CombineDataSources */; };
+		2955A4CC24575D610093E3F2 /* PublishRelay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2955A4CB24575D610093E3F2 /* PublishRelay.swift */; };
 		295616782440CEBB0063542A /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 295616772440CEBB0063542A /* Domain */; };
 		2956167B2440DA7A0063542A /* Differentiator in Frameworks */ = {isa = PBXBuildFile; productRef = 2956167A2440DA7A0063542A /* Differentiator */; };
 		2956167D2440DA7A0063542A /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 2956167C2440DA7A0063542A /* RxDataSources */; };
 		295616802440DB180063542A /* RxSwiftExt in Frameworks */ = {isa = PBXBuildFile; productRef = 2956167F2440DB180063542A /* RxSwiftExt */; };
-		295C3D6123FEF60000D82655 /* CartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C3D6023FEF60000D82655 /* CartViewController.swift */; };
-		295C3D6323FEF7A300D82655 /* CartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C3D6223FEF7A300D82655 /* CartViewModel.swift */; };
 		295C3D6723FEFB4900D82655 /* PaddingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C3D6623FEFB4900D82655 /* PaddingTableViewCell.swift */; };
 		295C3D6923FEFBC000D82655 /* CartItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C3D6823FEFBC000D82655 /* CartItemTableViewCell.swift */; };
 		295C3D6B23FEFDF900D82655 /* CartTotalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C3D6A23FEFDF900D82655 /* CartTotalTableViewCell.swift */; };
 		295C3D6D23FEFF7700D82655 /* PaddingCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C3D6C23FEFF7700D82655 /* PaddingCellViewModel.swift */; };
 		295C3D6F23FF00D600D82655 /* CartItemCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C3D6E23FF00D600D82655 /* CartItemCellViewModel.swift */; };
 		295C3D7123FF03C900D82655 /* CartTotalCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C3D7023FF03C900D82655 /* CartTotalCellViewModel.swift */; };
+		2965D815245857BE000B127B /* AppDependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B5A7982409746600BDE6AB /* AppDependencyContainer.swift */; };
+		2965D81624586323000B127B /* Navigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A46823FD76F600828A94 /* Navigator.swift */; };
 		2969857923FEA5870024466E /* UITableViewCell+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969857823FEA5870024466E /* UITableViewCell+Extension.swift */; };
 		2969857C23FEB5400024466E /* AddedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969857B23FEB5400024466E /* AddedViewController.swift */; };
-		2976A46523FD6B9300828A94 /* IngredientsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A46423FD6B9300828A94 /* IngredientsViewController.swift */; };
-		2976A46723FD6BF900828A94 /* IngredientsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A46623FD6BF900828A94 /* IngredientsViewModel.swift */; };
-		2976A46923FD76F600828A94 /* Navigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A46823FD76F600828A94 /* Navigator.swift */; };
 		2976A46D23FDB21B00828A94 /* IngredientsHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A46C23FDB21B00828A94 /* IngredientsHeaderTableViewCell.swift */; };
 		2976A46F23FDB58E00828A94 /* SeparableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A46E23FDB58E00828A94 /* SeparableTableViewCell.swift */; };
 		2976A47123FDB6A300828A94 /* IngredientsHeaderCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A47023FDB6A300828A94 /* IngredientsHeaderCellViewModel.swift */; };
@@ -49,11 +49,7 @@
 		29B13822240141E200A49C45 /* UIConvertibleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B13821240141E200A49C45 /* UIConvertibleType.swift */; };
 		29B138242401424800A49C45 /* DomainRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B138232401424800A49C45 /* DomainRepresentable.swift */; };
 		29B1382A2401465E00A49C45 /* UICart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B138292401465E00A49C45 /* UICart.swift */; };
-		29B5A7992409746600BDE6AB /* AppDependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B5A7982409746600BDE6AB /* AppDependencyContainer.swift */; };
-		29B5A79B2409889800BDE6AB /* CartDependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B5A79A2409889800BDE6AB /* CartDependencyContainer.swift */; };
 		29B8ABE024007E4300A07816 /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B8ABDF24007E4300A07816 /* SuccessViewController.swift */; };
-		29EF9A732401D53C002E8E4E /* DrinksTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EF9A6D2401D53C002E8E4E /* DrinksTableViewController.swift */; };
-		29EF9A742401D53C002E8E4E /* DrinksTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EF9A6E2401D53C002E8E4E /* DrinksTableViewModel.swift */; };
 		29EF9A752401D53C002E8E4E /* DrinkCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EF9A702401D53C002E8E4E /* DrinkCellViewModel.swift */; };
 		29EF9A762401D53C002E8E4E /* DrinkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EF9A722401D53C002E8E4E /* DrinkTableViewCell.swift */; };
 /* End PBXBuildFile section */
@@ -90,6 +86,8 @@
 		294ACFF423FC601A0027D0D4 /* ViewModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelType.swift; sourceTree = "<group>"; };
 		294ACFF623FC60C50027D0D4 /* MenuTableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableViewModel.swift; sourceTree = "<group>"; };
 		294ACFF923FC63530027D0D4 /* MenuCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCellViewModel.swift; sourceTree = "<group>"; };
+		295351262458857E0069D426 /* UIBarButtonItem+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Combine.swift"; sourceTree = "<group>"; };
+		2955A4CB24575D610093E3F2 /* PublishRelay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishRelay.swift; sourceTree = "<group>"; };
 		295616762440C4330063542A /* Domain */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Domain; sourceTree = "<group>"; };
 		295C3D6023FEF60000D82655 /* CartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartViewController.swift; sourceTree = "<group>"; };
 		295C3D6223FEF7A300D82655 /* CartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartViewModel.swift; sourceTree = "<group>"; };
@@ -128,6 +126,7 @@
 			files = (
 				2956167D2440DA7A0063542A /* RxDataSources in Frameworks */,
 				2956167B2440DA7A0063542A /* Differentiator in Frameworks */,
+				2955A4CA24574A1A0093E3F2 /* CombineDataSources in Frameworks */,
 				295616802440DB180063542A /* RxSwiftExt in Frameworks */,
 				295616782440CEBB0063542A /* Domain in Frameworks */,
 			);
@@ -218,6 +217,7 @@
 				294ACFF423FC601A0027D0D4 /* ViewModelType.swift */,
 				2976A46E23FDB58E00828A94 /* SeparableTableViewCell.swift */,
 				29432A0D240312E800F4FC06 /* PriceFormatter.swift */,
+				2955A4CB24575D610093E3F2 /* PublishRelay.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -230,6 +230,7 @@
 				294ACFE523FC56630027D0D4 /* UITableView+Extension.swift */,
 				294ACFE623FC56630027D0D4 /* UIColor+Extensions.swift */,
 				2969857823FEA5870024466E /* UITableViewCell+Extension.swift */,
+				295351262458857E0069D426 /* UIBarButtonItem+Combine.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -405,6 +406,7 @@
 				2956167A2440DA7A0063542A /* Differentiator */,
 				2956167C2440DA7A0063542A /* RxDataSources */,
 				2956167F2440DB180063542A /* RxSwiftExt */,
+				2955A4C924574A1A0093E3F2 /* CombineDataSources */,
 			);
 			productName = DCPizza;
 			productReference = 2941A3F023FAF0DC005838BA /* DCPizza.app */;
@@ -459,6 +461,7 @@
 			packageReferences = (
 				295616792440DA7A0063542A /* XCRemoteSwiftPackageReference "RxDataSources" */,
 				2956167E2440DB180063542A /* XCRemoteSwiftPackageReference "RxSwiftExt" */,
+				2955A4C824574A1A0093E3F2 /* XCRemoteSwiftPackageReference "CombineDataSources" */,
 			);
 			productRefGroup = 2941A3F123FAF0DC005838BA /* Products */;
 			projectDirPath = "";
@@ -516,34 +519,32 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				29EF9A742401D53C002E8E4E /* DrinksTableViewModel.swift in Sources */,
 				295C3D6B23FEFDF900D82655 /* CartTotalTableViewCell.swift in Sources */,
-				29B5A7992409746600BDE6AB /* AppDependencyContainer.swift in Sources */,
 				295C3D6D23FEFF7700D82655 /* PaddingCellViewModel.swift in Sources */,
 				294ACFE723FC56630027D0D4 /* UIStoryboard+load.swift in Sources */,
 				294ACFEE23FC5B3E0027D0D4 /* MenuTableViewController.swift in Sources */,
 				29EF9A752401D53C002E8E4E /* DrinkCellViewModel.swift in Sources */,
-				29B5A79B2409889800BDE6AB /* CartDependencyContainer.swift in Sources */,
 				294ACFFA23FC63530027D0D4 /* MenuCellViewModel.swift in Sources */,
 				294ACFF723FC60C50027D0D4 /* MenuTableViewModel.swift in Sources */,
-				29EF9A732401D53C002E8E4E /* DrinksTableViewController.swift in Sources */,
 				294ACFF323FC5C270027D0D4 /* MenuTableViewCell.swift in Sources */,
 				29432A0E240312E800F4FC06 /* PriceFormatter.swift in Sources */,
 				294ACFE923FC56630027D0D4 /* UIColor+Extensions.swift in Sources */,
 				2976A47123FDB6A300828A94 /* IngredientsHeaderCellViewModel.swift in Sources */,
+				2955A4CC24575D610093E3F2 /* PublishRelay.swift in Sources */,
 				29EF9A762401D53C002E8E4E /* DrinkTableViewCell.swift in Sources */,
 				295C3D6723FEFB4900D82655 /* PaddingTableViewCell.swift in Sources */,
 				2944CAA324003F1400F4709F /* UIViewController+Rx.swift in Sources */,
 				2976A47323FDBA6700828A94 /* IngredientsItemTableViewCell.swift in Sources */,
 				295C3D7123FF03C900D82655 /* CartTotalCellViewModel.swift in Sources */,
 				29B1382A2401465E00A49C45 /* UICart.swift in Sources */,
+				295351272458857E0069D426 /* UIBarButtonItem+Combine.swift in Sources */,
+				2965D815245857BE000B127B /* AppDependencyContainer.swift in Sources */,
 				2976A46D23FDB21B00828A94 /* IngredientsHeaderTableViewCell.swift in Sources */,
-				295C3D6323FEF7A300D82655 /* CartViewModel.swift in Sources */,
 				29B13822240141E200A49C45 /* UIConvertibleType.swift in Sources */,
+				2965D81624586323000B127B /* Navigator.swift in Sources */,
 				294ACFEB23FC57130027D0D4 /* RoundedView.swift in Sources */,
 				29B8ABE024007E4300A07816 /* SuccessViewController.swift in Sources */,
 				295C3D6F23FF00D600D82655 /* CartItemCellViewModel.swift in Sources */,
-				2976A46923FD76F600828A94 /* Navigator.swift in Sources */,
 				2969857C23FEB5400024466E /* AddedViewController.swift in Sources */,
 				295C3D6923FEFBC000D82655 /* CartItemTableViewCell.swift in Sources */,
 				2969857923FEA5870024466E /* UITableViewCell+Extension.swift in Sources */,
@@ -551,10 +552,7 @@
 				294ACFE823FC56630027D0D4 /* UITableView+Extension.swift in Sources */,
 				2941A3F423FAF0DC005838BA /* AppDelegate.swift in Sources */,
 				2976A47523FDBB3400828A94 /* IngredientsItemCellViewModel.swift in Sources */,
-				2976A46723FD6BF900828A94 /* IngredientsViewModel.swift in Sources */,
-				295C3D6123FEF60000D82655 /* CartViewController.swift in Sources */,
 				294ACFA723FC026D0027D0D4 /* Constant.swift in Sources */,
-				2976A46523FD6B9300828A94 /* IngredientsViewController.swift in Sources */,
 				29B138242401424800A49C45 /* DomainRepresentable.swift in Sources */,
 				294ACFF523FC601A0027D0D4 /* ViewModelType.swift in Sources */,
 			);
@@ -830,6 +828,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2955A4C824574A1A0093E3F2 /* XCRemoteSwiftPackageReference "CombineDataSources" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CombineCommunity/CombineDataSources.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.5;
+			};
+		};
 		295616792440DA7A0063542A /* XCRemoteSwiftPackageReference "RxDataSources" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/RxSwiftCommunity/RxDataSources";
@@ -849,6 +855,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2955A4C924574A1A0093E3F2 /* CombineDataSources */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2955A4C824574A1A0093E3F2 /* XCRemoteSwiftPackageReference "CombineDataSources" */;
+			productName = CombineDataSources;
+		};
 		295616772440CEBB0063542A /* Domain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Domain;
