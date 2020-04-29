@@ -12,3 +12,5 @@ import typealias UIKit.CGFloat
 struct PaddingCellViewModel {
     let height: CGFloat
 }
+
+extension PaddingCellViewModel: Hashable {}

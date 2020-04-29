@@ -34,6 +34,7 @@
 		2956167B2440DA7A0063542A /* Differentiator in Frameworks */ = {isa = PBXBuildFile; productRef = 2956167A2440DA7A0063542A /* Differentiator */; };
 		2956167D2440DA7A0063542A /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 2956167C2440DA7A0063542A /* RxDataSources */; };
 		295616802440DB180063542A /* RxSwiftExt in Frameworks */ = {isa = PBXBuildFile; productRef = 2956167F2440DB180063542A /* RxSwiftExt */; };
+		2957A6D4245C82D4008ECE50 /* UIGestureRecognizer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2957A6D3245C82D4008ECE50 /* UIGestureRecognizer+Extension.swift */; };
 		295C3D6723FEFB4900D82655 /* PaddingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C3D6623FEFB4900D82655 /* PaddingTableViewCell.swift */; };
 		295C3D6923FEFBC000D82655 /* CartItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C3D6823FEFBC000D82655 /* CartItemTableViewCell.swift */; };
 		295C3D6B23FEFDF900D82655 /* CartTotalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C3D6A23FEFDF900D82655 /* CartTotalTableViewCell.swift */; };
@@ -92,6 +93,7 @@
 		295351262458857E0069D426 /* UIBarButtonItem+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Combine.swift"; sourceTree = "<group>"; };
 		2955A4CB24575D610093E3F2 /* PublishRelay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishRelay.swift; sourceTree = "<group>"; };
 		295616762440C4330063542A /* Domain */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Domain; sourceTree = "<group>"; };
+		2957A6D3245C82D4008ECE50 /* UIGestureRecognizer+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIGestureRecognizer+Extension.swift"; sourceTree = "<group>"; };
 		295C3D6023FEF60000D82655 /* CartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartViewController.swift; sourceTree = "<group>"; };
 		295C3D6223FEF7A300D82655 /* CartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartViewModel.swift; sourceTree = "<group>"; };
 		295C3D6623FEFB4900D82655 /* PaddingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingTableViewCell.swift; sourceTree = "<group>"; };
@@ -234,6 +236,7 @@
 				294ACFE623FC56630027D0D4 /* UIColor+Extensions.swift */,
 				2969857823FEA5870024466E /* UITableViewCell+Extension.swift */,
 				295351262458857E0069D426 /* UIBarButtonItem+Combine.swift */,
+				2957A6D3245C82D4008ECE50 /* UIGestureRecognizer+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -533,6 +536,7 @@
 				294ACFF323FC5C270027D0D4 /* MenuTableViewCell.swift in Sources */,
 				29432A0E240312E800F4FC06 /* PriceFormatter.swift in Sources */,
 				294ACFE923FC56630027D0D4 /* UIColor+Extensions.swift in Sources */,
+				2957A6D4245C82D4008ECE50 /* UIGestureRecognizer+Extension.swift in Sources */,
 				2976A47123FDB6A300828A94 /* IngredientsHeaderCellViewModel.swift in Sources */,
 				2955A4CC24575D610093E3F2 /* PublishRelay.swift in Sources */,
 				29EF9A762401D53C002E8E4E /* DrinkTableViewCell.swift in Sources */,

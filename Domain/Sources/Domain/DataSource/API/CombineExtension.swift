@@ -20,7 +20,7 @@ public struct Combinable<Base> {
 }
 
 /// A type that has Combinable extensions.
-public protocol CombinableCompatible {
+public protocol CombineCompatible {
     /// Extended type
     associatedtype CombinableBase
 
@@ -31,7 +31,7 @@ public protocol CombinableCompatible {
     var cmb: Combinable<CombinableBase> { get set }
 }
 
-extension CombinableCompatible {
+extension CombineCompatible {
     /// Combinable extensions.
     public static var cmb: Combinable<Self>.Type {
         get {

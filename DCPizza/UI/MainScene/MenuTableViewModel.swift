@@ -32,7 +32,7 @@ class MenuTableViewModel: ViewModelType {
         let tableData: AnyPublisher<[MenuCellViewModel], Never>
 //        let selection: AnyPublisher<Selection, Never>
         let showAdded: AnyPublisher<Void, Never>
-//        let showCart: AnyPublisher<DrinksData, Never>
+        let showCart: AnyPublisher<DrinksData, Never>
     }
 
     @Published var cart = UI.Cart.empty
@@ -47,14 +47,15 @@ class MenuTableViewModel: ViewModelType {
     }
 
     func transform(input: Input) -> Output {
-        let data = _networkUseCase
-            .getInitData()
+        let cachedData = CurrentValueSubject<InitData, Never>(InitData.empty)
+        _networkUseCase.getInitData()
             .catch({ _ in
                 Empty<InitData, Never>()
             })
-            .share()
+            .bind(subscriber: AnySubscriber(cachedData))
+            .store(in: &_bag)
 
-        let viewModels = data
+        let viewModels = cachedData
             .map({ data -> [MenuCellViewModel] in
                 let basePrice = data.pizzas.basePrice
                 let vms = data.pizzas.pizzas.map {
@@ -65,7 +66,7 @@ class MenuTableViewModel: ViewModelType {
             .share()
 
         // Init the cart.
-        data
+        cachedData
             .map({ $0.cart.asUI() })
             .assign(to: \.cart, on: self)
             .store(in: &_bag)
@@ -81,12 +82,20 @@ class MenuTableViewModel: ViewModelType {
             })
             .flatMap({
                 Publishers.MergeMany($0)
+                    .handleEvents(receiveOutput: {
+                        DLog("recved pair: ", $0)
+                    }, receiveCompletion: {
+                        DLog("completion: ", $0)
+                    }, receiveCancel: {
+                        DLog("cancel")
+                    })
             })
+            .share()
 
         // Update cart on add events.
         cartEvents
             .flatMap({ [unowned self] (idx: Int) in
-                Publishers.CombineLatest(data, self.$cart)
+                Publishers.Zip(cachedData, self.$cart)
                     .map({ (cmb: (data: InitData, cart: UI.Cart)) -> UI.Cart in
                         var newCart = cmb.cart
                         newCart.add(pizza: cmb.data.pizzas.pizzas[idx])
@@ -118,14 +127,15 @@ class MenuTableViewModel: ViewModelType {
 //
 //        let selection = Observable.merge(selected, scratch)
 //            .asDriver(onErrorDriveWith: Driver<Selection>.never())
-//
-//        let showCart = input.cart
-//            .withLatestFrom(Observable.combineLatest(data, cart), resultSelector: { (data: $1.0, cart: $1.1) })
-//            .map({ t -> DrinksData in
-//                (t.cart, t.data.drinks)
-//            })
-//            .asDriver(onErrorDriveWith: Driver<DrinksData>.never())
-//
+
+        let showCart = input.cart
+            .flatMap({
+                Publishers.Zip(cachedData, self.$cart)
+            })
+            .map({ (t: (data: InitData, cart: UI.Cart)) -> DrinksData in
+                (t.cart, t.data.drinks)
+            })
+
 //        input.saveCart
 //            .withLatestFrom(cart)
 //            .subscribe(onNext: { [dbUseCase = _databaseUseCase] in
@@ -134,12 +144,12 @@ class MenuTableViewModel: ViewModelType {
 //            })
 //            .disposed(by: _bag)
 
-        let showAdded = cartEvents.map({ _ in () }).eraseToAnyPublisher()
+        let showAdded = cartEvents.map({ _ in () })
 
         return Output(tableData: viewModels.eraseToAnyPublisher(),
 //                      selection: selection,
-                      showAdded: showAdded
-//                      showCart: showCart
+                      showAdded: showAdded.eraseToAnyPublisher(),
+                      showCart: showCart.eraseToAnyPublisher()
         )
     }
 }

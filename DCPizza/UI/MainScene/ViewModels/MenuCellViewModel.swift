@@ -28,7 +28,7 @@ struct MenuCellViewModel {
 }
 
 extension MenuCellViewModel: Hashable {
-    static func == (lhs: MenuCellViewModel, rhs: MenuCellViewModel) -> Bool {
+    static func ==(lhs: MenuCellViewModel, rhs: MenuCellViewModel) -> Bool {
         lhs.nameText == rhs.nameText
     }
 

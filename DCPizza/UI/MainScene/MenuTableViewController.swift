@@ -12,7 +12,6 @@ import Combine
 import CombineDataSources
 
 final class MenuTableViewController: UITableViewController {
-    typealias SectionModel = MenuCellViewModel
 //    typealias Selected = MenuTableViewModel.Selected
 
     private var _viewModel: MenuTableViewModel!
@@ -52,6 +51,7 @@ final class MenuTableViewController: UITableViewController {
     // MARK: - bind functions
 
     private func _bind() {
+        let leftPublisher = navigationItem.leftBarButtonItem!.cmb.publisher().map { _ in () }.eraseToAnyPublisher()
 //        let selected = tableView.rx.itemSelected
 //            .filterMap({ [unowned self] ip -> FilterMap<Selected> in
 //                guard let cell = self.tableView.cellForRow(at: ip) as? MenuTableViewCell else { return .ignore }
@@ -61,13 +61,13 @@ final class MenuTableViewController: UITableViewController {
         let out = _viewModel.transform(input: MenuTableViewModel.Input(
 //             selected: selected,
 //             scratch: navigationItem.rightBarButtonItem!.rx.tap.asObservable(),
-            cart: navigationItem.leftBarButtonItem!.cmb.publisher().map { _ in () }.eraseToAnyPublisher()
+            cart: leftPublisher
 //             saveCart: _saveCart
         ))
 
         _bag = [
             out.tableData
-                .bind(subscriber: tableView.rowsSubscriber(cellIdentifier: "MenuTableViewCell", cellType: MenuTableViewCell.self, cellConfig: { cell, ip, model in
+                .bind(subscriber: tableView.rowsSubscriber(cellType: MenuTableViewCell.self, cellConfig: { cell, ip, model in
                     cell.config(with: model)
                 })),
 
@@ -81,14 +81,13 @@ final class MenuTableViewController: UITableViewController {
             //            })
             //            .bind(to: _viewModel.cart)
             //            .disposed(by: _bag)
-            //
-            //        // Show cart.
-            //        out.showCart.asObservable()
-            //            .flatMap({ [unowned self] in
-            //                self._navigator.showCart($0.cart, drinks: $0.drinks)
-            //            })
-            //            .bind(to: _viewModel.cart)
-            //            .disposed(by: _bag)
+
+            // Show cart.
+            out.showCart
+                .flatMap({ [unowned self] in
+                    self._navigator.showCart($0.cart, drinks: $0.drinks)
+                })
+                .assign(to: \.cart, on: _viewModel),
 
             // Show addedd.
             out.showAdded

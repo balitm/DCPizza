@@ -17,3 +17,5 @@ struct CartTotalCellViewModel {
         priceText = format(price: price)
     }
 }
+
+extension CartTotalCellViewModel: Hashable {}

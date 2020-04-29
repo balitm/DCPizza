@@ -9,6 +9,7 @@
 import UIKit
 import Combine
 import AlamofireImage
+import Domain
 
 final class MenuTableViewCell: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
@@ -35,6 +36,7 @@ final class MenuTableViewCell: UITableViewCell {
     }
 
     @objc private func _actionTap() {
+        DLog("sending tap")
         _tapEvent.send(())
     }
 }

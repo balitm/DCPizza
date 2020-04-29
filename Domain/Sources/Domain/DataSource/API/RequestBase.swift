@@ -294,7 +294,7 @@ extension API {
 
 // MARK: - Combinable
 
-extension API._BaseRequest: CombinableCompatible {}
+extension API._BaseRequest: CombineCompatible {}
 
 /// A protocol representing a minimal interface for a model request.
 /// Used by the reactive provider extensions.

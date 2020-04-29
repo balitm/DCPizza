@@ -13,7 +13,7 @@ import Combine
 final class CartViewModel: ViewModelType {
     typealias DrinksData = (cart: UI.Cart, drinks: [Drink])
 
-    enum Item {
+    enum Item: Hashable {
         case padding(viewModel: PaddingCellViewModel)
         case item(viewModel: CartItemCellViewModel)
         case total(viewModel: CartTotalCellViewModel)
@@ -65,18 +65,18 @@ final class CartViewModel: ViewModelType {
                 items.append(.total(viewModel: CartTotalCellViewModel(price: cart.totalPrice())))
                 return items
             })
-        // .debug(trimOutput: true)
 
         input.selected
             .flatMap({ [unowned cart] index in
                 cart
+                    .first()
                     .map({
                         assert(index >= 1)
                         let idx = index - 1
 
                         // DLog(">>> index: ", index)
                         var newCart = $0
-                        newCart.remove(at: index)
+                        newCart.remove(at: idx)
                         // DLog(">>> pizzas in cart: ", newCart.pizzas.count)
                         return newCart
                     })
@@ -85,7 +85,7 @@ final class CartViewModel: ViewModelType {
             .store(in: &_bag)
 
         let checkout = input.checkout
-            .flatMap({ [unowned cart] _ in cart })
+            .flatMap({ [unowned cart] _ in cart.first() })
             .flatMap({ [useCase = _networkUseCase] uiCart in
                 useCase.checkout(cart: uiCart.asDomain())
                     .map { uiCart }
@@ -118,37 +118,3 @@ final class CartViewModel: ViewModelType {
         )
     }
 }
-
-//extension CartViewModel.SectionModel: AnimatableSectionModelType {
-//    var identity: Int { 0 }
-//
-//    typealias Item = CartViewModel.Item
-//
-//    init(original: CartViewModel.SectionModel, items: [CartViewModel.Item]) {
-//        self = original
-//        self.items = items
-//    }
-//}
-//
-//extension CartViewModel.Item: IdentifiableType, Equatable {
-//    var identity: Int {
-//        switch self {
-//        case let .padding(viewModel): return 1000 + Int(viewModel.height)
-//        case let .item(viewModel): return viewModel.id
-//        case .total: return 2000
-//        }
-//    }
-//
-//    var unique: Double {
-//        switch self {
-//        case let .total(viewModel):
-//            return viewModel.price
-//        default:
-//            return 0
-//        }
-//    }
-//
-//    static func ==(lhs: CartViewModel.Item, rhs: CartViewModel.Item) -> Bool {
-//        lhs.identity == rhs.identity && lhs.unique == rhs.unique
-//    }
-//}
