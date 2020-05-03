@@ -8,67 +8,56 @@
 
 import Foundation
 import Domain
-import RxSwift
-import RxDataSources
-import struct RxCocoa.Driver
+import Combine
 
-struct DrinksTableViewModel: ViewModelType {
+final class DrinksTableViewModel: ViewModelType {
+    typealias Item = DrinkCellViewModel
+
     struct Input {
-        let selected: Observable<Int>
+        let selected: AnyPublisher<Int, Never>
     }
 
     struct Output {
-        let tableData: Driver<[SectionModel]>
-        let showAdded: Driver<Void>
+        let tableData: AnyPublisher<[Item], Never>
+        let showAdded: AnyPublisher<Void, Never>
     }
 
-    var resultCart: Observable<UI.Cart> { cart.asObservable().skip(1) }
-    let cart: BehaviorSubject<UI.Cart>
+    var resultCart: AnyPublisher<UI.Cart, Never> { cart.dropFirst().eraseToAnyPublisher() }
+    let cart: CurrentValueSubject<UI.Cart, Never>
     private let _drinks: [Drink]
-    private let _bag = DisposeBag()
+    private var _bag = Set<AnyCancellable>()
 
     init(drinks: [Drink], cart: UI.Cart) {
         _drinks = drinks
-        self.cart = BehaviorSubject(value: cart)
+        self.cart = CurrentValueSubject(cart)
     }
 
     func transform(input: Input) -> Output {
         let items = _drinks.map {
             DrinkCellViewModel(name: $0.name, priceText: format(price: $0.price))
         }
+        let selected = input.selected.share()
 
         // Add drink to cart.
-        input.selected
-            .withLatestFrom(cart) { (index: $0, cart: $1) }
+        selected
+            .flatMap({ [unowned cart] index in
+                cart
+                    .first()
+                    .map({ (index: index, cart: $0) })
+            })
+            // .print()
             .map({ [drinks = _drinks] in
                 var newCart = $0.cart
                 newCart.add(drink: drinks[$0.index])
                 return newCart
             })
-            .bind(to: cart)
-            .disposed(by: _bag)
+            .bind(subscriber: AnySubscriber(cart))
+            .store(in: &_bag)
 
-        let showAdded = input.selected
+        let showAdded = selected
             .map { _ in () }
-            .asDriver(onErrorJustReturn: ())
 
-        return Output(tableData: Driver.just([SectionModel(items: items)]),
-                      showAdded: showAdded)
-    }
-}
-
-extension DrinksTableViewModel {
-    typealias SectionItem = DrinkCellViewModel
-
-    struct SectionModel {
-        var items: [SectionItem]
-    }
-}
-
-extension DrinksTableViewModel.SectionModel: SectionModelType {
-    typealias Item = DrinksTableViewModel.SectionItem
-
-    init(original: DrinksTableViewModel.SectionModel, items: [Item]) {
-        self.items = items
+        return Output(tableData: Just(items).eraseToAnyPublisher(),
+                      showAdded: showAdded.eraseToAnyPublisher())
     }
 }

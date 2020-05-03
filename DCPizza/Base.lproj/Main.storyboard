@@ -553,7 +553,6 @@
                     <connections>
                         <outlet property="checkoutLabel" destination="gcY-7f-JXg" id="fRC-3s-yFN"/>
                         <outlet property="checkoutTap" destination="Jo0-5k-baV" id="Kug-MC-gG4"/>
-                        <outlet property="drinksButton" destination="SFx-6P-ff1" id="uDa-cS-Ij6"/>
                         <outlet property="tableView" destination="ruX-YO-Nzr" id="a0b-1H-flv"/>
                     </connections>
                 </viewController>

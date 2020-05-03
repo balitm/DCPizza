@@ -16,7 +16,6 @@ class CartViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var checkoutTap: UITapGestureRecognizer!
-    @IBOutlet weak var drinksButton: UIBarButtonItem!
     @IBOutlet weak var checkoutLabel: UILabel!
 
     private var _navigator: Navigator!
@@ -54,16 +53,15 @@ class CartViewController: UIViewController {
 
 private extension CartViewController {
     func _bind() {
+        let rightPublisher = navigationItem.rightBarButtonItem!.cmb.publisher().map { _ in () }.eraseToAnyPublisher()
         let selected = tableView.cmb.itemSelected()
             .compactMap({ [unowned self] ip -> Int? in
                 guard self.tableView.cellForRow(at: ip) is CartItemTableViewCell else { return nil }
                 return ip.row
             })
-
         let tap = checkoutTap.cmb.event()
-
-        let input = CartViewModel.Input(selected: selected.eraseToAnyPublisher(), // Empty<Int, Never>(completeImmediately: false).eraseToAnyPublisher(),
-                                        checkout: tap.eraseToAnyPublisher()) // Empty<Void, Never>(completeImmediately: false).eraseToAnyPublisher())
+        let input = CartViewModel.Input(selected: selected.eraseToAnyPublisher(),
+                                        checkout: tap.eraseToAnyPublisher())
         let out = _viewModel.transform(input: input)
 
         let tableController = TableViewItemsController<[[Item]]> { _, tv, ip, item -> UITableViewCell in
@@ -76,25 +74,29 @@ private extension CartViewController {
                 return tv.createCell(CartTotalTableViewCell.self, viewModel, ip)
             }
         }
+
         _bag = [
             // Table view.
             out.tableData
                 .bind(subscriber: tableView.rowsSubscriber(tableController)),
-
-            //        // Add drinks.
-            //        drinksButton.rx.tap
-            //            .withLatestFrom(out.showDrinks)
-            //            .flatMap({ [unowned self] in
-            //                self._navigator.showDrinks(cart: $0.cart, drinks: $0.drinks)
-            //            })
-            //            .bind(to: _viewModel.cart)
-            //            .disposed(by: _bag)
 
             // On checkout success.
             out.showSuccess
                 .sink(receiveValue: { [unowned self] _ in
                     self._navigator.showSuccess()
                 }),
+
+            // Add drinks.
+            rightPublisher
+                .flatMap({ _ in
+                    out.showDrinks
+                        .first()
+                })
+                // .print()
+                .flatMap({ [unowned self] in
+                    self._navigator.showDrinks(cart: $0.cart, drinks: $0.drinks)
+                })
+                .bind(subscriber: AnySubscriber(_viewModel.cart)),
 
             // Enable checkout.
             out.canCheckout

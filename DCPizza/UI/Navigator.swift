@@ -18,7 +18,7 @@ protocol Navigator {
 //                         ingredients: [Ingredient],
 //                         cart: UI.Cart) -> AnyPublisher<UI.Cart, Never>
     func showCart(_ cart: UI.Cart, drinks: [Drink]) -> AnyPublisher<UI.Cart, Never>
-//    func showDrinks(cart: UI.Cart, drinks: [Drink]) -> AnyPublisher<UI.Cart, Never>
+    func showDrinks(cart: UI.Cart, drinks: [Drink]) -> AnyPublisher<UI.Cart, Never>
     func showAdded()
     func showSuccess()
 }
@@ -53,12 +53,12 @@ final class DefaultNavigator: Navigator {
         return vm.resultCart
     }
 
-//    func showDrinks(cart: UI.Cart, drinks: [Drink]) -> AnyPublisher<UI.Cart, Never> {
-//        let vm = DrinksTableViewModel(drinks: drinks, cart: cart)
-//        let vc = DrinksTableViewController.create(with: self, viewModel: vm)
-//        _navigationController.pushViewController(vc, animated: true)
-//        return vm.resultCart
-//    }
+    func showDrinks(cart: UI.Cart, drinks: [Drink]) -> AnyPublisher<UI.Cart, Never> {
+        let vm = DrinksTableViewModel(drinks: drinks, cart: cart)
+        let vc = DrinksTableViewController.create(with: self, viewModel: vm)
+        _navigationController.pushViewController(vc, animated: true)
+        return vm.resultCart
+    }
 
     func showSuccess() {
         let vc = SuccessViewController.create(with: storyboard)

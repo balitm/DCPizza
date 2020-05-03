@@ -12,3 +12,5 @@ struct DrinkCellViewModel {
     let name: String
     let priceText: String
 }
+
+extension DrinkCellViewModel: Hashable {}

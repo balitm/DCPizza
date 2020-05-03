@@ -51,7 +51,9 @@ final class MenuTableViewController: UITableViewController {
     // MARK: - bind functions
 
     private func _bind() {
-        let leftPublisher = navigationItem.leftBarButtonItem!.cmb.publisher().map { _ in () }.eraseToAnyPublisher()
+        let leftPublisher = navigationItem.leftBarButtonItem!.cmb.publisher()
+            .map({ _ in () })
+            .eraseToAnyPublisher()
 //        let selected = tableView.rx.itemSelected
 //            .filterMap({ [unowned self] ip -> FilterMap<Selected> in
 //                guard let cell = self.tableView.cellForRow(at: ip) as? MenuTableViewCell else { return .ignore }
