@@ -47,9 +47,9 @@ private class _Subscription<S: Subscriber>: Subscription where S.Input == Gestur
         recognizer.addTarget(self, action: #selector(_handle(_:)))
     }
 
-    deinit {
-        DLog("######## deinit ", type(of: self))
-    }
+//    deinit {
+//        DLog("######## deinit ", type(of: self))
+//    }
 
     func request(_ demand: Subscribers.Demand) {}
 

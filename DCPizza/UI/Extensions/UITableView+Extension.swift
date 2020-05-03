@@ -97,9 +97,9 @@ private class _Subscription<S: Subscriber>: Subscription where S.Input == TableV
         _delegate.config { [weak self] in _ = self?._subscriber?.receive($0) }
     }
 
-    deinit {
-        DLog("######## deinit ", type(of: self))
-    }
+//    deinit {
+//        DLog("######## deinit ", type(of: self))
+//    }
 
     func request(_ demand: Subscribers.Demand) {}
 

@@ -46,9 +46,9 @@ private class _ItemSubscription<S: Subscriber>: Subscription where S.Input == Ba
         item.action = #selector(_handler)
     }
 
-    deinit {
-        DLog("######## deinit ", type(of: self))
-    }
+//    deinit {
+//        DLog("######## deinit ", type(of: self))
+//    }
 
     func request(_ demand: Subscribers.Demand) {}
 
