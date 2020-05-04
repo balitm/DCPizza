@@ -12,7 +12,7 @@ import Combine
 import CombineDataSources
 
 final class MenuTableViewController: UITableViewController {
-//    typealias Selected = MenuTableViewModel.Selected
+    typealias Selected = MenuTableViewModel.Selected
 
     private var _viewModel: MenuTableViewModel!
     private var _navigator: Navigator!
@@ -54,35 +54,39 @@ final class MenuTableViewController: UITableViewController {
         let leftPublisher = navigationItem.leftBarButtonItem!.cmb.publisher()
             .map({ _ in () })
             .eraseToAnyPublisher()
-//        let selected = tableView.rx.itemSelected
-//            .filterMap({ [unowned self] ip -> FilterMap<Selected> in
-//                guard let cell = self.tableView.cellForRow(at: ip) as? MenuTableViewCell else { return .ignore }
-//                return .map((ip.row, cell.pizzaView.image))
-//            })
+        let rightPublisher = navigationItem.rightBarButtonItem!.cmb.publisher()
+            .map({ _ in () })
+            .eraseToAnyPublisher()
+        let selected = tableView.cmb.itemSelected()
+            .compactMap({ ip -> Selected? in
+                guard let cell = self.tableView.cellForRow(at: ip) as? MenuTableViewCell else { return nil }
+                return (ip.row, cell.pizzaView.image)
+            })
+            .eraseToAnyPublisher()
 
         let out = _viewModel.transform(input: MenuTableViewModel.Input(
-//             selected: selected,
-//             scratch: navigationItem.rightBarButtonItem!.rx.tap.asObservable(),
+            selected: selected,
+            scratch: rightPublisher,
             cart: leftPublisher
 //             saveCart: _saveCart
         ))
 
         _bag = [
+            // Table view data source.
             out.tableData
                 .bind(subscriber: tableView.rowsSubscriber(cellType: MenuTableViewCell.self, cellConfig: { cell, ip, model in
                     cell.config(with: model)
                 })),
 
-            //        // Show ingredients.
-            //        out.selection.asObservable()
-            //            .flatMap({ [unowned self] in
-            //                self._navigator.showIngredients(of: $0.pizza,
-            //                                                image: $0.image,
-            //                                                ingredients: $0.ingredients,
-            //                                                cart: $0.cart)
-            //            })
-            //            .bind(to: _viewModel.cart)
-            //            .disposed(by: _bag)
+            // Show ingredients.
+            out.selection
+                .flatMap({ [unowned self] in
+                    self._navigator.showIngredients(of: $0.pizza,
+                                                    image: $0.image,
+                                                    ingredients: $0.ingredients,
+                                                    cart: $0.cart)
+                })
+                .assign(to: \.cart, on: _viewModel),
 
             // Show cart.
             out.showCart

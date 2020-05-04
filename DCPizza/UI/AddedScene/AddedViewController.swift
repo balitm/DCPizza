@@ -33,6 +33,7 @@ final class AddedViewController: UIViewController {
         super.viewDidAppear(animated)
 
         Timer.publish(every: 3, on: .main, in: .default)
+            .autoconnect()
             .first()
             .sink(receiveValue: { [unowned self] _ in
                 self.dismiss(animated: true)

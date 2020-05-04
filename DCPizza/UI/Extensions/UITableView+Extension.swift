@@ -118,7 +118,7 @@ private class _Delegate: NSObject, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        DLog("selected: ", indexPath.description)
+        // DLog("selected: ", indexPath.description)
         _select?(indexPath)
     }
 }

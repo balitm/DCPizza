@@ -1,21 +1,28 @@
 //
-//  PublishRelay.swift
+//  CurrentValueRelay.swift
 //  DCPizza
 //
-//  Created by Balázs Kilvády on 4/27/20.
+//  Created by Balázs Kilvády on 5/5/20.
 //  Copyright © 2020 kil-dev. All rights reserved.
 //
 
 import Foundation
 import Combine
 
-class PublishRelay<Output>: Subject {
-    typealias Failure = Never
+final class CurrentValueRelay<Output>: RelayBase<CurrentValueSubject<Output, Never>> {
+    init(_ value: Output) {
+        super.init(CurrentValueSubject<Output, Never>(value))
+    }
+}
 
-    private let _subject: PassthroughSubject<Output, Never>
+class RelayBase<Base: Subject>: Subject where Base.Failure == Never {
+    typealias Output = Base.Output
+    typealias Failure = Base.Failure
 
-    init() {
-        _subject = PassthroughSubject<Output, Never>()
+    private let _subject: Base
+
+    init(_ subject: Base) {
+        _subject = subject
     }
 
     func send(subscription: Subscription) {
