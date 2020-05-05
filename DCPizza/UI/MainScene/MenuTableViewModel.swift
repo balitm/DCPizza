@@ -25,7 +25,7 @@ class MenuTableViewModel: ViewModelType {
         let selected: AnyPublisher<Selected, Never>
         let scratch: AnyPublisher<Void, Never>
         let cart: AnyPublisher<Void, Never>
-//        let saveCart: AnyPublisher<Void, Never>
+        let saveCart: AnyPublisher<Void, Never>
     }
 
     struct Output {
@@ -142,13 +142,16 @@ class MenuTableViewModel: ViewModelType {
                 (t.cart, t.data.drinks)
             })
 
-//        input.saveCart
-//            .withLatestFrom(cart)
-//            .subscribe(onNext: { [dbUseCase = _databaseUseCase] in
-//                // DLog("save cart, pizzas: ", $0.pizzas.count, ", drinks: ", $0.drinks.count)
-//                dbUseCase.save(cart: $0.asDomain())
-//            })
-//            .disposed(by: _bag)
+        input.saveCart
+            .flatMap({ [unowned self] in
+                self.$cart
+                    .first()
+            })
+            .sink(receiveValue: { [dbUseCase = _databaseUseCase] in
+                // DLog("save cart, pizzas: ", $0.pizzas.count, ", drinks: ", $0.drinks.count)
+                dbUseCase.save(cart: $0.asDomain())
+            })
+            .store(in: &_bag)
 
         let showAdded = cartEvents.map({ _ in () })
 
