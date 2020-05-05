@@ -7,12 +7,12 @@
 //
 
 import XCTest
-import RxSwift
+import Combine
 @testable import Domain
 @testable import DCPizza
 
 class DCPizzaTests: XCTestCase {
-    private let _bag = DisposeBag()
+    private var _bag = Set<AnyCancellable>()
     var initData: InitData!
     var useCase: NetworkUseCase!
 
@@ -22,12 +22,12 @@ class DCPizzaTests: XCTestCase {
         let useCase = RepositoryUseCaseProvider().makeNetworkUseCase()
         self.useCase = useCase
         useCase.getInitData()
-            .subscribe(onNext: { [unowned self] in
-                self.initData = $0
-            }, onDisposed: {
+            .sink(receiveCompletion: { _ in
                 initialSetupFinished.fulfill()
+            }, receiveValue: { [unowned self] in
+                self.initData = $0
             })
-            .disposed(by: _bag)
+            .store(in: &_bag)
 
         return initialSetupFinished
     }()
@@ -92,7 +92,7 @@ class DCPizzaTests: XCTestCase {
     }
 
     func testCartRemove() {
-        var cart = initData.cart.asUI()
+        var cart = UI.Cart.empty
         guard initData.drinks.count >= 2 && initData.pizzas.pizzas.count >= 2 else { return }
         cart.add(drink: initData.drinks[0])
         cart.add(drink: initData.drinks[1])
@@ -120,35 +120,34 @@ class DCPizzaTests: XCTestCase {
                 $0.add(cart.asDomain().asDataSource())
             }
             XCTAssert(
-                container.values(DS.Cart.self).count != 0
-                    && container.values(DS.Pizza.self).count != 0
+                !container.values(DS.Cart.self).isEmpty
+                    && !container.values(DS.Pizza.self).isEmpty
             )
 
             let expectation = XCTestExpectation(description: "checkout")
 
             useCase.checkout(cart: cart.asDomain())
-                .subscribe(onNext: { _ in
-                    DLog("Checkout succeeded.")
-
-                    XCTAssert(true)
-                }, onError: { _ in
-                    XCTAssert(false)
-                }, onDisposed: {
+                .sink(receiveCompletion: {
+                    if case let Subscribers.Completion<Error>.failure(error) = $0 {
+                        DLog("failed with: ", error)
+                        XCTAssert(false)
+                    }
                     expectation.fulfill()
+                }, receiveValue: { _ in
+                    DLog("Checkout succeeded.")
+                    XCTAssert(true)
                 })
-                .disposed(by: _bag)
+                .store(in: &_bag)
 
             wait(for: [expectation], timeout: 30.0)
 
             XCTAssert(
-                container.values(DS.Cart.self).count == 0
-                    && container.values(DS.Pizza.self).count == 0
+                container.values(DS.Cart.self).isEmpty
+                    && container.values(DS.Pizza.self).isEmpty
             )
         } catch {
             XCTAssert(false)
             return
         }
-
-
     }
 }
