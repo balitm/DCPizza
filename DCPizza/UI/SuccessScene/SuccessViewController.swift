@@ -8,12 +8,12 @@
 
 import UIKit
 import Domain
-import RxSwift
+import Combine
 
 private let _kUnwindSegue = "unwindToMenu"
 
 final class SuccessViewController: UIViewController {
-    private let _bag = DisposeBag()
+    private var _timerCancellable: AnyCancellable?
 
     class func create(with storyboard: UIStoryboard) -> SuccessViewController {
         let vc = storyboard.load(type: SuccessViewController.self)
@@ -28,10 +28,10 @@ final class SuccessViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        Observable<Int>.timer(.seconds(30), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [unowned self] _ in
+        _timerCancellable = Timer.publish(every: 30, on: .main, in: .default)
+            .autoconnect()
+            .sink(receiveValue: { [unowned self] _ in
                 self.performSegue(withIdentifier: _kUnwindSegue, sender: nil)
             })
-            .disposed(by: _bag)
     }
 }
