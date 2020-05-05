@@ -32,9 +32,6 @@
 		2955A4CA24574A1A0093E3F2 /* CombineDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 2955A4C924574A1A0093E3F2 /* CombineDataSources */; };
 		2955A4CC24575D610093E3F2 /* PassthroughRelay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2955A4CB24575D610093E3F2 /* PassthroughRelay.swift */; };
 		295616782440CEBB0063542A /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 295616772440CEBB0063542A /* Domain */; };
-		2956167B2440DA7A0063542A /* Differentiator in Frameworks */ = {isa = PBXBuildFile; productRef = 2956167A2440DA7A0063542A /* Differentiator */; };
-		2956167D2440DA7A0063542A /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 2956167C2440DA7A0063542A /* RxDataSources */; };
-		295616802440DB180063542A /* RxSwiftExt in Frameworks */ = {isa = PBXBuildFile; productRef = 2956167F2440DB180063542A /* RxSwiftExt */; };
 		2957A6D4245C82D4008ECE50 /* UIGestureRecognizer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2957A6D3245C82D4008ECE50 /* UIGestureRecognizer+Extension.swift */; };
 		295A0B3224617D340034BEAA /* CurrentValueRelay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295A0B3124617D340034BEAA /* CurrentValueRelay.swift */; };
 		295C3D6723FEFB4900D82655 /* PaddingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C3D6623FEFB4900D82655 /* PaddingTableViewCell.swift */; };
@@ -45,7 +42,6 @@
 		295C3D7123FF03C900D82655 /* CartTotalCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C3D7023FF03C900D82655 /* CartTotalCellViewModel.swift */; };
 		2965D815245857BE000B127B /* AppDependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B5A7982409746600BDE6AB /* AppDependencyContainer.swift */; };
 		2965D81624586323000B127B /* Navigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A46823FD76F600828A94 /* Navigator.swift */; };
-		2969857923FEA5870024466E /* UITableViewCell+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969857823FEA5870024466E /* UITableViewCell+Extension.swift */; };
 		2969857C23FEB5400024466E /* AddedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969857B23FEB5400024466E /* AddedViewController.swift */; };
 		29762CFD245DB71A00071C74 /* DrinksTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EF9A6E2401D53C002E8E4E /* DrinksTableViewModel.swift */; };
 		29762CFE245DBAF200071C74 /* DrinksTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EF9A6D2401D53C002E8E4E /* DrinksTableViewController.swift */; };
@@ -106,7 +102,6 @@
 		295C3D6C23FEFF7700D82655 /* PaddingCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingCellViewModel.swift; sourceTree = "<group>"; };
 		295C3D6E23FF00D600D82655 /* CartItemCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartItemCellViewModel.swift; sourceTree = "<group>"; };
 		295C3D7023FF03C900D82655 /* CartTotalCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartTotalCellViewModel.swift; sourceTree = "<group>"; };
-		2969857823FEA5870024466E /* UITableViewCell+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extension.swift"; sourceTree = "<group>"; };
 		2969857B23FEB5400024466E /* AddedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddedViewController.swift; sourceTree = "<group>"; };
 		2976A46423FD6B9300828A94 /* IngredientsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsViewController.swift; sourceTree = "<group>"; };
 		2976A46623FD6BF900828A94 /* IngredientsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsViewModel.swift; sourceTree = "<group>"; };
@@ -133,10 +128,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2956167D2440DA7A0063542A /* RxDataSources in Frameworks */,
-				2956167B2440DA7A0063542A /* Differentiator in Frameworks */,
 				2955A4CA24574A1A0093E3F2 /* CombineDataSources in Frameworks */,
-				295616802440DB180063542A /* RxSwiftExt in Frameworks */,
 				295616782440CEBB0063542A /* Domain in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -238,7 +230,6 @@
 				294ACFE423FC56630027D0D4 /* UIStoryboard+load.swift */,
 				294ACFE523FC56630027D0D4 /* UITableView+Extension.swift */,
 				294ACFE623FC56630027D0D4 /* UIColor+Extensions.swift */,
-				2969857823FEA5870024466E /* UITableViewCell+Extension.swift */,
 				295351262458857E0069D426 /* UIBarButtonItem+Combine.swift */,
 				2957A6D3245C82D4008ECE50 /* UIGestureRecognizer+Extension.swift */,
 			);
@@ -413,9 +404,6 @@
 			name = DCPizza;
 			packageProductDependencies = (
 				295616772440CEBB0063542A /* Domain */,
-				2956167A2440DA7A0063542A /* Differentiator */,
-				2956167C2440DA7A0063542A /* RxDataSources */,
-				2956167F2440DB180063542A /* RxSwiftExt */,
 				2955A4C924574A1A0093E3F2 /* CombineDataSources */,
 			);
 			productName = DCPizza;
@@ -469,8 +457,6 @@
 			);
 			mainGroup = 2941A3E723FAF0DC005838BA;
 			packageReferences = (
-				295616792440DA7A0063542A /* XCRemoteSwiftPackageReference "RxDataSources" */,
-				2956167E2440DB180063542A /* XCRemoteSwiftPackageReference "RxSwiftExt" */,
 				2955A4C824574A1A0093E3F2 /* XCRemoteSwiftPackageReference "CombineDataSources" */,
 			);
 			productRefGroup = 2941A3F123FAF0DC005838BA /* Products */;
@@ -565,7 +551,6 @@
 				2969857C23FEB5400024466E /* AddedViewController.swift in Sources */,
 				2953512924588DDC0069D426 /* CartViewController.swift in Sources */,
 				295C3D6923FEFBC000D82655 /* CartItemTableViewCell.swift in Sources */,
-				2969857923FEA5870024466E /* UITableViewCell+Extension.swift in Sources */,
 				2976A46F23FDB58E00828A94 /* SeparableTableViewCell.swift in Sources */,
 				294ACFE823FC56630027D0D4 /* UITableView+Extension.swift in Sources */,
 				2941A3F423FAF0DC005838BA /* AppDelegate.swift in Sources */,
@@ -854,22 +839,6 @@
 				minimumVersion = 0.2.5;
 			};
 		};
-		295616792440DA7A0063542A /* XCRemoteSwiftPackageReference "RxDataSources" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/RxSwiftCommunity/RxDataSources";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.1;
-			};
-		};
-		2956167E2440DB180063542A /* XCRemoteSwiftPackageReference "RxSwiftExt" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/RxSwiftCommunity/RxSwiftExt";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.2.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -881,21 +850,6 @@
 		295616772440CEBB0063542A /* Domain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Domain;
-		};
-		2956167A2440DA7A0063542A /* Differentiator */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 295616792440DA7A0063542A /* XCRemoteSwiftPackageReference "RxDataSources" */;
-			productName = Differentiator;
-		};
-		2956167C2440DA7A0063542A /* RxDataSources */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 295616792440DA7A0063542A /* XCRemoteSwiftPackageReference "RxDataSources" */;
-			productName = RxDataSources;
-		};
-		2956167F2440DB180063542A /* RxSwiftExt */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2956167E2440DB180063542A /* XCRemoteSwiftPackageReference "RxSwiftExt" */;
-			productName = RxSwiftExt;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
