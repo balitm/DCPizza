@@ -16,9 +16,9 @@ protocol Navigator {
     func showIngredients(of pizza: Pizza,
                          image: UIImage?,
                          ingredients: [Ingredient],
-                         cart: UI.Cart) -> AnyPublisher<UI.Cart, Never>
-    func showCart(_ cart: UI.Cart, drinks: [Drink]) -> AnyPublisher<UI.Cart, Never>
-    func showDrinks(cart: UI.Cart, drinks: [Drink]) -> AnyPublisher<UI.Cart, Never>
+                         cart: Cart) -> AnyPublisher<Cart, Never>
+    func showCart(_ cart: Cart, drinks: [Drink]) -> AnyPublisher<Cart, Never>
+    func showDrinks(cart: Cart, drinks: [Drink]) -> AnyPublisher<Cart, Never>
     func showAdded()
     func showSuccess()
 }
@@ -39,21 +39,21 @@ final class DefaultNavigator: Navigator {
     func showIngredients(of pizza: Pizza,
                          image: UIImage?,
                          ingredients: [Ingredient],
-                         cart: UI.Cart) -> AnyPublisher<UI.Cart, Never> {
+                         cart: Cart) -> AnyPublisher<Cart, Never> {
         let vm = IngredientsViewModel(pizza: pizza, image: image, ingredients: ingredients, cart: cart)
         let vc = IngredientsViewController.create(with: self, viewModel: vm)
         _navigationController.pushViewController(vc, animated: true)
         return vm.resultCart
     }
 
-    func showCart(_ cart: UI.Cart, drinks: [Drink]) -> AnyPublisher<UI.Cart, Never> {
+    func showCart(_ cart: Cart, drinks: [Drink]) -> AnyPublisher<Cart, Never> {
         let vm = _dependencyContainer.makeCartViewModel(cart: cart, drinks: drinks)
         let vc = CartViewController.create(with: self, viewModel: vm)
         _navigationController.pushViewController(vc, animated: true)
         return vm.resultCart
     }
 
-    func showDrinks(cart: UI.Cart, drinks: [Drink]) -> AnyPublisher<UI.Cart, Never> {
+    func showDrinks(cart: Cart, drinks: [Drink]) -> AnyPublisher<Cart, Never> {
         let vm = DrinksTableViewModel(drinks: drinks, cart: cart)
         let vc = DrinksTableViewController.create(with: self, viewModel: vm)
         _navigationController.pushViewController(vc, animated: true)

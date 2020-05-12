@@ -16,7 +16,7 @@ class CartDependencyContainer {
         networkUseCase = appDependencyContainer.networkUseCase
     }
 
-    func makeCartViewModel(cart: UI.Cart, drinks: [Drink]) -> CartViewModel {
+    func makeCartViewModel(cart: Cart, drinks: [Drink]) -> CartViewModel {
         CartViewModel(networkUseCase: networkUseCase, cart: cart, drinks: drinks)
     }
 }

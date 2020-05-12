@@ -11,7 +11,7 @@ import Domain
 import Combine
 
 final class CartViewModel: ViewModelType {
-    typealias DrinksData = (cart: UI.Cart, drinks: [Drink])
+    typealias DrinksData = (cart: Cart, drinks: [Drink])
 
     enum Item: Hashable {
         case padding(viewModel: PaddingCellViewModel)
@@ -31,15 +31,15 @@ final class CartViewModel: ViewModelType {
         let canCheckout: AnyPublisher<Bool, Never>
     }
 
-    var resultCart: AnyPublisher<UI.Cart, Never> { cart.dropFirst().eraseToAnyPublisher() }
-    let cart: CurrentValueSubject<UI.Cart, Never>
+    var resultCart: AnyPublisher<Cart, Never> { cart.dropFirst().eraseToAnyPublisher() }
+    let cart: CurrentValueSubject<Cart, Never>
 
     private let _networkUseCase: NetworkUseCase
     private let _drinks: [Drink]
     private var _bag = Set<AnyCancellable>()
 
-    init(networkUseCase: NetworkUseCase, cart: UI.Cart, drinks: [Drink]) {
-        self.cart = CurrentValueSubject<UI.Cart, Never>(cart)
+    init(networkUseCase: NetworkUseCase, cart: Cart, drinks: [Drink]) {
+        self.cart = CurrentValueSubject<Cart, Never>(cart)
         _networkUseCase = networkUseCase
         _drinks = drinks
     }
@@ -50,13 +50,11 @@ final class CartViewModel: ViewModelType {
                 var items = [Item.padding(viewModel: PaddingCellViewModel(height: 12))]
                 let pizzas = cart.pizzas.enumerated().map {
                     Item.item(viewModel: CartItemCellViewModel(pizza: $0.element,
-                                                               basePrice: cart.basePrice,
-                                                               id: cart.pizzaIds[$0.offset])
+                                                               basePrice: cart.basePrice)
                     )
                 }
                 let drinks = cart.drinks.enumerated().map {
-                    Item.item(viewModel: CartItemCellViewModel(drink: $0.element,
-                                                               id: cart.drinkIds[$0.offset])
+                    Item.item(viewModel: CartItemCellViewModel(drink: $0.element)
                     )
                 }
                 items.append(contentsOf: pizzas)
@@ -86,10 +84,10 @@ final class CartViewModel: ViewModelType {
 
         let checkout = input.checkout
             .flatMap({ [unowned cart] _ in cart.first() })
-            .flatMap({ [useCase = _networkUseCase] uiCart in
-                useCase.checkout(cart: uiCart.asDomain())
-                    .map { uiCart }
-                    .catch({ _ in Just(uiCart) })
+            .flatMap({ [useCase = _networkUseCase] cart in
+                useCase.checkout(cart: cart)
+                    .map { cart }
+                    .catch({ _ in Just(cart) })
             })
             .share()
 

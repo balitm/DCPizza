@@ -12,13 +12,13 @@ import Combine
 import class UIKit.UIImage
 
 class MenuTableViewModel: ViewModelType {
-    typealias DrinksData = (cart: UI.Cart, drinks: [Drink])
+    typealias DrinksData = (cart: Cart, drinks: [Drink])
     typealias Selected = (index: Int, image: UIImage?)
     typealias Selection = (
         pizza: Pizza,
         image: UIImage?,
         ingredients: [Ingredient],
-        cart: UI.Cart
+        cart: Cart
     )
 
     struct Input {
@@ -35,7 +35,7 @@ class MenuTableViewModel: ViewModelType {
         let showCart: AnyPublisher<DrinksData, Never>
     }
 
-    @Published var cart = UI.Cart.empty
+    @Published var cart = Cart.empty
 
     private let _networkUseCase: NetworkUseCase
     private let _databaseUseCase: DatabaseUseCase
@@ -67,7 +67,7 @@ class MenuTableViewModel: ViewModelType {
 
         // Init the cart.
         cachedData
-            .map({ $0.cart.asUI() })
+            .map({ $0.cart })
             .assign(to: \.cart, on: self)
             .store(in: &_bag)
 
@@ -96,7 +96,7 @@ class MenuTableViewModel: ViewModelType {
         cartEvents
             .flatMap({ [unowned self] (idx: Int) in
                 Publishers.Zip(cachedData, self.$cart)
-                    .map({ (cmb: (data: InitData, cart: UI.Cart)) -> UI.Cart in
+                    .map({ (cmb: (data: InitData, cart: Cart)) -> Cart in
                         var newCart = cmb.cart
                         newCart.add(pizza: cmb.data.pizzas.pizzas[idx])
                         return newCart
@@ -126,7 +126,7 @@ class MenuTableViewModel: ViewModelType {
                 Publishers.Zip(cachedData, self.$cart)
                     .first()
             })
-            .map({ (t: (data: InitData, cart: UI.Cart)) -> Selection in
+            .map({ (t: (data: InitData, cart: Cart)) -> Selection in
                 let pizza = Pizza()
                 let ingredients = t.data.ingredients
                 return (pizza, nil, ingredients, t.cart)
@@ -138,7 +138,7 @@ class MenuTableViewModel: ViewModelType {
             .flatMap({
                 Publishers.Zip(cachedData, self.$cart)
             })
-            .map({ (t: (data: InitData, cart: UI.Cart)) -> DrinksData in
+            .map({ (t: (data: InitData, cart: Cart)) -> DrinksData in
                 (t.cart, t.data.drinks)
             })
 
@@ -149,7 +149,7 @@ class MenuTableViewModel: ViewModelType {
             })
             .sink(receiveValue: { [dbUseCase = _databaseUseCase] in
                 // DLog("save cart, pizzas: ", $0.pizzas.count, ", drinks: ", $0.drinks.count)
-                dbUseCase.save(cart: $0.asDomain())
+                dbUseCase.save(cart: $0)
             })
             .store(in: &_bag)
 

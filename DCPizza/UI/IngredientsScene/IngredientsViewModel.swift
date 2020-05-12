@@ -33,15 +33,15 @@ final class IngredientsViewModel: ViewModelType {
         let footerEvent: Publishers.MakeConnectable<AnyPublisher<FooterEvent, Never>>
     }
 
-    var resultCart: AnyPublisher<UI.Cart, Never> { cart.dropFirst().eraseToAnyPublisher() }
-    let cart: CurrentValueSubject<UI.Cart, Never>
+    var resultCart: AnyPublisher<Cart, Never> { cart.dropFirst().eraseToAnyPublisher() }
+    let cart: CurrentValueSubject<Cart, Never>
     private let _pizza: Pizza
     private let _image: UIImage?
     private let _ingredients: [Ingredient]
     private var _bag = Set<AnyCancellable>()
     private var _timerCancellable: AnyCancellable?
 
-    init(pizza: Pizza, image: UIImage?, ingredients: [Ingredient], cart: UI.Cart) {
+    init(pizza: Pizza, image: UIImage?, ingredients: [Ingredient], cart: Cart) {
         _pizza = pizza
         _image = image
         _ingredients = ingredients
@@ -83,7 +83,7 @@ final class IngredientsViewModel: ViewModelType {
                 Publishers.CombineLatest(cart, selectedIngredients)
                     .first()
             })
-            .map({ (pair: (cart: UI.Cart, ingredients: [Ingredient])) -> UI.Cart in
+            .map({ (pair: (cart: Cart, ingredients: [Ingredient])) -> Cart in
                 var newCart = pair.cart
                 let pizza = Pizza(copy: self._pizza, with: pair.ingredients)
                 newCart.add(pizza: pizza)
