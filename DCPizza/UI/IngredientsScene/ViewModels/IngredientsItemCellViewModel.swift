@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct IngredientsItemCellViewModel {
+struct IngredientsItemCellViewModel: Hashable {
     let name: String
     let priceText: String
     let isContained: Bool

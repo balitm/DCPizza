@@ -8,13 +8,10 @@
 
 import Foundation
 import Domain
-import RxSwift
-import RxDataSources
-import RxRelay
-import struct RxCocoa.Driver
+import Combine
 import class UIKit.UIImage
 
-struct MenuTableViewModel: ViewModelType {
+class MenuTableViewModel: ViewModelType {
     typealias DrinksData = (cart: UI.Cart, drinks: [Drink])
     typealias Selected = (index: Int, image: UIImage?)
     typealias Selection = (
@@ -25,23 +22,24 @@ struct MenuTableViewModel: ViewModelType {
     )
 
     struct Input {
-        let selected: Observable<Selected>
-        let scratch: Observable<Void>
-        let cart: Observable<Void>
-        let saveCart: Observable<Void>
+        let selected: AnyPublisher<Selected, Never>
+        let scratch: AnyPublisher<Void, Never>
+        let cart: AnyPublisher<Void, Never>
+        let saveCart: AnyPublisher<Void, Never>
     }
 
     struct Output {
-        let tableData: Driver<[SectionModel]>
-        let selection: Driver<Selection>
-        let showAdded: Driver<Void>
-        let showCart: Driver<DrinksData>
+        let tableData: AnyPublisher<[MenuCellViewModel], Never>
+        let selection: AnyPublisher<Selection, Never>
+        let showAdded: AnyPublisher<Void, Never>
+        let showCart: AnyPublisher<DrinksData, Never>
     }
 
-    let cart = PublishRelay<UI.Cart>()
+    @Published var cart = UI.Cart.empty
+
     private let _networkUseCase: NetworkUseCase
     private let _databaseUseCase: DatabaseUseCase
-    private let _bag = DisposeBag()
+    private var _bag = Set<AnyCancellable>()
 
     init(networkUseCase: NetworkUseCase, databaseUseCase: DatabaseUseCase) {
         _networkUseCase = networkUseCase
@@ -49,12 +47,15 @@ struct MenuTableViewModel: ViewModelType {
     }
 
     func transform(input: Input) -> Output {
-        let data = _networkUseCase
-            .getInitData()
-            .catchErrorJustComplete()
-            .share()
+        let cachedData = CurrentValueSubject<InitData, Never>(InitData.empty)
+        _networkUseCase.getInitData()
+            .catch({ _ in
+                Empty<InitData, Never>()
+            })
+            .bind(subscriber: AnySubscriber(cachedData))
+            .store(in: &_bag)
 
-        let viewModels = data
+        let viewModels = cachedData
             .map({ data -> [MenuCellViewModel] in
                 let basePrice = data.pizzas.basePrice
                 let vms = data.pizzas.pizzas.map {
@@ -65,14 +66,14 @@ struct MenuTableViewModel: ViewModelType {
             .share()
 
         // Init the cart.
-        data
+        cachedData
             .map({ $0.cart.asUI() })
-            .bind(to: cart)
-            .disposed(by: _bag)
+            .assign(to: \.cart, on: self)
+            .store(in: &_bag)
 
         let cartEvents = viewModels
-            .map({ vm in
-                vm.enumerated().map({ pair in
+            .map({ vms in
+                vms.enumerated().map({ pair in
                     pair.element.tap
                         .map({ _ in
                             pair.offset
@@ -80,28 +81,38 @@ struct MenuTableViewModel: ViewModelType {
                 })
             })
             .flatMap({
-                Observable.merge($0)
+                Publishers.MergeMany($0)
+                    .handleEvents(receiveOutput: {
+                        DLog("recved pair: ", $0)
+                    }, receiveCompletion: {
+                        DLog("completion: ", $0)
+                    }, receiveCancel: {
+                        DLog("cancel")
+                    })
             })
+            .share()
 
-        // Update cart.
+        // Update cart on add events.
         cartEvents
-            .withLatestFrom(Observable.combineLatest(data, cart)) { (cart: $1.1, data: $1.0, idx: $0) }
-            // .debug(trimOutput: true)
-            .map({
-                var newCart = $0.cart
-                newCart.add(pizza: $0.data.pizzas.pizzas[$0.idx])
-                return newCart
+            .flatMap({ [unowned self] (idx: Int) in
+                Publishers.Zip(cachedData, self.$cart)
+                    .map({ (cmb: (data: InitData, cart: UI.Cart)) -> UI.Cart in
+                        var newCart = cmb.cart
+                        newCart.add(pizza: cmb.data.pizzas.pizzas[idx])
+                        return newCart
+                    })
             })
-            .bind(to: cart)
-            .disposed(by: _bag)
-
-        let sections = viewModels
-            .map({ [SectionModel(items: $0)] })
-            .asDriver(onErrorJustReturn: [])
+            // .debug(trimOutput: true)
+            .assign(to: \.cart, on: self)
+            .store(in: &_bag)
 
         // A pizza is selected.
         let selected = input.selected
-            .withLatestFrom(Observable.combineLatest(data, cart)) { (data: $1.0, selected: $0, cart: $1.1) }
+            .flatMap({ [unowned self] selected in
+                Publishers.Zip(cachedData, self.$cart)
+                    .map({ (data: $0.0, selected: selected, cart: $0.1) })
+                    .first()
+            })
             .map({ t -> Selection in
                 let pizza = t.data.pizzas.pizzas[t.selected.index]
                 let image = t.selected.image
@@ -111,49 +122,43 @@ struct MenuTableViewModel: ViewModelType {
 
         // Pizza from scratch is selected.
         let scratch = input.scratch
-            .withLatestFrom(Observable.combineLatest(data, cart)) { (data: $1.0, cart: $1.1) }
-            .map({ t -> Selection in
+            .flatMap({ [unowned self] selected in
+                Publishers.Zip(cachedData, self.$cart)
+                    .first()
+            })
+            .map({ (t: (data: InitData, cart: UI.Cart)) -> Selection in
                 let pizza = Pizza()
                 let ingredients = t.data.ingredients
                 return (pizza, nil, ingredients, t.cart)
             })
 
-        let selection = Observable.merge(selected, scratch)
-            .asDriver(onErrorDriveWith: Driver<Selection>.never())
+        let selection = Publishers.Merge(selected, scratch)
 
         let showCart = input.cart
-            .withLatestFrom(Observable.combineLatest(data, cart), resultSelector: { (data: $1.0, cart: $1.1) })
-            .map({ t -> DrinksData in
+            .flatMap({
+                Publishers.Zip(cachedData, self.$cart)
+            })
+            .map({ (t: (data: InitData, cart: UI.Cart)) -> DrinksData in
                 (t.cart, t.data.drinks)
             })
-            .asDriver(onErrorDriveWith: Driver<DrinksData>.never())
 
         input.saveCart
-            .withLatestFrom(cart)
-            .subscribe(onNext: { [dbUseCase = _databaseUseCase] in
+            .flatMap({ [unowned self] in
+                self.$cart
+                    .first()
+            })
+            .sink(receiveValue: { [dbUseCase = _databaseUseCase] in
                 // DLog("save cart, pizzas: ", $0.pizzas.count, ", drinks: ", $0.drinks.count)
                 dbUseCase.save(cart: $0.asDomain())
             })
-            .disposed(by: _bag)
+            .store(in: &_bag)
 
-        return Output(tableData: sections,
-                      selection: selection,
-                      showAdded: cartEvents.map { _ in () }.asDriver(onErrorJustReturn: ()),
-                      showCart: showCart
+        let showAdded = cartEvents.map({ _ in () })
+
+        return Output(tableData: viewModels.eraseToAnyPublisher(),
+                      selection: selection.eraseToAnyPublisher(),
+                      showAdded: showAdded.eraseToAnyPublisher(),
+                      showCart: showCart.eraseToAnyPublisher()
         )
-    }
-}
-
-extension MenuTableViewModel {
-    struct SectionModel {
-        var items: [MenuCellViewModel]
-    }
-}
-
-extension MenuTableViewModel.SectionModel: SectionModelType {
-    typealias Item = MenuCellViewModel
-
-    init(original: MenuTableViewModel.SectionModel, items: [Item]) {
-        self.items = items
     }
 }

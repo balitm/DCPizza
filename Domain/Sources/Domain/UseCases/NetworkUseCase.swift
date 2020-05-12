@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 public protocol NetworkUseCase {
-    func getIngredients() -> Observable<[Ingredient]>
-    func getDrinks() -> Observable<[Drink]>
-    func getInitData() -> Observable<InitData>
-    func checkout(cart: Cart) -> Observable<Void>
+    func getIngredients() -> AnyPublisher<[Ingredient], Error>
+    func getDrinks() -> AnyPublisher<[Drink], Error>
+    func getInitData() -> AnyPublisher<InitData, Error>
+    func checkout(cart: Cart) -> AnyPublisher<Void, Error>
 }

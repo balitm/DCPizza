@@ -7,241 +7,12 @@
 //
 
 import XCTest
-import RxSwift
+import Combine
 import RealmSwift
 @testable import Domain
 
-private struct _TestNetUseCase: NetworkUseCase {
-    private func _decode<T: Decodable>(_ type: T.Type, _ jsonStr: String) -> Observable<T> {
-        do {
-            let jsonData = jsonStr.data(using: .utf8)!
-            let decoder = JSONDecoder()
-            let object = try decoder.decode(T.self, from: jsonData)
-            return Observable<T>.just(object)
-        } catch {
-            DLog(">>> decode error: ", error)
-        }
-        return Observable<T>.empty()
-    }
-
-    func getIngredients() -> Observable<[Ingredient]> {
-        let jsonStr = """
-        [
-            {
-                "id": 1,
-                "name": "Mozzarella",
-                "price": 1
-            },
-                {
-                "id": 2,
-                "name": "Tomato Sauce",
-                "price": 0.5
-            },
-                {
-                "id": 3,
-                "name": "Salami",
-                "price": 1.5
-            },
-                {
-                "id": 4,
-                "name": "Mushrooms",
-                "price": 2
-            },
-                {
-                "id": 5,
-                "name": "Ricci",
-                "price": 4
-            },
-                {
-                "id": 6,
-                "name": "Asparagus",
-                "price": 2
-            },
-                {
-                "id": 7,
-                "name": "Pineapple",
-                "price": 1
-            },
-                {
-                "id": 8,
-                "name": "Speck",
-                "price": 3
-            },
-                {
-                "id": 9,
-                "name": "Bottarga",
-                "price": 2.5
-            },
-                {
-                "id": 10,
-                "name": "Tuna",
-                "price": 2.2
-            }
-        ]
-        """
-        return _decode([DS.Ingredient].self, jsonStr)
-    }
-
-    func getDrinks() -> Observable<[DS.Drink]> {
-        let jsonStr = """
-        [
-            {
-                "id": 1,
-                "name": "Still Water",
-                "price": 1
-            },
-            {
-                "id": 2,
-                "name": "Sparkling Water",
-                "price": 1.5
-            },
-            {
-                "id": 3,
-                "name": "Coke",
-                "price": 2.5
-            },
-            {
-                "id": 4,
-                "name": "Beer",
-                "price": 3
-            },
-            {
-                "id": 5,
-                "name": "Red Wine",
-                "price": 4
-            }
-        ]
-        """
-        return _decode([DS.Drink].self, jsonStr)
-    }
-
-    func getPizzas() -> Observable<DS.Pizzas> {
-        let jsonStr = """
-        {
-            "basePrice": 4,
-            "pizzas": [
-                        {
-                    "imageUrl": "https://i.ibb.co/2t4sh8w/margherita.png",
-                    "ingredients": [
-                        1,
-                        2
-                    ],
-                    "name": "Margherita"
-                },
-                        {
-                    "imageUrl": "https://i.ibb.co/GpyPfSC/ricci.png",
-                    "ingredients": [
-                        1,
-                        5
-                    ],
-                    "name": "Ricci"
-                },
-                        {
-                    "imageUrl": "https://i.ibb.co/9T8jyLt/boscaiola.png",
-                    "ingredients": [
-                        1,
-                        2,
-                        3,
-                        4
-                    ],
-                    "name": "Boscaiola"
-                },
-                        {
-                    "imageUrl": "https://i.ibb.co/XD5kYNd/primavera.png",
-                    "ingredients": [
-                        1,
-                        5,
-                        6
-                    ],
-                    "name": "Primavera"
-                },
-                        {
-                    "imageUrl": "https://i.ibb.co/k5qWjBW/hawaii.png",
-                    "ingredients": [
-                        1,
-                        2,
-                        7,
-                        8
-                    ],
-                    "name": "Hawaii"
-                },
-                        {
-                    "ingredients": [
-                        1,
-                        9,
-                        10
-                    ],
-                    "name": "Mare Bianco"
-                },
-                        {
-                    "imageUrl": "https://i.ibb.co/tM9Hrtz/mari-e-monti.png",
-                    "ingredients": [
-                        1,
-                        2,
-                        4,
-                        8,
-                        9,
-                        10
-                    ],
-                    "name": "Mari e monti"
-                },
-                        {
-                    "imageUrl": "https://i.ibb.co/nzmhrbs/bottarga.png",
-                    "ingredients": [
-                        1,
-                        9
-                    ],
-                    "name": "Bottarga"
-                },
-                        {
-                    "imageUrl": "https://i.ibb.co/FH6MGxT/bottarga-e-asparagus.png",
-                    "ingredients": [
-                        1,
-                        2,
-                        9,
-                        6
-                    ],
-                    "name": "Boottarga e Asparagi"
-                },
-                        {
-                    "imageUrl": "https://i.ibb.co/KX0FG9V/ricci-asparagus.png",
-                    "ingredients": [
-                        1,
-                        5,
-                        6
-                    ],
-                    "name": "Ricci e Asparagi"
-                }
-            ]
-        }
-        """
-        return _decode(DS.Pizzas.self, jsonStr)
-    }
-
-    func getInitData() -> Observable<InitData> {
-        let netData = Observable.zip(getPizzas(),
-                                     getIngredients(),
-                                     getDrinks(),
-                                     resultSelector: { (pizzas: $0, ingredients: $1, drinks: $2) })
-            .map({ tuple -> InitData in
-                let ingredients = tuple.ingredients.sorted { $0.name < $1.name }
-                return InitData(pizzas: tuple.pizzas.asDomain(with: ingredients, drinks: tuple.drinks),
-                                ingredients: ingredients,
-                                drinks: tuple.drinks,
-                                cart: Domain.Cart(pizzas: [],
-                                                  drinks: [],
-                                                  basePrice: tuple.pizzas.basePrice))
-            })
-        return netData
-    }
-
-    func checkout(cart: Cart) -> Observable<Void> {
-        return Observable.just(())
-    }
-}
-
 class DomainTests: XCTestCase {
-    private let _bag = DisposeBag()
+    private var _bag = Set<AnyCancellable>()
     var initData: InitData!
     var useCase: NetworkUseCase!
     var testCart: Cart!
@@ -272,18 +43,15 @@ class DomainTests: XCTestCase {
         }
     }
 
-
-    static var allTests = [
-        ("testNetwork", testNetwork),
-    ]
-
     override func setUp() {
         super.setUp()
 
         _container = DS.Container(realm: DomainTests.realm)
-        useCase = _TestNetUseCase()
+        useCase = TestNetUseCase()
         useCase.getInitData()
-            .subscribe(onNext: { [unowned self] in
+            .sink(receiveCompletion: {
+                DLog("received: ", $0)
+            }, receiveValue: { [unowned self] in
                 self.initData = $0
                 guard $0.drinks.count >= 2 && $0.pizzas.pizzas.count >= 2 else { return }
                 let pizzas = [
@@ -296,26 +64,51 @@ class DomainTests: XCTestCase {
                 ]
                 self.testCart = Cart(pizzas: pizzas, drinks: drinks, basePrice: $0.pizzas.basePrice)
             })
-            .disposed(by: _bag)
+            .store(in: &_bag)
     }
 
-    override func tearDown() {}
+    override func tearDown() {
+        DLog("cancellables: ", _bag.count)
+    }
 
     func testNetwork() {
         let useCase = RepositoryUseCaseProvider(container: _container).makeNetworkUseCase()
         let expectation = XCTestExpectation(description: "net")
 
-        Observable.zip(
+        Publishers.Zip(
             useCase.getIngredients(),
             useCase.getDrinks()
         )
-            .subscribe(onDisposed: {
+            .sink(receiveCompletion: { _ in
                 XCTAssert(true)
                 expectation.fulfill()
+            }, receiveValue: { _ in
             })
-            .disposed(by: _bag)
+            .store(in: &_bag)
 
         wait(for: [expectation], timeout: 120.0)
+    }
+
+    func testCombinableNetwork() {
+        let expectation = XCTestExpectation(description: "combine")
+
+        func success() {
+            XCTAssert(true)
+            expectation.fulfill()
+        }
+
+        let cancellable = Publishers.Zip(API.GetIngredients().cmb.perform(),
+                                         API.GetDrinks().cmb.perform())
+            .sink(receiveCompletion: {
+                DLog("Received comletion: ", $0)
+                success()
+            }, receiveValue: {
+                DLog("Received #(ingredients: ", $0.0.count, ", drinks: ", $0.1.count, ").")
+                success()
+            })
+
+        wait(for: [expectation], timeout: 120.0)
+        cancellable.cancel()
     }
 
     func testPizzaConversion() {
@@ -347,15 +140,19 @@ class DomainTests: XCTestCase {
 
         let expectation = XCTestExpectation(description: "checkout")
         useCase.checkout(cart: cart)
-            .subscribe(onNext: { _ in
+            .sink(receiveCompletion: {
+                switch $0 {
+                case .failure:
+                    XCTAssert(false)
+                case .finished:
+                    break
+                }
+                expectation.fulfill()
+            }, receiveValue: { _ in
                 DLog("Checkout succeeded.")
                 XCTAssert(true)
-            }, onError: { _ in
-                XCTAssert(false)
-            }, onDisposed: {
-                expectation.fulfill()
             })
-            .disposed(by: _bag)
+            .store(in: &_bag)
 
         wait(for: [expectation], timeout: 30.0)
     }

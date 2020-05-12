@@ -8,19 +8,16 @@
 
 import UIKit
 import Domain
-import RxSwift
-import RxSwiftExt
-import RxCocoa
-import RxDataSources
+import Combine
+import CombineDataSources
 
 final class MenuTableViewController: UITableViewController {
-    typealias SectionModel = MenuTableViewModel.SectionModel
     typealias Selected = MenuTableViewModel.Selected
 
     private var _viewModel: MenuTableViewModel!
     private var _navigator: Navigator!
-    private let _saveCart = PublishSubject<Void>()
-    private let _bag = DisposeBag()
+    private let _saveCart = PassthroughSubject<Void, Never>()
+    private var _bag = Set<AnyCancellable>()
 
     func setup(with navigator: Navigator, viewModel: MenuTableViewModel) {
         _navigator = navigator
@@ -34,6 +31,11 @@ final class MenuTableViewController: UITableViewController {
 
         tableView.tableFooterView = UIView()
 
+        DLog("dataSource: ", tableView.dataSource?.description ?? "nil")
+        if tableView.dataSource != nil {
+            tableView.dataSource = nil
+        }
+
         _bind()
     }
 
@@ -43,59 +45,61 @@ final class MenuTableViewController: UITableViewController {
 
     /// Save the current cart.
     func saveCart() {
-        _saveCart.on(.next(()))
+        _saveCart.send(())
     }
 
     // MARK: - bind functions
 
     private func _bind() {
-        let selected = tableView.rx.itemSelected
-            .filterMap({ [unowned self] ip -> FilterMap<Selected> in
-                guard let cell = self.tableView.cellForRow(at: ip) as? MenuTableViewCell else { return .ignore }
-                return .map((ip.row, cell.pizzaView.image))
+        let leftPublisher = navigationItem.leftBarButtonItem!.cmb.publisher()
+            .map({ _ in () })
+            .eraseToAnyPublisher()
+        let rightPublisher = navigationItem.rightBarButtonItem!.cmb.publisher()
+            .map({ _ in () })
+            .eraseToAnyPublisher()
+        let selected = tableView.cmb.itemSelected()
+            .compactMap({ ip -> Selected? in
+                guard let cell = self.tableView.cellForRow(at: ip) as? MenuTableViewCell else { return nil }
+                return (ip.row, cell.pizzaView.image)
             })
+            .eraseToAnyPublisher()
 
-        let out = _viewModel.transform(input: MenuTableViewModel.Input(selected: selected,
-                                                                       scratch: navigationItem.rightBarButtonItem!.rx.tap.asObservable(),
-                                                                       cart: navigationItem.leftBarButtonItem!.rx.tap.asObservable(),
-                                                                       saveCart: _saveCart))
+        let out = _viewModel.transform(input: MenuTableViewModel.Input(
+            selected: selected,
+            scratch: rightPublisher,
+            cart: leftPublisher,
+            saveCart: _saveCart.eraseToAnyPublisher()
+        ))
 
-        let dataSource = RxTableViewSectionedReloadDataSource<SectionModel>(configureCell: { ds, tv, ip, _ in
-            tv.createCell(MenuTableViewCell.self, ds[ip], ip)
-        })
+        _bag = [
+            // Table view data source.
+            out.tableData
+                .bind(subscriber: tableView.rowsSubscriber(cellType: MenuTableViewCell.self, cellConfig: { cell, ip, model in
+                    cell.config(with: model)
+                })),
 
-        DLog("dataSource: ", tableView.dataSource?.description ?? "nil")
-        if tableView.dataSource != nil {
-            tableView.dataSource = nil
-        }
-        out.tableData
-            .drive(tableView.rx.items(dataSource: dataSource))
-            .disposed(by: _bag)
+            // Show ingredients.
+            out.selection
+                .flatMap({ [unowned self] in
+                    self._navigator.showIngredients(of: $0.pizza,
+                                                    image: $0.image,
+                                                    ingredients: $0.ingredients,
+                                                    cart: $0.cart)
+                })
+                .assign(to: \.cart, on: _viewModel),
 
-        // Show ingredients.
-        out.selection.asObservable()
-            .flatMap({ [unowned self] in
-                self._navigator.showIngredients(of: $0.pizza,
-                                                image: $0.image,
-                                                ingredients: $0.ingredients,
-                                                cart: $0.cart)
-            })
-            .bind(to: _viewModel.cart)
-            .disposed(by: _bag)
+            // Show cart.
+            out.showCart
+                .flatMap({ [unowned self] in
+                    self._navigator.showCart($0.cart, drinks: $0.drinks)
+                })
+                .assign(to: \.cart, on: _viewModel),
 
-        // Show cart.
-        out.showCart.asObservable()
-            .flatMap({ [unowned self] in
-                self._navigator.showCart($0.cart, drinks: $0.drinks)
-            })
-            .bind(to: _viewModel.cart)
-            .disposed(by: _bag)
-
-        // Show addedd.
-        out.showAdded
-            .drive(onNext: { [unowned self] _ in
-                self._navigator.showAdded()
-            })
-            .disposed(by: _bag)
+            // Show addedd.
+            out.showAdded
+                .sink(receiveValue: { [unowned self] _ in
+                    self._navigator.showAdded()
+                }),
+        ]
     }
 }

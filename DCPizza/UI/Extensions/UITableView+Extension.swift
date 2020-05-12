@@ -6,6 +6,9 @@
 //
 
 import UIKit
+import Domain
+import Combine
+import CombineDataSources
 
 protocol ReuseID {
     static var kReuseID: String { get }
@@ -42,5 +45,80 @@ extension UITableView {
         let cell = dequeue(type: Cell.self, for: indexPath)
         cell.config(with: viewModel)
         return cell
+    }
+}
+
+// MARK: - Combine data source
+
+extension UITableView {
+    func rowsSubscriber<C, I>(cellType: C.Type, cellConfig: @escaping TableViewItemsController<[I]>.CellConfig<I.Element, C>)
+        -> AnySubscriber<I, Never> where C: UITableViewCell & CellViewModelProtocol, I: RandomAccessCollection, I: Equatable {
+        rowsSubscriber(.init(cellIdentifier: C.kReuseID, cellType: cellType, cellConfig: cellConfig))
+    }
+}
+
+// MARK: - Combine selection publisher
+
+extension UITableView: CombineCompatible {}
+
+extension Combinable where Base: UITableView {
+    func itemSelected() -> TableViewSelectPublisher {
+        .init(tableView: base)
+    }
+}
+
+struct TableViewSelectPublisher: Publisher {
+    typealias Output = IndexPath
+    typealias Failure = Never
+
+    private let _tableView: UITableView
+
+    init(tableView: UITableView) {
+        _tableView = tableView
+    }
+
+    func receive<S>(subscriber: S) where S: Subscriber, Failure == S.Failure, Output == S.Input {
+        let subscription = _Subscription(
+            subscriber: subscriber,
+            tableView: _tableView
+        )
+        subscriber.receive(subscription: subscription)
+    }
+}
+
+private class _Subscription<S: Subscriber>: Subscription where S.Input == TableViewSelectPublisher.Output, S.Failure == TableViewSelectPublisher.Failure {
+    private var _subscriber: S?
+    private let _delegate: _Delegate
+
+    init(subscriber: S, tableView: UITableView) {
+        _subscriber = subscriber
+        _delegate = _Delegate()
+        tableView.delegate = _delegate
+        _delegate.config { [weak self] in _ = self?._subscriber?.receive($0) }
+    }
+
+//    deinit {
+//        DLog("######## deinit ", type(of: self))
+//    }
+
+    func request(_ demand: Subscribers.Demand) {}
+
+    func cancel() {
+        _subscriber = nil
+    }
+}
+
+private class _Delegate: NSObject, UITableViewDelegate {
+    typealias Select = (IndexPath) -> Void
+
+    var _select: Select?
+
+    func config(selected: @escaping (IndexPath) -> Void) {
+        _select = selected
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // DLog("selected: ", indexPath.description)
+        _select?(indexPath)
     }
 }

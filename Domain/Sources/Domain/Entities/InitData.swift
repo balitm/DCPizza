@@ -13,4 +13,11 @@ public struct InitData {
     public let ingredients: [Ingredient]
     public let drinks: [Drink]
     public let cart: Cart
+
+    public static var empty: InitData {
+        InitData(pizzas: Pizzas(pizzas: [], basePrice: 0),
+                 ingredients: [],
+                 drinks: [],
+                 cart: Cart.empty)
+    }
 }

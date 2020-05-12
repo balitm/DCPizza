@@ -8,13 +8,11 @@
 
 import UIKit
 import Domain
-import RxSwift
-import RxCocoa
-import RxSwiftExt
-import RxDataSources
+import Combine
+import CombineDataSources
 
 final class IngredientsViewController: UIViewController {
-    typealias SectionModel = IngredientsViewModel.SectionModel
+    typealias Item = IngredientsViewModel.Item
     typealias FooterEvent = IngredientsViewModel.FooterEvent
 
     @IBOutlet weak var tableView: UITableView!
@@ -25,7 +23,8 @@ final class IngredientsViewController: UIViewController {
 
     private var _viewModel: IngredientsViewModel!
     private var _navigator: Navigator!
-    private let _bag = DisposeBag()
+    private var _connectable: Publishers.MakeConnectable<AnyPublisher<FooterEvent, Never>>?
+    private var _bag = Set<AnyCancellable>()
 
     class func create(with navigator: Navigator, viewModel: IngredientsViewModel) -> IngredientsViewController {
         let vc = navigator.storyboard.load(type: IngredientsViewController.self)
@@ -44,20 +43,23 @@ final class IngredientsViewController: UIViewController {
         super.viewDidLoad()
 
         tableView.tableFooterView = UIView()
-
-        rx.methodInvoked(#selector(willMove(toParent:)))
-            .filter({
-                if $0[0] is NSNull {
-                    return true
-                }
-                return false
-            })
-            .subscribe(onNext: { [unowned self] _ in
-                self._viewModel.cart.on(.completed)
-            })
-            .disposed(by: _bag)
-
         _bind()
+    }
+
+    override func willMove(toParent parent: UIViewController?) {
+        super.willMove(toParent: parent)
+
+        if parent == nil {
+            _viewModel.cart.send(completion: .finished)
+        }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        _connectable?
+            .connect()
+            .store(in: &_bag)
     }
 }
 
@@ -66,45 +68,54 @@ final class IngredientsViewController: UIViewController {
 private extension IngredientsViewController {
     func _bind() {
         let out = _viewModel.transform(
-            input: IngredientsViewModel.Input(selected: tableView.rx.itemSelected.map { $0.row },
-                                              addEvent: addTap.rx.event.map { _ in () })
+            input: IngredientsViewModel.Input(selected: tableView.cmb.itemSelected().map { $0.row }.eraseToAnyPublisher(),
+                                              addEvent: addTap.cmb.event().map { _ in () }.eraseToAnyPublisher())
         )
+        _connectable = out.footerEvent
 
-        out.title
-            .drive(rx.title)
-            .dispose()
+        let titleCancellable = out.title
+            .assign(to: \.title, on: self)
 
-        let dataSource = RxTableViewSectionedAnimatedDataSource<SectionModel>(configureCell: { ds, tv, ip, _ in
-            switch ds[ip] {
+        let tableController = TableViewItemsController<[[Item]]> { _, tv, ip, item -> UITableViewCell in
+            switch item {
             case let .header(viewModel):
                 return tv.createCell(IngredientsHeaderTableViewCell.self, viewModel, ip)
-            case let .ingredient(_, viewModel):
+            case let .ingredient(viewModel):
                 return tv.createCell(IngredientsItemTableViewCell.self, viewModel, ip)
             }
+        }
+        tableController.rowAnimations = (
+            insert: UITableView.RowAnimation.none,
+            update: UITableView.RowAnimation.none,
+            delete: UITableView.RowAnimation.none
+        )
+
+        let binder = AnySubscriber<FooterEvent, Never>(receiveValue: { [unowned self] in
+            self._displayFooter($0)
+            return .unlimited
         })
-        out.tableData
-            .drive(tableView.rx.items(dataSource: dataSource))
-            .disposed(by: _bag)
 
-        out.cartText
-            .drive(cartLabel.rx.text)
-            .disposed(by: _bag)
+        _bag = [
+            // Table view data source.
+            out.tableData
+                .bind(subscriber: tableView.rowsSubscriber(tableController)),
 
-        out.showAdded
-            .drive(onNext: { [unowned self] in
-                self._navigator.showAdded()
-            })
-            .disposed(by: _bag)
+            // Update the price text on the added view.
+            out.cartText
+                .assign(to: \.text, on: cartLabel),
 
-        // Pause footer events until view appeared.
-        let pauser = rx.viewDidAppear
-            .map { _ in true }
+            // Show added confirmation scene.
+            out.showAdded
+                .sink(receiveValue: { [unowned self] _ in
+                    self._navigator.showAdded()
+                }),
 
-        out.footerEvent.asObservable()
-            .distinctUntilChanged()
-            .pausableBuffered(pauser, limit: 1)
-            .bind(to: rx._footer)
-            .disposed(by: _bag)
+            // Show or hide the footer.
+            out.footerEvent
+                .bind(subscriber: binder),
+        ]
+
+        titleCancellable.cancel()
     }
 
     func _displayFooter(_ event: FooterEvent) {
@@ -121,14 +132,5 @@ private extension IngredientsViewController {
         UIView.animate(withDuration: 0.3, animations: {
             parent.layoutIfNeeded()
         })
-    }
-}
-
-private extension Reactive where Base: IngredientsViewController {
-    /// Bindable sink for `_footer` property.
-    var _footer: Binder<IngredientsViewController.FooterEvent> {
-        Binder(base) { vc, event in
-            vc._displayFooter(event)
-        }
     }
 }

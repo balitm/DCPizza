@@ -9,6 +9,6 @@
 import Foundation
 import class UIKit.UIImage
 
-struct IngredientsHeaderCellViewModel {
+struct IngredientsHeaderCellViewModel: Hashable {
     let image: UIImage?
 }

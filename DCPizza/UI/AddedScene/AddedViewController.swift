@@ -8,12 +8,12 @@
 
 import UIKit
 import Domain
-import RxSwift
+import Combine
 
 final class AddedViewController: UIViewController {
     @IBOutlet weak var tapRecognizer: UITapGestureRecognizer!
 
-    private let _bag = DisposeBag()
+    private var _bag = Set<AnyCancellable>()
 
     deinit {
         DLog(">>> deinit: ", type(of: self))
@@ -22,19 +22,22 @@ final class AddedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tapRecognizer.rx.event
-            .subscribe(onNext: { [unowned self] _ in
+        tapRecognizer.cmb.event()
+            .sink(receiveValue: { [unowned self] _ in
                 self.dismiss(animated: true)
             })
-            .disposed(by: _bag)
+            .store(in: &_bag)
+    }
 
-        rx.viewDidAppear
-            .flatMap({ _ in
-                Observable<Int>.timer(.seconds(3), scheduler: MainScheduler.instance)
-            })
-            .subscribe(onNext: { [unowned self] _ in
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        Timer.publish(every: 3, on: .main, in: .default)
+            .autoconnect()
+            .first()
+            .sink(receiveValue: { [unowned self] _ in
                 self.dismiss(animated: true)
             })
-            .disposed(by: _bag)
+            .store(in: &_bag)
     }
 }

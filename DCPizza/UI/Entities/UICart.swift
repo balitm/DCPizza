@@ -14,6 +14,7 @@ enum UI {}
 extension UI {
     struct Cart {
         fileprivate static var _additionNumber = 0
+        static var empty: Cart { Cart(domainCart: Domain.Cart.empty, ids: []) }
 
         private var _domainCart: Domain.Cart
         private var _ids: [Int]
@@ -23,7 +24,7 @@ extension UI {
         var pizzaIds: [Int] { Array(_ids[0 ..< _domainCart.pizzas.endIndex]) }
         var drinkIds: [Int] { Array(_ids[_domainCart.pizzas.endIndex...]) }
 
-        fileprivate init(
+        init(
             domainCart: Domain.Cart,
             ids: [Int]
         ) {

@@ -8,16 +8,15 @@
 
 import UIKit
 import Domain
-import RxSwift
-import RxCocoa
-import RxDataSources
+import Combine
+import CombineDataSources
 
 class DrinksTableViewController: UITableViewController {
-    typealias SectionModel = DrinksTableViewModel.SectionModel
+    typealias Item = DrinksTableViewModel.Item
 
     private var _navigator: Navigator!
     private var _viewModel: DrinksTableViewModel!
-    private let _bag = DisposeBag()
+    private var _bag = Set<AnyCancellable>()
 
     class func create(with navigator: Navigator, viewModel: DrinksTableViewModel) -> DrinksTableViewController {
         let vc = navigator.storyboard.load(type: DrinksTableViewController.self)
@@ -36,40 +35,36 @@ class DrinksTableViewController: UITableViewController {
         super.viewDidLoad()
 
         tableView.tableFooterView = UIView()
-
-        rx.viewWillDisappear
-            .subscribe(onNext: { [unowned self] _ in
-                self._viewModel.cart.on(.completed)
-            })
-            .disposed(by: _bag)
-
         _bind()
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        _viewModel.cart.send(completion: .finished)
+    }
+
     private func _bind() {
-        let selected = tableView.rx.itemSelected
+        let selected = tableView.cmb.itemSelected()
             .map({ $0.row })
+            .eraseToAnyPublisher()
         let input = DrinksTableViewModel.Input(selected: selected)
         let out = _viewModel.transform(input: input)
 
-        // Table view.
-        let dataSource = RxTableViewSectionedReloadDataSource<SectionModel>(
-            configureCell: { ds, tv, ip, _ in
-                tv.createCell(DrinkTableViewCell.self, ds[ip], ip)
-            }
-        )
-        out.tableData
-            // .debug(trimOutput: true)
-            .drive(tableView.rx.items(dataSource: dataSource))
-            .disposed(by: _bag)
+        _bag = [
+            // Table view.
+            out.tableData
+                .bind(subscriber: tableView.rowsSubscriber(cellType: DrinkTableViewCell.self, cellConfig: { cell, ip, model in
+                    cell.config(with: model)
+                })),
 
-        // Show addedd.
-        out.showAdded
-            .drive(onNext: { [weak self] _ in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    self?._navigator.showAdded()
-                }
-            })
-            .disposed(by: _bag)
+            // Show addedd.
+            out.showAdded
+                .sink(receiveValue: { [weak self] _ in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        self?._navigator.showAdded()
+                    }
+                }),
+        ]
     }
 }

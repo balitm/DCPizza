@@ -26,3 +26,5 @@ struct CartItemCellViewModel {
         self.id = id
     }
 }
+
+extension CartItemCellViewModel: Hashable {}
