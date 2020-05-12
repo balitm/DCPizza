@@ -22,12 +22,12 @@ final class DrinksTableViewModel: ViewModelType {
         let showAdded: AnyPublisher<Void, Never>
     }
 
-    var resultCart: AnyPublisher<UI.Cart, Never> { cart.dropFirst().eraseToAnyPublisher() }
-    let cart: CurrentValueSubject<UI.Cart, Never>
+    var resultCart: AnyPublisher<Cart, Never> { cart.dropFirst().eraseToAnyPublisher() }
+    let cart: CurrentValueSubject<Cart, Never>
     private let _drinks: [Drink]
     private var _bag = Set<AnyCancellable>()
 
-    init(drinks: [Drink], cart: UI.Cart) {
+    init(drinks: [Drink], cart: Cart) {
         _drinks = drinks
         self.cart = CurrentValueSubject(cart)
     }
