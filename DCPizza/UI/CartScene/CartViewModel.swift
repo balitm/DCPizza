@@ -10,7 +10,7 @@ import Foundation
 import Domain
 import Combine
 
-final class CartViewModel: ViewModelType {
+struct CartViewModel: ViewModelType {
     typealias DrinksData = (cart: Cart, drinks: [Drink])
 
     enum Item: Hashable {
@@ -36,7 +36,6 @@ final class CartViewModel: ViewModelType {
 
     private let _networkUseCase: NetworkUseCase
     private let _drinks: [Drink]
-    private var _bag = Set<AnyCancellable>()
 
     init(networkUseCase: NetworkUseCase, cart: Cart, drinks: [Drink]) {
         self.cart = CurrentValueSubject<Cart, Never>(cart)
@@ -79,8 +78,7 @@ final class CartViewModel: ViewModelType {
                         return newCart
                     })
             })
-            .bind(subscriber: AnySubscriber(cart))
-            .store(in: &_bag)
+            .subscribe(AnySubscriber(cart))
 
         let checkout = input.checkout
             .flatMap({ [unowned cart] _ in cart.first() })
@@ -97,8 +95,7 @@ final class CartViewModel: ViewModelType {
                 newCart.empty()
                 return newCart
             })
-            .bind(subscriber: AnySubscriber(cart))
-            .store(in: &_bag)
+            .subscribe(AnySubscriber(cart))
 
         let showDrinks = cart
             .map({ [drinks = _drinks] in (cart: $0, drinks: drinks) })

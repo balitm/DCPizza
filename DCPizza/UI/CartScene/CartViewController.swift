@@ -86,18 +86,6 @@ private extension CartViewController {
                     self._navigator.showSuccess()
                 }),
 
-            // Add drinks.
-            rightPublisher
-                .flatMap({ _ in
-                    out.showDrinks
-                        .first()
-                })
-                // .print()
-                .flatMap({ [unowned self] in
-                    self._navigator.showDrinks(cart: $0.cart, drinks: $0.drinks)
-                })
-                .bind(subscriber: AnySubscriber(_viewModel.cart)),
-
             // Enable checkout.
             out.canCheckout
                 .sink(receiveValue: { [unowned self] in
@@ -105,5 +93,17 @@ private extension CartViewController {
                     self.checkoutLabel.alpha = $0 ? 1.0 : 0.5
                 }),
         ]
+
+        // Add drinks.
+        rightPublisher
+            .flatMap({ _ in
+                out.showDrinks
+                    .first()
+            })
+            // .print()
+            .flatMap({ [unowned self] in
+                self._navigator.showDrinks(cart: $0.cart, drinks: $0.drinks)
+            })
+            .subscribe(AnySubscriber(_viewModel.cart))
     }
 }

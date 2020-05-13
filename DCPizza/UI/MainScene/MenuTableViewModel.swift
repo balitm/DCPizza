@@ -47,13 +47,12 @@ class MenuTableViewModel: ViewModelType {
     }
 
     func transform(input: Input) -> Output {
-        let cachedData = CurrentValueSubject<InitData, Never>(InitData.empty)
+        let cachedData = CurrentValueRelay<InitData>(InitData.empty)
         _networkUseCase.getInitData()
             .catch({ _ in
                 Empty<InitData, Never>()
             })
-            .bind(subscriber: AnySubscriber(cachedData))
-            .store(in: &_bag)
+            .subscribe(AnySubscriber(cachedData))
 
         let viewModels = cachedData
             .map({ data -> [MenuCellViewModel] in
@@ -110,7 +109,9 @@ class MenuTableViewModel: ViewModelType {
         let selected = input.selected
             .flatMap({ [unowned self] selected in
                 Publishers.Zip(cachedData, self.$cart)
-                    .map({ (data: $0.0, selected: selected, cart: $0.1) })
+                    .map({
+                        (data: $0.0, selected: selected, cart: $0.1)
+                    })
                     .first()
             })
             .map({ t -> Selection in
@@ -135,7 +136,7 @@ class MenuTableViewModel: ViewModelType {
         let selection = Publishers.Merge(selected, scratch)
 
         let showCart = input.cart
-            .flatMap({
+            .flatMap({ [unowned self] in
                 Publishers.Zip(cachedData, self.$cart)
             })
             .map({ (t: (data: InitData, cart: Cart)) -> DrinksData in

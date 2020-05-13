@@ -10,7 +10,7 @@ import Foundation
 import Domain
 import Combine
 
-final class DrinksTableViewModel: ViewModelType {
+struct DrinksTableViewModel: ViewModelType {
     typealias Item = DrinkCellViewModel
 
     struct Input {
@@ -25,7 +25,6 @@ final class DrinksTableViewModel: ViewModelType {
     var resultCart: AnyPublisher<Cart, Never> { cart.dropFirst().eraseToAnyPublisher() }
     let cart: CurrentValueSubject<Cart, Never>
     private let _drinks: [Drink]
-    private var _bag = Set<AnyCancellable>()
 
     init(drinks: [Drink], cart: Cart) {
         _drinks = drinks
@@ -51,8 +50,7 @@ final class DrinksTableViewModel: ViewModelType {
                 newCart.add(drink: drinks[$0.index])
                 return newCart
             })
-            .bind(subscriber: AnySubscriber(cart))
-            .store(in: &_bag)
+            .subscribe(AnySubscriber(cart))
 
         let showAdded = selected
             .map { _ in () }

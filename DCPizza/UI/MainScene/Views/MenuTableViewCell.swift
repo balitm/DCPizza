@@ -51,7 +51,6 @@ extension MenuTableViewCell: CellViewModelProtocol {
         }
 
         _tapEvent
-            .bind(subscriber: AnySubscriber(viewModel.tap))
-            .store(in: &_bag)
+            .receive(subscriber: AnySubscriber(viewModel.tap))
     }
 }
