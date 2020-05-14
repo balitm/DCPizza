@@ -1,6 +1,6 @@
- //
+//
 //  TestNetUseCase.swift
-//  
+//
 //
 //  Created by Balázs Kilvády on 4/24/20.
 //
@@ -9,8 +9,8 @@ import Foundation
 import Combine
 @testable import Domain
 
-struct TestNetUseCase: NetworkUseCase {
-    private func _decode<T: Decodable>(_ type: T.Type, _ jsonStr: String) -> AnyPublisher<T, Error> {
+struct TestNetUseCase: NetworkProtocol {
+    private func _decode<T: Decodable>(_ type: T.Type, _ jsonStr: String) -> AnyPublisher<T, API.ErrorType> {
         do {
             let jsonData = jsonStr.data(using: .utf8)!
             let decoder = JSONDecoder()
@@ -19,10 +19,10 @@ struct TestNetUseCase: NetworkUseCase {
         } catch {
             DLog(">>> decode error: ", error)
         }
-        return Empty<T, Error>().eraseToAnyPublisher()
+        return Empty<T, API.ErrorType>().eraseToAnyPublisher()
     }
 
-    func getIngredients() -> AnyPublisher<[Ingredient], Error> {
+    func getIngredients() -> AnyPublisher<[Ingredient], API.ErrorType> {
         let jsonStr = """
         [
             {
@@ -80,7 +80,7 @@ struct TestNetUseCase: NetworkUseCase {
         return _decode([DS.Ingredient].self, jsonStr)
     }
 
-    func getDrinks() -> AnyPublisher<[DS.Drink], Error> {
+    func getDrinks() -> AnyPublisher<[DS.Drink], API.ErrorType> {
         let jsonStr = """
         [
             {
@@ -113,7 +113,7 @@ struct TestNetUseCase: NetworkUseCase {
         return _decode([DS.Drink].self, jsonStr)
     }
 
-    func getPizzas() -> AnyPublisher<DS.Pizzas, Error> {
+    func getPizzas() -> AnyPublisher<DS.Pizzas, API.ErrorType> {
         let jsonStr = """
         {
             "basePrice": 4,
@@ -216,7 +216,7 @@ struct TestNetUseCase: NetworkUseCase {
         return _decode(DS.Pizzas.self, jsonStr)
     }
 
-    func getInitData() -> AnyPublisher<InitData, Error> {
+    func getInitData() -> AnyPublisher<InitData, API.ErrorType> {
         let netData = Publishers.Zip3(getPizzas(),
                                       getIngredients(),
                                       getDrinks())
@@ -232,8 +232,7 @@ struct TestNetUseCase: NetworkUseCase {
         return netData.eraseToAnyPublisher()
     }
 
-    func checkout(cart: Cart) -> AnyPublisher<Void, Error> {
-        return Result.Publisher(()).eraseToAnyPublisher()
+    func checkout(cart: DS.Cart) -> AnyPublisher<Void, API.ErrorType> {
+        Result.Publisher(()).eraseToAnyPublisher()
     }
 }
-

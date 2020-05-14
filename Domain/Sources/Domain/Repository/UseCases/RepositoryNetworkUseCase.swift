@@ -16,19 +16,19 @@ final class RepositoryNetworkUseCase: NetworkUseCase {
         _repository = NetworkRepository(container: container)
     }
 
-    func getInitData() -> AnyPublisher<InitData, Error> {
+    func getInitData() -> AnyPublisher<InitData, API.ErrorType> {
         _repository.getInitData()
     }
 
-    func getIngredients() -> AnyPublisher<[Ingredient], Error> {
+    func getIngredients() -> AnyPublisher<[Ingredient], API.ErrorType> {
         _repository.getIngredients()
     }
 
-    func getDrinks() -> AnyPublisher<[Drink], Error> {
+    func getDrinks() -> AnyPublisher<[Drink], API.ErrorType> {
         _repository.getDrinks()
     }
 
-    func checkout(cart: Cart) -> AnyPublisher<Void, Error> {
+    func checkout(cart: Cart) -> AnyPublisher<Void, API.ErrorType> {
         _repository.checkout(cart: cart.asDataSource())
     }
 }

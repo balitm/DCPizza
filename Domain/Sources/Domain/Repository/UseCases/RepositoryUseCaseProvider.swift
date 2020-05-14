@@ -8,26 +8,29 @@
 
 import Foundation
 
-public struct RepositoryUseCaseProvider: UseCaseProvider {
-    let _container: DS.Container?
+public struct RepositoryUseCaseProvider: UseCaseProvider, DatabaseContainerProtocol {
+    var container: DS.Container?
+    private let _data: Initializer
 
     public init() {
-        _container = NetworkRepository.initContainer()
+        container = RepositoryUseCaseProvider.initContainer()
+        _data = Initializer(container: container, network: API.Network())
     }
 
-    init(container: DS.Container? = nil) {
+    init(container: DS.Container? = nil, network: NetworkProtocol) {
         if let container = container {
-            _container = container
+            self.container = container
         } else {
-            _container = NetworkRepository.initContainer()
+            self.container = RepositoryUseCaseProvider.initContainer()
         }
+        _data = Initializer(container: container, network: network)
     }
 
     public func makeNetworkUseCase() -> NetworkUseCase {
-        return RepositoryNetworkUseCase(container: _container)
+        RepositoryNetworkUseCase(container: container)
     }
 
-    public func makeDatabaseUseCase() -> DatabaseUseCase {
-        return RepositoryDatabaseUseCase()
+    public func makeMenuUseCase() -> MenuUseCase {
+        MenuRepository(data: _data)
     }
 }

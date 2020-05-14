@@ -67,7 +67,6 @@ final class MenuTableViewController: UITableViewController {
         let out = _viewModel.transform(input: MenuTableViewModel.Input(
             selected: selected,
             scratch: rightPublisher,
-            cart: leftPublisher,
             saveCart: _saveCart.eraseToAnyPublisher()
         ))
 
@@ -80,20 +79,19 @@ final class MenuTableViewController: UITableViewController {
 
             // Show ingredients.
             out.selection
-                .flatMap({ [unowned self] in
-                    self._navigator.showIngredients(of: $0.pizza,
-                                                    image: $0.image,
-                                                    ingredients: $0.ingredients,
-                                                    cart: $0.cart)
-                })
-                .assign(to: \.cart, on: _viewModel),
+                .sink(receiveValue: { [unowned self] in
+                    _ = self._navigator.showIngredients(of: $0.pizza,
+                                                        image: $0.image,
+                                                        ingredients: [],
+                                                        cart: Cart.empty)
+                }),
 
-            // Show cart.
-            out.showCart
-                .flatMap({ [unowned self] in
-                    self._navigator.showCart($0.cart, drinks: $0.drinks)
-                })
-                .assign(to: \.cart, on: _viewModel),
+//            // Show cart.
+//            out.showCart
+//                .flatMap({ [unowned self] in
+//                    self._navigator.showCart($0.cart, drinks: $0.drinks)
+//                })
+//                .assign(to: \.cart, on: _viewModel),
 
             // Show addedd.
             out.showAdded

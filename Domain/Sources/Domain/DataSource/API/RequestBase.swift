@@ -29,8 +29,9 @@ protocol RequestBaseProtocol: AnyObject {
 protocol HandlerBlockTypesProtocol {
     associatedtype Target
 
+    typealias ErrorType = API.ErrorType
     typealias SuccessBlock = (Target) -> Void
-    typealias ErrorBlock = (Error) -> Bool
+    typealias ErrorBlock = (ErrorType) -> Bool
 }
 
 protocol HandlerBlockProtocol: HandlerBlockTypesProtocol {
@@ -56,9 +57,9 @@ extension API {
     private static var _instanceNum = 0
 
     class _BaseRequest<Model>: RequestBaseProtocol {
-        typealias ErrorModel = Error
+        typealias ErrorModel = API.ErrorType
 
-        var httpParams: [String: Any]? { return nil }
+        var httpParams: [String: Any]? { nil }
         var method: Alamofire.HTTPMethod = .get
         var headers: [String: String]?
 
@@ -100,7 +101,7 @@ extension API {
             }
         }
 
-        func handleError(_ error: Error) {
+        func handleError(_ error: ErrorType) {
             guard let handlers: _HandlerBlocks<Model> = _removeHandlers(key: handlerKey) else { return }
 
             let isProcessed: Bool
@@ -229,7 +230,7 @@ extension API {
         }
 
         func createModel() -> Model {
-            return Model()
+            Model()
         }
 
         override func _perform() {
@@ -257,14 +258,14 @@ extension API {
                         self.path = self.fallbackPath
                         self._perform()
                     } else {
-                        self.handleError(error)
+                        self.handleError(.netError(error: error))
                     }
                 }
             }
         }
 
         private func _responeParser() -> ResponseParser {
-            return { [unowned self] request, response, data, error in
+            { [unowned self] request, response, data, error in
                 if let error = error { return .failure(error) }
                 let data = data ?? Data()
 
@@ -284,6 +285,7 @@ extension API {
             if let error = error {
                 result = .failure(error)
             } else {
+                // swiftformat:disable redundantSelf
                 result = self.responseParser(urlRequest, response, data, error)
             }
 
@@ -319,7 +321,7 @@ extension CombinableType {
         _performIn()
     }
 
-    fileprivate func _cmbPerform() -> AnyPublisher<Target, Error> {
+    fileprivate func _cmbPerform() -> AnyPublisher<Target, ErrorType> {
 //        Deferred {
 //            return Future<Target, Error> { promise in
 //                self._perform(onSuccess: { result in
@@ -336,15 +338,15 @@ extension CombinableType {
 }
 
 extension Combinable where Base: CombinableType {
-    func perform() -> AnyPublisher<Base.Target, Error> {
-        return base._cmbPerform()
+    func perform() -> AnyPublisher<Base.Target, Base.ErrorType> {
+        base._cmbPerform()
     }
 }
 
 // MARK: - Publisher
 
 private extension Subscribers {
-    final class _APISubscription<S: Subscriber, R: CombinableType>: Subscription, CancelableObserver where S.Input == R.Target, S.Failure == Error {
+    final class _APISubscription<S: Subscriber, R: CombinableType>: Subscription, CancelableObserver where S.Input == R.Target, S.Failure == R.ErrorType {
         private let _request: R
         private var _subscriber: S?
 
@@ -355,7 +357,7 @@ private extension Subscribers {
         }
 
         func request(_ demand: Subscribers.Demand) {
-            //TODO: - Optionaly Adjust The Demand
+            // TODO: - Optionaly Adjust The Demand
         }
 
         func cancel() {
@@ -381,7 +383,7 @@ private extension Subscribers {
 
     struct _APIPublisher<R: CombinableType>: Publisher {
         typealias Output = R.Target
-        typealias Failure = Error
+        typealias Failure = R.ErrorType
 
         private let _request: R
 

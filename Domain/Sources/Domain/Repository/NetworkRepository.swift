@@ -10,10 +10,37 @@ import Foundation
 import Combine
 
 protocol RepositoryNetworkProtocol {
-    func getInitData() -> AnyPublisher<InitData, Error>
-    func getIngredients() -> AnyPublisher<[Ingredient], Error>
-    func getDrinks() -> AnyPublisher<[Drink], Error>
-    func checkout(cart: DS.Cart) -> AnyPublisher<Void, Error>
+    func getInitData() -> AnyPublisher<InitData, API.ErrorType>
+    func getIngredients() -> AnyPublisher<[DS.Ingredient], API.ErrorType>
+    func getDrinks() -> AnyPublisher<[DS.Drink], API.ErrorType>
+    func checkout(cart: DS.Cart) -> AnyPublisher<Void, API.ErrorType>
+}
+
+protocol NetworkProtocol {
+    func getPizzas() -> AnyPublisher<DS.Pizzas, API.ErrorType>
+    func getIngredients() -> AnyPublisher<[DS.Ingredient], API.ErrorType>
+    func getDrinks() -> AnyPublisher<[DS.Drink], API.ErrorType>
+    func checkout(cart: DS.Cart) -> AnyPublisher<Void, API.ErrorType>
+}
+
+extension API {
+    struct Network: NetworkProtocol {
+        func getPizzas() -> AnyPublisher<DS.Pizzas, API.ErrorType> {
+            GetPizzas().cmb.perform()
+        }
+
+        func getIngredients() -> AnyPublisher<[DS.Ingredient], API.ErrorType> {
+            GetIngredients().cmb.perform()
+        }
+
+        func getDrinks() -> AnyPublisher<[DS.Drink], API.ErrorType> {
+            GetDrinks().cmb.perform()
+        }
+
+        func checkout(cart: DS.Cart) -> AnyPublisher<Void, API.ErrorType> {
+            Checkout(pizzas: cart.pizzas, drinks: cart.drinks).cmb.perform()
+        }
+    }
 }
 
 struct NetworkRepository: RepositoryNetworkProtocol, DatabaseContainerProtocol {
@@ -23,7 +50,7 @@ struct NetworkRepository: RepositoryNetworkProtocol, DatabaseContainerProtocol {
         self.container = container
     }
 
-    func getInitData() -> AnyPublisher<InitData, Error> {
+    func getInitData() -> AnyPublisher<InitData, API.ErrorType> {
         let netData = Publishers.Zip3(API.GetPizzas().cmb.perform(),
                                       API.GetIngredients().cmb.perform(),
                                       API.GetDrinks().cmb.perform())
@@ -41,15 +68,15 @@ struct NetworkRepository: RepositoryNetworkProtocol, DatabaseContainerProtocol {
         return netData.eraseToAnyPublisher()
     }
 
-    func getIngredients() -> AnyPublisher<[Ingredient], Error> {
+    func getIngredients() -> AnyPublisher<[Ingredient], API.ErrorType> {
         API.GetIngredients().cmb.perform()
     }
 
-    func getDrinks() -> AnyPublisher<[Drink], Error> {
+    func getDrinks() -> AnyPublisher<[Drink], API.ErrorType> {
         API.GetDrinks().cmb.perform()
     }
 
-    func checkout(cart: DS.Cart) -> AnyPublisher<Void, Error> {
+    func checkout(cart: DS.Cart) -> AnyPublisher<Void, API.ErrorType> {
         API.Checkout(pizzas: cart.pizzas, drinks: cart.drinks).cmb.perform()
             .handleEvents(receiveOutput: {
                 self.execute {

@@ -11,60 +11,23 @@ import Combine
 import RealmSwift
 @testable import Domain
 
-class DomainTests: XCTestCase {
+class DomainTests: UseCaseTestsBase {
     private var _bag = Set<AnyCancellable>()
-    var initData: InitData!
-    var useCase: NetworkUseCase!
     var testCart: Cart!
-    static var realm: Realm!
-    private var _container: DS.Container?
-
-    override class func setUp() {
-        super.setUp()
-
-        var _realmConfig: Realm.Configuration {
-            var config = Realm.Configuration.defaultConfiguration
-            DLog("Realm file: \(config.fileURL!.path)")
-            var fileURL = config.fileURL!
-            fileURL.deleteLastPathComponent()
-            fileURL.deleteLastPathComponent()
-            fileURL.appendPathComponent("tmp")
-            fileURL.appendPathComponent("test.realm")
-            DLog("Realm file: \(fileURL.path)")
-            config.fileURL = fileURL
-            return config
-        }
-
-        do {
-            let config = _realmConfig
-            realm = try Realm.init(configuration: config)
-        } catch {
-            fatalError("test realm can't be inited:\n\(error)")
-        }
-    }
 
     override func setUp() {
         super.setUp()
 
-        _container = DS.Container(realm: DomainTests.realm)
-        useCase = TestNetUseCase()
-        useCase.getInitData()
-            .sink(receiveCompletion: {
-                DLog("received: ", $0)
-            }, receiveValue: { [unowned self] in
-                self.initData = $0
-                guard $0.drinks.count >= 2 && $0.pizzas.pizzas.count >= 2 else { return }
-                let pizzas = [
-                    $0.pizzas.pizzas[0],
-                    $0.pizzas.pizzas[1],
-                ]
-                let drinks = [
-                    $0.drinks[0],
-                    $0.drinks[1],
-                ]
-                self.testCart = Cart(pizzas: pizzas, drinks: drinks, basePrice: $0.pizzas.basePrice)
-            })
-            .store(in: &_bag)
+        guard component.drinks.count >= 2 && component.pizzas.pizzas.count >= 2 else { return }
+        let pizzas = [
+            component.pizzas.pizzas[0],
+            component.pizzas.pizzas[1],
+        ]
+        let drinks = [
+            component.drinks[0],
+            component.drinks[1],
+        ]
+        testCart = Cart(pizzas: pizzas, drinks: drinks, basePrice: data.cart.basePrice)
     }
 
     override func tearDown() {
@@ -72,19 +35,19 @@ class DomainTests: XCTestCase {
     }
 
     func testNetwork() {
-        let useCase = RepositoryUseCaseProvider(container: _container).makeNetworkUseCase()
+        let network: NetworkProtocol = API.Network()
         let expectation = XCTestExpectation(description: "net")
 
         Publishers.Zip(
-            useCase.getIngredients(),
-            useCase.getDrinks()
+            network.getIngredients(),
+            network.getDrinks()
         )
-            .sink(receiveCompletion: { _ in
-                XCTAssert(true)
-                expectation.fulfill()
-            }, receiveValue: { _ in
+        .sink(receiveCompletion: { _ in
+            XCTAssert(true)
+            expectation.fulfill()
+        }, receiveValue: { _ in
             })
-            .store(in: &_bag)
+        .store(in: &_bag)
 
         wait(for: [expectation], timeout: 120.0)
     }
@@ -112,13 +75,13 @@ class DomainTests: XCTestCase {
     }
 
     func testPizzaConversion() {
-        let pizzas = initData.pizzas
+        let pizzas = component.pizzas
         let dsPizzas = pizzas.asDataSource()
         let isConverted =
             dsPizzas.pizzas.count == pizzas.pizzas.count
-            && dsPizzas.pizzas.reduce(true, { r0, pizza in
-                r0 && pizza.ingredients.reduce(true, { r1, id in
-                    r1 && initData.ingredients.contains { $0.id == id }
+                && dsPizzas.pizzas.reduce(true, { r0, pizza in
+                    r0 && pizza.ingredients.reduce(true, { r1, id in
+                        r1 && component.ingredients.contains { $0.id == id }
                 })
             })
 
@@ -128,18 +91,18 @@ class DomainTests: XCTestCase {
     func testCartConversion() {
         let cart = testCart!
 
-        let converted = cart.asDataSource().asDomain(with: initData.ingredients, drinks: initData.drinks)
+        let converted = cart.asDataSource().asDomain(with: component.ingredients, drinks: component.drinks)
         DLog("converted:\n", converted.drinks.map { $0.id }, "\norig:\n", cart.drinks.map { $0.id })
         let isConverted = _isEqual(converted, rhs: cart)
         XCTAssertTrue(isConverted)
     }
 
     func testCheckout() {
-        let useCase = RepositoryUseCaseProvider(container: _container).makeNetworkUseCase()
+        let network: NetworkProtocol = API.Network()
         let cart = testCart!
 
         let expectation = XCTestExpectation(description: "checkout")
-        useCase.checkout(cart: cart)
+        network.checkout(cart: cart.asDataSource())
             .sink(receiveCompletion: {
                 switch $0 {
                 case .failure:
@@ -180,7 +143,7 @@ class DomainTests: XCTestCase {
             })
 
             // Compare.
-            let converted = dCart.asDomain(with: initData.ingredients, drinks: initData.drinks)
+            let converted = dCart.asDomain(with: component.ingredients, drinks: component.drinks)
             XCTAssertTrue(_isEqual(converted, rhs: testCart))
             return
         } catch {
@@ -190,8 +153,7 @@ class DomainTests: XCTestCase {
     }
 
     private func _isEqual(_ lhs: Domain.Cart, rhs: Domain.Cart) -> Bool {
-        return lhs.pizzas.map({ $0.name }) == rhs.pizzas.map({ $0.name })
+        lhs.pizzas.map({ $0.name }) == rhs.pizzas.map({ $0.name })
             && lhs.drinks.map { $0.id } == rhs.drinks.map { $0.id }
-
     }
 }

@@ -11,20 +11,16 @@ import Domain
 import Combine
 import class UIKit.UIImage
 
-class MenuTableViewModel: ViewModelType {
-    typealias DrinksData = (cart: Cart, drinks: [Drink])
+final class MenuTableViewModel: ViewModelType {
     typealias Selected = (index: Int, image: UIImage?)
     typealias Selection = (
         pizza: Pizza,
-        image: UIImage?,
-        ingredients: [Ingredient],
-        cart: Cart
+        image: UIImage?
     )
 
     struct Input {
         let selected: AnyPublisher<Selected, Never>
         let scratch: AnyPublisher<Void, Never>
-        let cart: AnyPublisher<Void, Never>
         let saveCart: AnyPublisher<Void, Never>
     }
 
@@ -32,43 +28,38 @@ class MenuTableViewModel: ViewModelType {
         let tableData: AnyPublisher<[MenuCellViewModel], Never>
         let selection: AnyPublisher<Selection, Never>
         let showAdded: AnyPublisher<Void, Never>
-        let showCart: AnyPublisher<DrinksData, Never>
     }
 
-    @Published var cart = Cart.empty
-
-    private let _networkUseCase: NetworkUseCase
-    private let _databaseUseCase: DatabaseUseCase
+    private let _menuUseCase: MenuUseCase
     private var _bag = Set<AnyCancellable>()
 
-    init(networkUseCase: NetworkUseCase, databaseUseCase: DatabaseUseCase) {
-        _networkUseCase = networkUseCase
-        _databaseUseCase = databaseUseCase
+    init(menuUseCase: MenuUseCase) {
+        _menuUseCase = menuUseCase
     }
 
     func transform(input: Input) -> Output {
-        let cachedData = CurrentValueRelay<InitData>(InitData.empty)
-        _networkUseCase.getInitData()
-            .catch({ _ in
-                Empty<InitData, Never>()
+        let cachedPizzas = CurrentValueRelay(Pizzas.empty)
+        _menuUseCase.pizzas()
+            .compactMap({
+                switch $0 {
+                case let .success(pizzas):
+                    return pizzas as Pizzas?
+                case .failure:
+                    return nil
+                }
             })
-            .subscribe(AnySubscriber(cachedData))
+            .subscribe(AnySubscriber(cachedPizzas))
 
-        let viewModels = cachedData
-            .map({ data -> [MenuCellViewModel] in
-                let basePrice = data.pizzas.basePrice
-                let vms = data.pizzas.pizzas.map {
+        let viewModels = cachedPizzas
+            .map({ pizzas -> [MenuCellViewModel] in
+                let basePrice = pizzas.basePrice
+                let vms = pizzas.pizzas.map {
                     MenuCellViewModel(basePrice: basePrice, pizza: $0)
                 }
                 return vms
             })
+            .print()
             .share()
-
-        // Init the cart.
-        cachedData
-            .map({ $0.cart })
-            .assign(to: \.cart, on: self)
-            .store(in: &_bag)
 
         let cartEvents = viewModels
             .map({ vms in
@@ -92,76 +83,55 @@ class MenuTableViewModel: ViewModelType {
             .share()
 
         // Update cart on add events.
-        cartEvents
-            .flatMap({ [unowned self] (idx: Int) in
-                cachedData.zip(self.$cart)
-                    .first()
-                    .map({ (cmb: (data: InitData, cart: Cart)) -> Cart in
-                        var newCart = cmb.cart
-                        newCart.add(pizza: cmb.data.pizzas.pizzas[idx])
-                        return newCart
-                    })
+        cartEvents.combineLatest(cachedPizzas)
+            .flatMap({ [menuUseCase = _menuUseCase] in
+                menuUseCase.addPizza(pizza: $0.1.pizzas[$0.0])
+                    .catch({ _ in Empty<Void, Never>() })
             })
-            // .debug(trimOutput: true)
-            .assign(to: \.cart, on: self)
+            .sink {}
             .store(in: &_bag)
 
         // A pizza is selected.
         let selected = input.selected
-            .flatMap({ [unowned self] selected in
-                cachedData.zip(self.$cart)
+            .flatMap({ selected in
+                cachedPizzas
                     .first()
                     .map({
-                        (data: $0.0, selected: selected, cart: $0.1)
+                        (pizzas: $0.pizzas, selected: selected)
                     })
             })
             .map({ t -> Selection in
-                let pizza = t.data.pizzas.pizzas[t.selected.index]
+                let pizza = t.pizzas[t.selected.index]
                 let image = t.selected.image
-                let ingredients = t.data.ingredients
-                return (pizza, image, ingredients, t.cart)
+                return (pizza, image)
             })
 
         // Pizza from scratch is selected.
         let scratch = input.scratch
-            .flatMap({ [unowned self] selected in
-                cachedData.zip(self.$cart)
+            .flatMap({
+                cachedPizzas
                     .first()
             })
-            .map({ (t: (data: InitData, cart: Cart)) -> Selection in
+            .map({ (t: Pizzas) -> Selection in
                 let pizza = Pizza()
-                let ingredients = t.data.ingredients
-                return (pizza, nil, ingredients, t.cart)
+                return (pizza, nil)
             })
 
         let selection = Publishers.Merge(selected, scratch)
 
-        let showCart = input.cart
-            .flatMap({ [unowned self] in
-                cachedData.zip(self.$cart)
-                    .first()
-            })
-            .map({ (t: (data: InitData, cart: Cart)) -> DrinksData in
-                (t.cart, t.data.drinks)
-            })
-
         input.saveCart
-            .flatMap({ [unowned self] in
-                self.$cart
-                    .first()
+            .flatMap({ [menuUseCase = _menuUseCase] in
+                menuUseCase.saveCart()
+                    .catch({ _ in Empty<Void, Never>() })
             })
-            .sink(receiveValue: { [dbUseCase = _databaseUseCase] in
-                // DLog("save cart, pizzas: ", $0.pizzas.count, ", drinks: ", $0.drinks.count)
-                dbUseCase.save(cart: $0)
-            })
+            .sink {}
             .store(in: &_bag)
 
         let showAdded = cartEvents.map({ _ in () })
 
         return Output(tableData: viewModels.eraseToAnyPublisher(),
                       selection: selection.eraseToAnyPublisher(),
-                      showAdded: showAdded.eraseToAnyPublisher(),
-                      showCart: showCart.eraseToAnyPublisher()
+                      showAdded: showAdded.eraseToAnyPublisher()
         )
     }
 }

@@ -9,8 +9,8 @@
 import Foundation
 import Alamofire
 
-struct API {
-    enum ErrorType: Error {
+public struct API {
+    public enum ErrorType: Error {
         case invalidURL
         case disabled
         case invalidJSON

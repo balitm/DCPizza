@@ -10,5 +10,5 @@ import Foundation
 
 public protocol UseCaseProvider {
     func makeNetworkUseCase() -> NetworkUseCase
-    func makeDatabaseUseCase() -> DatabaseUseCase
+    func makeMenuUseCase() -> MenuUseCase
 }

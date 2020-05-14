@@ -43,8 +43,8 @@ public struct Cart {
 
     public func totalPrice() -> Double {
         let pizzaPrice = pizzas.reduce(0.0) {
-            return $0 + $1.ingredients.reduce(basePrice) {
-                return $0 + $1.price
+            $0 + $1.ingredients.reduce(basePrice) {
+                $0 + $1.price
             }
         }
         let drinkPrice = drinks.reduce(0.0) {
@@ -53,3 +53,30 @@ public struct Cart {
         return pizzaPrice + drinkPrice
     }
 }
+
+// extension Cart: CombineCompatible {}
+//
+// extension Combinable where Base == Cart {
+//    enum Item {
+//        case pizza(pizza: Pizza)
+//        case drink(drink: Drink)
+//    }
+//
+//    var addItem: AnySubscriber<Item, API.ErrorType> {
+//        AnySubscriber<Item, API.ErrorType>(receiveSubscription: {
+//            DLog("subscription: ", $0)
+//        }, receiveValue: {
+//            switch $0 {
+//            case let .pizza(pizza):
+//                DLog("add pizza: ", pizza.name)
+//                base.add(pizza: pizza)
+//            case let .drink(drink):
+//                DLog("add drink: ", drink.name)
+//                base.add(drink: drink)
+//            }
+//            return .unlimited
+//        }, receiveCompletion: {
+//            DLog("completion: ", $0)
+//        })
+//    }
+// }

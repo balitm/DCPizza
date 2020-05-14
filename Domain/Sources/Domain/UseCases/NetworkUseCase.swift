@@ -10,8 +10,8 @@ import Foundation
 import Combine
 
 public protocol NetworkUseCase {
-    func getIngredients() -> AnyPublisher<[Ingredient], Error>
-    func getDrinks() -> AnyPublisher<[Drink], Error>
-    func getInitData() -> AnyPublisher<InitData, Error>
-    func checkout(cart: Cart) -> AnyPublisher<Void, Error>
+    func getIngredients() -> AnyPublisher<[Ingredient], API.ErrorType>
+    func getDrinks() -> AnyPublisher<[Drink], API.ErrorType>
+    func getInitData() -> AnyPublisher<InitData, API.ErrorType>
+    func checkout(cart: Cart) -> AnyPublisher<Void, API.ErrorType>
 }

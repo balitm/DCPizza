@@ -11,17 +11,16 @@ import Domain
 
 class AppDependencyContainer {
     let networkUseCase: NetworkUseCase
-    let databaseUseCase: DatabaseUseCase
+    let menuUseCase: MenuUseCase
 
     init() {
         let provider = RepositoryUseCaseProvider()
         networkUseCase = provider.makeNetworkUseCase()
-        databaseUseCase = provider.makeDatabaseUseCase()
+        menuUseCase = provider.makeMenuUseCase()
     }
 
     func makeMenuTableViewModel() -> MenuTableViewModel {
-        MenuTableViewModel(networkUseCase: networkUseCase,
-                           databaseUseCase: databaseUseCase)
+        MenuTableViewModel(menuUseCase: menuUseCase)
     }
 
     func makeNavigator(by viewController: UIViewController) -> Navigator {
