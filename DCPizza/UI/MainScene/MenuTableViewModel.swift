@@ -47,13 +47,12 @@ class MenuTableViewModel: ViewModelType {
     }
 
     func transform(input: Input) -> Output {
-        let cachedData = CurrentValueSubject<InitData, Never>(InitData.empty)
+        let cachedData = CurrentValueRelay<InitData>(InitData.empty)
         _networkUseCase.getInitData()
             .catch({ _ in
                 Empty<InitData, Never>()
             })
-            .bind(subscriber: AnySubscriber(cachedData))
-            .store(in: &_bag)
+            .subscribe(AnySubscriber(cachedData))
 
         let viewModels = cachedData
             .map({ data -> [MenuCellViewModel] in
@@ -95,7 +94,8 @@ class MenuTableViewModel: ViewModelType {
         // Update cart on add events.
         cartEvents
             .flatMap({ [unowned self] (idx: Int) in
-                Publishers.Zip(cachedData, self.$cart)
+                cachedData.zip(self.$cart)
+                    .first()
                     .map({ (cmb: (data: InitData, cart: Cart)) -> Cart in
                         var newCart = cmb.cart
                         newCart.add(pizza: cmb.data.pizzas.pizzas[idx])
@@ -109,9 +109,11 @@ class MenuTableViewModel: ViewModelType {
         // A pizza is selected.
         let selected = input.selected
             .flatMap({ [unowned self] selected in
-                Publishers.Zip(cachedData, self.$cart)
-                    .map({ (data: $0.0, selected: selected, cart: $0.1) })
+                cachedData.zip(self.$cart)
                     .first()
+                    .map({
+                        (data: $0.0, selected: selected, cart: $0.1)
+                    })
             })
             .map({ t -> Selection in
                 let pizza = t.data.pizzas.pizzas[t.selected.index]
@@ -123,7 +125,7 @@ class MenuTableViewModel: ViewModelType {
         // Pizza from scratch is selected.
         let scratch = input.scratch
             .flatMap({ [unowned self] selected in
-                Publishers.Zip(cachedData, self.$cart)
+                cachedData.zip(self.$cart)
                     .first()
             })
             .map({ (t: (data: InitData, cart: Cart)) -> Selection in
@@ -135,8 +137,9 @@ class MenuTableViewModel: ViewModelType {
         let selection = Publishers.Merge(selected, scratch)
 
         let showCart = input.cart
-            .flatMap({
-                Publishers.Zip(cachedData, self.$cart)
+            .flatMap({ [unowned self] in
+                cachedData.zip(self.$cart)
+                    .first()
             })
             .map({ (t: (data: InitData, cart: Cart)) -> DrinksData in
                 (t.cart, t.data.drinks)

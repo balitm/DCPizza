@@ -90,11 +90,6 @@ private extension IngredientsViewController {
             delete: UITableView.RowAnimation.none
         )
 
-        let binder = AnySubscriber<FooterEvent, Never>(receiveValue: { [unowned self] in
-            self._displayFooter($0)
-            return .unlimited
-        })
-
         _bag = [
             // Table view data source.
             out.tableData
@@ -112,7 +107,9 @@ private extension IngredientsViewController {
 
             // Show or hide the footer.
             out.footerEvent
-                .bind(subscriber: binder),
+                .sink(receiveValue: { [unowned self] in
+                    self._displayFooter($0)
+                }),
         ]
 
         titleCancellable.cancel()

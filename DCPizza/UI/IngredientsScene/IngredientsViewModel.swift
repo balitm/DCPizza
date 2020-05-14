@@ -48,8 +48,12 @@ final class IngredientsViewModel: ViewModelType {
         self.cart = CurrentValueSubject(cart)
     }
 
+    deinit {
+        DLog(">>> deinit: ", type(of: self))
+    }
+
     func transform(input: Input) -> Output {
-        // Create selections observable.
+        // Create selections publisher.
         let selecteds = _makeSelectionPublisher(
             input.selected
                 .compactMap({ $0 >= 1 ? $0 - 1 : nil })
@@ -73,24 +77,26 @@ final class IngredientsViewModel: ViewModelType {
             })
 
         // Selected ingredients.
-        let selectedIngredients = selecteds
-            .map { $0.compactMap { $0.isOn ? $0.ingredient : nil } }
-            .drop { $0.isEmpty }
+        let selectedIngredients = CurrentValueSubject<[Ingredient], Never>([])
+        selecteds
+            .map({ sels -> [Ingredient] in
+                sels.compactMap { $0.isOn ? $0.ingredient : nil }
+            })
+            .subscribe(AnySubscriber(selectedIngredients))
 
         // Add pizza to cart.
         input.addEvent
             .flatMap({ [unowned cart] in
-                Publishers.CombineLatest(cart, selectedIngredients)
+                cart.combineLatest(selectedIngredients)
                     .first()
             })
-            .map({ (pair: (cart: Cart, ingredients: [Ingredient])) -> Cart in
+            .map({ [pizza = _pizza] (pair: (cart: Cart, ingredients: [Ingredient])) -> Cart in
                 var newCart = pair.cart
-                let pizza = Pizza(copy: self._pizza, with: pair.ingredients)
+                let pizza = Pizza(copy: pizza, with: pair.ingredients)
                 newCart.add(pizza: pizza)
                 return newCart
             })
-            .bind(subscriber: AnySubscriber(cart))
-            .store(in: &_bag)
+            .subscribe(AnySubscriber(cart))
 
         // Title for the scene.
         let title = Just(_pizza)
@@ -131,8 +137,8 @@ private extension IngredientsViewModel {
         return sels
     }
 
-    /// Create selections observable.
-    func _makeSelectionPublisher(_ selected: AnyPublisher<Int, Never>) -> AnyPublisher<[Selected], Never> {
+    /// Create selections publisher.
+    func _makeSelectionPublisher(_ selected: AnyPublisher<Int, Never>) -> CurrentValueSubject<[Selected], Never> {
         let items = _createSelecteds()
         let subject = CurrentValueSubject<[Selected], Never>(items)
 
@@ -148,20 +154,18 @@ private extension IngredientsViewModel {
                 ings[$0.idx] = (!item.isOn, item.ingredient)
                 return ings
             })
-            .bind(subscriber: AnySubscriber(subject))
-            .store(in: &_bag)
+            .subscribe(AnySubscriber(subject))
 
-        return subject.eraseToAnyPublisher()
+        return subject
     }
 
-    /// Create footer event observable.
+    /// Create footer event publisher.
     func _makeFooterPublisher(_ publisher: AnyPublisher<Void, Never>) -> AnyPublisher<FooterEvent, Never> {
         let footerEvent = CurrentValueRelay(FooterEvent.hide)
 
         publisher
             .map({ FooterEvent.show })
-            .bind(subscriber: AnySubscriber(footerEvent))
-            .store(in: &_bag)
+            .subscribe(AnySubscriber(footerEvent))
 
         publisher
             .sink(receiveValue: { [unowned self] _ in
@@ -170,7 +174,9 @@ private extension IngredientsViewModel {
                     .autoconnect()
                     .first()
                     .map({ _ in FooterEvent.hide })
-                    .bind(subscriber: AnySubscriber(footerEvent))
+                    .sink(receiveValue: {
+                        footerEvent.send($0)
+                    })
             })
             .store(in: &_bag)
 

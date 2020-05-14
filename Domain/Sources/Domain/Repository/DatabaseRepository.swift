@@ -10,7 +10,7 @@ import Foundation
 
 protocol RepositoryDatabaseProtocol {
     func deleteCart()
-    func save(cart: DS.Cart )
+    func save(cart: DS.Cart)
 }
 
 struct DatabaseRepository: RepositoryDatabaseProtocol, DatabaseContainerProtocol {
