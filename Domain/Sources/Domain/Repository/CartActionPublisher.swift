@@ -15,7 +15,29 @@ enum CartAction {
 }
 
 extension Publishers {
-    private final class _CartSubscription<S: Subscriber>: Subscription where S.Input == Void, S.Failure == Error {
+    struct CartActionPublisher: Publisher {
+        typealias Output = Void
+        typealias Failure = Error
+
+        private let _action: CartAction
+        private let _data: Initializer
+
+        init(data: Initializer, action: CartAction) {
+            _action = action
+            _data = data
+        }
+
+        public func receive<S: Subscriber>(subscriber: S) where Failure == S.Failure, Output == S.Input {
+            let subscription = _Subscription(data: _data,
+                                             action: _action,
+                                             subscriber: subscriber)
+            subscriber.receive(subscription: subscription)
+        }
+    }
+}
+
+private extension Publishers.CartActionPublisher {
+    final class _Subscription<S: Subscriber>: Subscription where S.Input == Void, S.Failure == Error {
         private let _action: CartAction
         private let _data: Initializer
         private var _subscriber: S?
@@ -56,26 +78,6 @@ extension Publishers {
                     subscriber.receive(completion: .failure(error))
                 }
             }
-        }
-    }
-
-    struct CartActionPublisher: Publisher {
-        typealias Output = Void
-        typealias Failure = Error
-
-        private let _action: CartAction
-        private let _data: Initializer
-
-        init(data: Initializer, action: CartAction) {
-            _action = action
-            _data = data
-        }
-
-        func receive<S: Subscriber>(subscriber: S) where Failure == S.Failure, Output == S.Input {
-            let subscription = _CartSubscription(data: _data,
-                                                 action: _action,
-                                                 subscriber: subscriber)
-            subscriber.receive(subscription: subscription)
         }
     }
 }
