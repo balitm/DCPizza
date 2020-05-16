@@ -77,7 +77,7 @@ class DCPizzaTests: XCTestCase {
 
             useCase.checkout(cart: cart)
                 .sink(receiveCompletion: {
-                    if case let Subscribers.Completion<Error>.failure(error) = $0 {
+                    if case let Subscribers.Completion<API.ErrorType>.failure(error) = $0 {
                         DLog("failed with: ", error)
                         XCTAssert(false)
                     }
