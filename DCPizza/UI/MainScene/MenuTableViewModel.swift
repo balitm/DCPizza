@@ -85,7 +85,7 @@ final class MenuTableViewModel: ViewModelType {
         // Update cart on add events.
         cartEvents.combineLatest(cachedPizzas)
             .flatMap({ [menuUseCase = _menuUseCase] in
-                menuUseCase.addPizza(pizza: $0.1.pizzas[$0.0])
+                menuUseCase.add(pizza: $0.1.pizzas[$0.0])
                     .catch({ _ in Empty<Void, Never>() })
             })
             .sink {}

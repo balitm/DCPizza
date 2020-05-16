@@ -12,6 +12,6 @@ public typealias PizzasResult = Result<Pizzas, API.ErrorType>
 
 public protocol MenuUseCase {
     func pizzas() -> AnyPublisher<PizzasResult, Never>
-    func addPizza(pizza: Pizza) -> AnyPublisher<Void, Error>
+    func add(pizza: Pizza) -> AnyPublisher<Void, Error>
     func saveCart() -> AnyPublisher<Void, Error>
 }

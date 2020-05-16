@@ -10,7 +10,7 @@ import Combine
 @testable import Domain
 
 class MenuUseCaseTests: UseCaseTestsBase {
-    var useCase: MenuUseCase!
+    var useCase: MenuRepository!
 
     override func setUp() {
         super.setUp()
@@ -18,14 +18,8 @@ class MenuUseCaseTests: UseCaseTestsBase {
         useCase = MenuRepository(data: data)
     }
 
-    private func _exception(test: (XCTestExpectation) -> Void) {
-        let expectation = XCTestExpectation(description: "combine")
-        test(expectation)
-        wait(for: [expectation], timeout: 3.0)
-    }
-
     func testPizzas() {
-        _exception { expectation in
+        exception { expectation in
             _ = useCase.pizzas()
                 .first()
                 .sink(receiveValue: {
@@ -39,24 +33,6 @@ class MenuUseCaseTests: UseCaseTestsBase {
                     expectation.fulfill()
                 })
         }
-    }
-
-    func testAddPizza() {
-        data.cart.empty()
-        XCTAssert(data.cart.pizzas.isEmpty)
-        XCTAssert(data.cart.drinks.isEmpty)
-        _exception { expectation in
-            _ = useCase.addPizza(pizza: component.pizzas.pizzas.first!)
-                .sink(receiveCompletion: {
-                    if case let Subscribers.Completion.failure(error) = $0 {
-                        XCTAssert(false, "failed with: \(error)")
-                    }
-                    expectation.fulfill()
-                }, receiveValue: {
-                    XCTAssert(true)
-                })
-        }
-        XCTAssertEqual(data.cart.pizzas.count, 1)
     }
 
     func testSaveCart() {
@@ -75,7 +51,7 @@ class MenuUseCaseTests: UseCaseTestsBase {
         ]
         data.cart = Cart(pizzas: pizzas, drinks: drinks, basePrice: data.cart.basePrice)
 
-        _exception { expectation in
+        exception { expectation in
             _ = useCase.saveCart()
                 .sink(receiveCompletion: {
                     if case let Subscribers.Completion.failure(error) = $0 {
@@ -106,5 +82,13 @@ class MenuUseCaseTests: UseCaseTestsBase {
         } catch {
             XCTAssert(false, "Database threw \(error)")
         }
+    }
+}
+
+extension MenuRepository: HasAddPizza {}
+
+extension MenuUseCaseTests: AddPizzaTest {
+    func testAddPizza() {
+        addPizzaTest()
     }
 }

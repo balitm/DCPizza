@@ -7,7 +7,18 @@
 
 import XCTest
 import RealmSwift
+import Combine
 @testable import Domain
+
+protocol HasAddPizza {
+    func add(pizza: Pizza) -> AnyPublisher<Void, Error>
+}
+
+protocol AddPizzaTest {
+    associatedtype UseCase: HasAddPizza
+
+    var useCase: UseCase! { get }
+}
 
 class UseCaseTestsBase: XCTestCase {
     var data: Initializer!
@@ -46,5 +57,31 @@ class UseCaseTestsBase: XCTestCase {
         let network: NetworkProtocol = TestNetUseCase()
         data = Initializer(container: container, network: network)
         component = try! data.component.get()
+    }
+
+    func exception(test: (XCTestExpectation) -> Void) {
+        let expectation = XCTestExpectation(description: "combine")
+        test(expectation)
+        wait(for: [expectation], timeout: 3.0)
+    }
+}
+
+extension AddPizzaTest where Self: UseCaseTestsBase {
+    func addPizzaTest() {
+        data.cart.empty()
+        XCTAssert(data.cart.pizzas.isEmpty)
+        XCTAssert(data.cart.drinks.isEmpty)
+        exception { expectation in
+            _ = useCase.add(pizza: component.pizzas.pizzas.first!)
+                .sink(receiveCompletion: {
+                    if case let Subscribers.Completion.failure(error) = $0 {
+                        XCTAssert(false, "failed with: \(error)")
+                    }
+                    expectation.fulfill()
+                }, receiveValue: {
+                    XCTAssert(true)
+                })
+        }
+        XCTAssertEqual(data.cart.pizzas.count, 1)
     }
 }
