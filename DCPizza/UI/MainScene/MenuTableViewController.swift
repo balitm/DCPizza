@@ -80,10 +80,7 @@ final class MenuTableViewController: UITableViewController {
             // Show ingredients.
             out.selection
                 .sink(receiveValue: { [unowned self] in
-                    _ = self._navigator.showIngredients(of: $0.pizza,
-                                                        image: $0.image,
-                                                        ingredients: [],
-                                                        cart: Cart.empty)
+                    _ = self._navigator.showIngredients(of: $0.pizza, image: $0.image)
                 }),
 
 //            // Show cart.

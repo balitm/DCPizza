@@ -58,7 +58,6 @@ final class MenuTableViewModel: ViewModelType {
                 }
                 return vms
             })
-            .print()
             .share()
 
         let cartEvents = viewModels

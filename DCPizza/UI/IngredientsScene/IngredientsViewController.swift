@@ -46,14 +46,6 @@ final class IngredientsViewController: UIViewController {
         _bind()
     }
 
-    override func willMove(toParent parent: UIViewController?) {
-        super.willMove(toParent: parent)
-
-        if parent == nil {
-            _viewModel.cart.send(completion: .finished)
-        }
-    }
-
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 

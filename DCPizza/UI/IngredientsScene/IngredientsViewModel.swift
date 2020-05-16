@@ -33,19 +33,16 @@ final class IngredientsViewModel: ViewModelType {
         let footerEvent: Publishers.MakeConnectable<AnyPublisher<FooterEvent, Never>>
     }
 
-    var resultCart: AnyPublisher<Cart, Never> { cart.dropFirst().eraseToAnyPublisher() }
-    let cart: CurrentValueSubject<Cart, Never>
+    private let _service: IngredientsUseCase
     private let _pizza: Pizza
     private let _image: UIImage?
-    private let _ingredients: [Ingredient]
     private var _bag = Set<AnyCancellable>()
     private var _timerCancellable: AnyCancellable?
 
-    init(pizza: Pizza, image: UIImage?, ingredients: [Ingredient], cart: Cart) {
+    init(service: IngredientsUseCase, pizza: Pizza, image: UIImage?) {
         _pizza = pizza
         _image = image
-        _ingredients = ingredients
-        self.cart = CurrentValueSubject(cart)
+        _service = service
     }
 
     deinit {
@@ -53,8 +50,13 @@ final class IngredientsViewModel: ViewModelType {
     }
 
     func transform(input: Input) -> Output {
+        let ingredients = CurrentValueRelay([Ingredient]())
+        _service.ingredients()
+            .subscribe(AnySubscriber(ingredients))
+
         // Create selections publisher.
         let selecteds = _makeSelectionPublisher(
+            ingredients.eraseToAnyPublisher(),
             input.selected
                 .compactMap({ $0 >= 1 ? $0 - 1 : nil })
                 .eraseToAnyPublisher()
@@ -63,10 +65,8 @@ final class IngredientsViewModel: ViewModelType {
         // Table data source.
         let tableData = selecteds
             .map({ sels -> [Item] in
-                // TODO: Drop enumerated.
-                let items = sels.enumerated().map { pair -> Item in
-                    let elem = pair.element
-                    return Item.ingredient(
+                let items = sels.map { elem -> Item in
+                    Item.ingredient(
                         viewModel: IngredientsItemCellViewModel(name: elem.ingredient.name,
                                                                 priceText: format(price: elem.ingredient.price),
                                                                 isContained: elem.isOn)
@@ -86,17 +86,22 @@ final class IngredientsViewModel: ViewModelType {
 
         // Add pizza to cart.
         input.addEvent
-            .flatMap({ [unowned cart] in
-                cart.combineLatest(selectedIngredients)
+            .flatMap({
+                selectedIngredients
                     .first()
             })
-            .map({ [pizza = _pizza] (pair: (cart: Cart, ingredients: [Ingredient])) -> Cart in
-                var newCart = pair.cart
-                let pizza = Pizza(copy: pizza, with: pair.ingredients)
-                newCart.add(pizza: pizza)
-                return newCart
+            .map({ [pizza = _pizza] in
+                Pizza(copy: pizza, with: $0)
             })
-            .subscribe(AnySubscriber(cart))
+            .flatMap({ [service = _service] in
+                service.add(pizza: $0)
+                    .catch({ error -> Empty<Void, Never> in
+                        DLog("recved error: ", error)
+                        return Empty<Void, Never>()
+                    })
+            })
+            .sink {}
+            .store(in: &_bag)
 
         // Title for the scene.
         let title = Just(_pizza)
@@ -126,21 +131,26 @@ final class IngredientsViewModel: ViewModelType {
 
 private extension IngredientsViewModel {
     /// Create array of Ingredients with selectcion flag.
-    func _createSelecteds() -> [Selected] {
+    func _createSelecteds(_ ingredients: [Ingredient]) -> [Selected] {
         func isContained(_ ingredient: Domain.Ingredient) -> Bool {
             _pizza.ingredients.contains { $0.id == ingredient.id }
         }
 
-        let sels = _ingredients.map { ing -> Selected in
+        let sels = ingredients.map { ing -> Selected in
             (isContained(ing), ing)
         }
         return sels
     }
 
     /// Create selections publisher.
-    func _makeSelectionPublisher(_ selected: AnyPublisher<Int, Never>) -> CurrentValueSubject<[Selected], Never> {
-        let items = _createSelecteds()
-        let subject = CurrentValueSubject<[Selected], Never>(items)
+    func _makeSelectionPublisher(_ ingredients: AnyPublisher<[Ingredient], Never>,
+                                 _ selected: AnyPublisher<Int, Never>) -> CurrentValueSubject<[Selected], Never> {
+        let subject = CurrentValueSubject<[Selected], Never>([])
+        ingredients
+            .map({ [unowned self] in
+                self._createSelecteds($0)
+            })
+            .subscribe(AnySubscriber(subject))
 
         selected
             .flatMap({ idx in
