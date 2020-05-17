@@ -12,13 +12,12 @@ import Domain
 class AppDependencyContainer {
     let networkUseCase: NetworkUseCase
     let menuUseCase: MenuUseCase
-    let ingredientsService: IngredientsUseCase
+    let provider: UseCaseProvider
 
     init() {
-        let provider = RepositoryUseCaseProvider()
+        provider = RepositoryUseCaseProvider()
         networkUseCase = provider.makeNetworkUseCase()
         menuUseCase = provider.makeMenuUseCase()
-        ingredientsService = provider.makeIngredientsService()
     }
 
     func makeMenuTableViewModel() -> MenuTableViewModel {
@@ -37,6 +36,7 @@ class AppDependencyContainer {
     }
 
     func makeIngredientsViewModel(pizza: Pizza, image: UIImage?) -> IngredientsViewModel {
-        IngredientsViewModel(service: ingredientsService, pizza: pizza, image: image)
+        let dependencyContainer = IngredientsDependencyContainer(appDependencyContainer: self, pizza: pizza)
+        return dependencyContainer.makeIngredientsViewModel(image: image)
     }
 }

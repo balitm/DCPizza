@@ -9,6 +9,7 @@ import Foundation
 import Combine
 
 public protocol IngredientsUseCase {
-    func ingredients() -> AnyPublisher<[Ingredient], Never>
-    func add(pizza: Pizza) -> AnyPublisher<Void, Error>
+    func ingredients(selected: AnyPublisher<Int, Never>) -> AnyPublisher<[IngredientSelection], Never>
+    func addToCart() -> AnyPublisher<Void, Error>
+    func name() -> AnyPublisher<String, Never>
 }

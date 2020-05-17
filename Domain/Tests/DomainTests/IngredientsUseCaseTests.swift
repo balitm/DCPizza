@@ -15,26 +15,28 @@ class IngredientsUseCaseTests: UseCaseTestsBase {
     override func setUp() {
         super.setUp()
 
-        useCase = IngredientsRepository(data: data)
+        let pizza = component.pizzas.pizzas[0]
+        useCase = IngredientsRepository(data: data, pizza: pizza)
     }
 
     func testIngredients() {
+        let selected = CurrentValueSubject<Int, Never>(0)
+
         exception { expectation in
-            _ = useCase.ingredients()
-                .first()
+            _ = useCase.ingredients(selected: AnyPublisher(selected))
                 .sink(receiveValue: {
-                    DLog("all ingredients: ", $0.count)
+                    DLog("all ingredients: ", $0)
                     XCTAssertGreaterThan($0.count, 0)
-                    expectation.fulfill()
                 })
+
+            selected.send(1)
+            expectation.fulfill()
         }
     }
-}
 
-extension IngredientsRepository: HasAddPizza {}
-
-extension IngredientsUseCaseTests: AddPizzaTest {
     func testAddPizza() {
-        addPizzaTest()
+        addPizzaTest { [useCase = useCase!] in
+            useCase.addToCart()
+        }
     }
 }

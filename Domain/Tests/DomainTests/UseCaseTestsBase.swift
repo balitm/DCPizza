@@ -10,16 +10,6 @@ import RealmSwift
 import Combine
 @testable import Domain
 
-protocol HasAddPizza {
-    func add(pizza: Pizza) -> AnyPublisher<Void, Error>
-}
-
-protocol AddPizzaTest {
-    associatedtype UseCase: HasAddPizza
-
-    var useCase: UseCase! { get }
-}
-
 class UseCaseTestsBase: XCTestCase {
     var data: Initializer!
     var component: Initializer.Components!
@@ -64,15 +54,13 @@ class UseCaseTestsBase: XCTestCase {
         test(expectation)
         wait(for: [expectation], timeout: 3.0)
     }
-}
 
-extension AddPizzaTest where Self: UseCaseTestsBase {
-    func addPizzaTest() {
+    func addPizzaTest(addPizza: () -> AnyPublisher<Void, Error>) {
         data.cart.empty()
         XCTAssert(data.cart.pizzas.isEmpty)
         XCTAssert(data.cart.drinks.isEmpty)
         exception { expectation in
-            _ = useCase.add(pizza: component.pizzas.pizzas.first!)
+            _ = addPizza()
                 .sink(receiveCompletion: {
                     if case let Subscribers.Completion.failure(error) = $0 {
                         XCTAssert(false, "failed with: \(error)")

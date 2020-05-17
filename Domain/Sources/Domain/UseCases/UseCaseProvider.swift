@@ -11,5 +11,5 @@ import Foundation
 public protocol UseCaseProvider {
     func makeNetworkUseCase() -> NetworkUseCase
     func makeMenuUseCase() -> MenuUseCase
-    func makeIngredientsService() -> IngredientsUseCase
+    func makeIngredientsService(pizza: Pizza) -> IngredientsUseCase
 }

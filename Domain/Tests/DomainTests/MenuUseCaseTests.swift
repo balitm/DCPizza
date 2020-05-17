@@ -83,12 +83,11 @@ class MenuUseCaseTests: UseCaseTestsBase {
             XCTAssert(false, "Database threw \(error)")
         }
     }
-}
 
-extension MenuRepository: HasAddPizza {}
-
-extension MenuUseCaseTests: AddPizzaTest {
     func testAddPizza() {
-        addPizzaTest()
+        addPizzaTest { [useCase = useCase!, component = component!] in
+            let pizza = component.pizzas.pizzas.first!
+            return useCase.add(pizza: pizza)
+        }
     }
 }

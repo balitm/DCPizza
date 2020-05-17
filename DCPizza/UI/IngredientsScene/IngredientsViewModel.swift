@@ -34,13 +34,11 @@ final class IngredientsViewModel: ViewModelType {
     }
 
     private let _service: IngredientsUseCase
-    private let _pizza: Pizza
     private let _image: UIImage?
     private var _bag = Set<AnyCancellable>()
     private var _timerCancellable: AnyCancellable?
 
-    init(service: IngredientsUseCase, pizza: Pizza, image: UIImage?) {
-        _pizza = pizza
+    init(service: IngredientsUseCase, image: UIImage?) {
         _image = image
         _service = service
     }
@@ -50,13 +48,8 @@ final class IngredientsViewModel: ViewModelType {
     }
 
     func transform(input: Input) -> Output {
-        let ingredients = CurrentValueRelay([Ingredient]())
-        _service.ingredients()
-            .subscribe(AnySubscriber(ingredients))
-
-        // Create selections publisher.
-        let selecteds = _makeSelectionPublisher(
-            ingredients.eraseToAnyPublisher(),
+        // Selections publisher.
+        let selecteds = _service.ingredients(selected:
             input.selected
                 .compactMap({ $0 >= 1 ? $0 - 1 : nil })
                 .eraseToAnyPublisher()
@@ -86,15 +79,8 @@ final class IngredientsViewModel: ViewModelType {
 
         // Add pizza to cart.
         input.addEvent
-            .flatMap({
-                selectedIngredients
-                    .first()
-            })
-            .map({ [pizza = _pizza] in
-                Pizza(copy: pizza, with: $0)
-            })
             .flatMap({ [service = _service] in
-                service.add(pizza: $0)
+                service.addToCart()
                     .catch({ error -> Empty<Void, Never> in
                         DLog("recved error: ", error)
                         return Empty<Void, Never>()
@@ -102,12 +88,6 @@ final class IngredientsViewModel: ViewModelType {
             })
             .sink {}
             .store(in: &_bag)
-
-        // Title for the scene.
-        let title = Just(_pizza)
-            .map({ pizza -> String? in
-                pizza.ingredients.isEmpty ? "CREATE A PIZZA" : pizza.name.uppercased()
-            })
 
         let cartText = selectedIngredients
             .map({ ings -> String? in
@@ -120,7 +100,7 @@ final class IngredientsViewModel: ViewModelType {
         let footerEvent = _makeFooterPublisher(selectedIngredients.map { _ in () }.eraseToAnyPublisher())
             .makeConnectable()
 
-        return Output(title: title.eraseToAnyPublisher(),
+        return Output(title: _service.name().map({ $0 as String? }).eraseToAnyPublisher(),
                       tableData: tableData.eraseToAnyPublisher(),
                       cartText: cartText.eraseToAnyPublisher(),
                       showAdded: input.addEvent,
@@ -130,45 +110,6 @@ final class IngredientsViewModel: ViewModelType {
 }
 
 private extension IngredientsViewModel {
-    /// Create array of Ingredients with selectcion flag.
-    func _createSelecteds(_ ingredients: [Ingredient]) -> [Selected] {
-        func isContained(_ ingredient: Domain.Ingredient) -> Bool {
-            _pizza.ingredients.contains { $0.id == ingredient.id }
-        }
-
-        let sels = ingredients.map { ing -> Selected in
-            (isContained(ing), ing)
-        }
-        return sels
-    }
-
-    /// Create selections publisher.
-    func _makeSelectionPublisher(_ ingredients: AnyPublisher<[Ingredient], Never>,
-                                 _ selected: AnyPublisher<Int, Never>) -> CurrentValueSubject<[Selected], Never> {
-        let subject = CurrentValueSubject<[Selected], Never>([])
-        ingredients
-            .map({ [unowned self] in
-                self._createSelecteds($0)
-            })
-            .subscribe(AnySubscriber(subject))
-
-        selected
-            .flatMap({ idx in
-                subject
-                    .first()
-                    .map({ (idx: idx, selecteds: $0) })
-            })
-            .map({
-                var ings = $0.selecteds
-                let item = $0.selecteds[$0.idx]
-                ings[$0.idx] = (!item.isOn, item.ingredient)
-                return ings
-            })
-            .subscribe(AnySubscriber(subject))
-
-        return subject
-    }
-
     /// Create footer event publisher.
     func _makeFooterPublisher(_ publisher: AnyPublisher<Void, Never>) -> AnyPublisher<FooterEvent, Never> {
         let footerEvent = CurrentValueRelay(FooterEvent.hide)
@@ -194,7 +135,7 @@ private extension IngredientsViewModel {
     }
 }
 
-// MARK: - Table model types
+// MARK: - Table item types
 
 extension IngredientsViewModel {
     enum Item: Hashable {
