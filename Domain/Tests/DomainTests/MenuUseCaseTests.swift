@@ -19,7 +19,7 @@ class MenuUseCaseTests: UseCaseTestsBase {
     }
 
     func testPizzas() {
-        exception { expectation in
+        expectation { expectation in
             _ = useCase.pizzas()
                 .first()
                 .sink(receiveValue: {
@@ -51,7 +51,7 @@ class MenuUseCaseTests: UseCaseTestsBase {
         ]
         data.cart = Cart(pizzas: pizzas, drinks: drinks, basePrice: data.cart.basePrice)
 
-        exception { expectation in
+        expectation { expectation in
             _ = useCase.saveCart()
                 .sink(receiveCompletion: {
                     if case let Subscribers.Completion.failure(error) = $0 {

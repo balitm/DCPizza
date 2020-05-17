@@ -49,17 +49,17 @@ class UseCaseTestsBase: XCTestCase {
         component = try! data.component.get()
     }
 
-    func exception(test: (XCTestExpectation) -> Void) {
+    func expectation(test: (XCTestExpectation) -> Void) {
         let expectation = XCTestExpectation(description: "combine")
         test(expectation)
-        wait(for: [expectation], timeout: 3.0)
+        wait(for: [expectation], timeout: 30.0)
     }
 
     func addPizzaTest(addPizza: () -> AnyPublisher<Void, Error>) {
         data.cart.empty()
         XCTAssert(data.cart.pizzas.isEmpty)
         XCTAssert(data.cart.drinks.isEmpty)
-        exception { expectation in
+        expectation { expectation in
             _ = addPizza()
                 .sink(receiveCompletion: {
                     if case let Subscribers.Completion.failure(error) = $0 {

@@ -9,13 +9,18 @@
 import Foundation
 
 public struct Cart {
-    public static var empty: Cart { Cart(pizzas: [], drinks: [], basePrice: 0) }
+    public struct Item {
+        let name: String
+        let price: Double
+    }
 
-    public private(set) var pizzas: [Pizza]
+    public static let empty = Cart(pizzas: [], drinks: [], basePrice: 0)
+
+    private(set) var pizzas: [Pizza]
     public private(set) var drinks: [Drink]
     public internal(set) var basePrice: Double
 
-    public mutating func add(pizza: Pizza) {
+    mutating func add(pizza: Pizza) {
         pizzas.append(pizza)
     }
 
@@ -23,7 +28,7 @@ public struct Cart {
         drinks.append(drink)
     }
 
-    public mutating func remove(at index: Int) {
+    mutating func remove(at index: Int) {
         let count = pizzas.count
         if index < count {
             pizzas.remove(at: index)
@@ -41,7 +46,7 @@ public struct Cart {
         pizzas.isEmpty && drinks.isEmpty
     }
 
-    public func totalPrice() -> Double {
+    func totalPrice() -> Double {
         let pizzaPrice = pizzas.reduce(0.0) {
             $0 + $1.ingredients.reduce(basePrice) {
                 $0 + $1.price
@@ -51,6 +56,21 @@ public struct Cart {
             $0 + $1.price
         }
         return pizzaPrice + drinkPrice
+    }
+
+    func items() -> [Item] {
+        var items = pizzas.map { pizza in
+            Item(name: pizza.name,
+                 price: pizza.ingredients.reduce(basePrice, {
+                     $0 + $1.price
+                 })
+            )
+        }
+        items.append(contentsOf: drinks.map {
+            Item(name: $0.name, price: $0.price)
+        })
+
+        return items
     }
 }
 

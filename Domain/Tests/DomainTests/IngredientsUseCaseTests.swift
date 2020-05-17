@@ -22,10 +22,9 @@ class IngredientsUseCaseTests: UseCaseTestsBase {
     func testIngredients() {
         let selected = CurrentValueSubject<Int, Never>(0)
 
-        exception { expectation in
+        expectation { expectation in
             _ = useCase.ingredients(selected: AnyPublisher(selected))
                 .sink(receiveValue: {
-                    DLog("all ingredients: ", $0)
                     XCTAssertGreaterThan($0.count, 0)
                 })
 
