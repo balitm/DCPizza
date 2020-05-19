@@ -10,8 +10,8 @@ import Foundation
 
 public struct Cart {
     public struct Item {
-        let name: String
-        let price: Double
+        public let name: String
+        public let price: Double
     }
 
     public static let empty = Cart(pizzas: [], drinks: [], basePrice: 0)

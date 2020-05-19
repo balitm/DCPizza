@@ -48,11 +48,10 @@ private extension Publishers.CartActionPublisher {
             _action = action
             _data = data
             _subscriber = subscriber
-            _performAction()
         }
 
         func request(_ demand: Subscribers.Demand) {
-            // TODO: - Optionaly Adjust The Demand
+            _performAction()
         }
 
         func cancel() {
@@ -68,6 +67,7 @@ private extension Publishers.CartActionPublisher {
                 }
                 subscriber.receive(completion: completion)
             }
+
             switch _action {
             case let .pizza(pizza):
                 _data.cart.add(pizza: pizza)

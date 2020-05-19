@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol UseCaseProvider {
-    func makeNetworkUseCase() -> NetworkUseCase
     func makeMenuUseCase() -> MenuUseCase
     func makeIngredientsService(pizza: Pizza) -> IngredientsUseCase
+    func makeCartService() -> CartUseCase
 }

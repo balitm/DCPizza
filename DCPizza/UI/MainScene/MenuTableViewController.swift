@@ -83,12 +83,11 @@ final class MenuTableViewController: UITableViewController {
                     _ = self._navigator.showIngredients(of: $0.pizza, image: $0.image)
                 }),
 
-//            // Show cart.
-//            out.showCart
-//                .flatMap({ [unowned self] in
-//                    self._navigator.showCart($0.cart, drinks: $0.drinks)
-//                })
-//                .assign(to: \.cart, on: _viewModel),
+            // Show cart.
+            leftPublisher
+                .sink(receiveValue: { [unowned self] in
+                    self._navigator.showCart()
+                }),
 
             // Show addedd.
             out.showAdded

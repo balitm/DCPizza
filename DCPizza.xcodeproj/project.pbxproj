@@ -26,7 +26,6 @@
 		295351272458857E0069D426 /* UIBarButtonItem+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295351262458857E0069D426 /* UIBarButtonItem+Combine.swift */; };
 		2953512824588DD30069D426 /* CartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C3D6223FEF7A300D82655 /* CartViewModel.swift */; };
 		2953512924588DDC0069D426 /* CartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C3D6023FEF60000D82655 /* CartViewController.swift */; };
-		2953512A24589AC20069D426 /* CartDependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B5A79A2409889800BDE6AB /* CartDependencyContainer.swift */; };
 		29541604245F054C00414BB7 /* IngredientsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A46623FD6BF900828A94 /* IngredientsViewModel.swift */; };
 		29541605245F055400414BB7 /* IngredientsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A46423FD6B9300828A94 /* IngredientsViewController.swift */; };
 		2955A4CA24574A1A0093E3F2 /* CombineDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 2955A4C924574A1A0093E3F2 /* CombineDataSources */; };
@@ -111,7 +110,6 @@
 		2976A47223FDBA6700828A94 /* IngredientsItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsItemTableViewCell.swift; sourceTree = "<group>"; };
 		2976A47423FDBB3400828A94 /* IngredientsItemCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsItemCellViewModel.swift; sourceTree = "<group>"; };
 		29B5A7982409746600BDE6AB /* AppDependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencyContainer.swift; sourceTree = "<group>"; };
-		29B5A79A2409889800BDE6AB /* CartDependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartDependencyContainer.swift; sourceTree = "<group>"; };
 		29B8ABDF24007E4300A07816 /* SuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
 		29EF9A6D2401D53C002E8E4E /* DrinksTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrinksTableViewController.swift; sourceTree = "<group>"; };
 		29EF9A6E2401D53C002E8E4E /* DrinksTableViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrinksTableViewModel.swift; sourceTree = "<group>"; };
@@ -265,7 +263,6 @@
 				295C3D6523FEFB0000D82655 /* ViewModels */,
 				295C3D6023FEF60000D82655 /* CartViewController.swift */,
 				295C3D6223FEF7A300D82655 /* CartViewModel.swift */,
-				29B5A79A2409889800BDE6AB /* CartDependencyContainer.swift */,
 			);
 			path = CartScene;
 			sourceTree = "<group>";
@@ -522,7 +519,6 @@
 				2965D81624586323000B127B /* Navigator.swift in Sources */,
 				294ACFEB23FC57130027D0D4 /* RoundedView.swift in Sources */,
 				29B8ABE024007E4300A07816 /* SuccessViewController.swift in Sources */,
-				2953512A24589AC20069D426 /* CartDependencyContainer.swift in Sources */,
 				295C3D6F23FF00D600D82655 /* CartItemCellViewModel.swift in Sources */,
 				2969857C23FEB5400024466E /* AddedViewController.swift in Sources */,
 				2953512924588DDC0069D426 /* CartViewController.swift in Sources */,

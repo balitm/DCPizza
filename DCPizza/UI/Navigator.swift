@@ -14,7 +14,7 @@ protocol Navigator {
     var storyboard: UIStoryboard { get }
 
     func showIngredients(of pizza: Pizza, image: UIImage?)
-    func showCart(_ cart: Cart, drinks: [Drink]) -> AnyPublisher<Cart, Never>
+    func showCart()
     func showDrinks(cart: Cart, drinks: [Drink]) -> AnyPublisher<Cart, Never>
     func showAdded()
     func showSuccess()
@@ -39,11 +39,10 @@ final class DefaultNavigator: Navigator {
         _navigationController.pushViewController(vc, animated: true)
     }
 
-    func showCart(_ cart: Cart, drinks: [Drink]) -> AnyPublisher<Cart, Never> {
-        let vm = _dependencyContainer.makeCartViewModel(cart: cart, drinks: drinks)
+    func showCart() {
+        let vm = _dependencyContainer.makeCartViewModel()
         let vc = CartViewController.create(with: self, viewModel: vm)
         _navigationController.pushViewController(vc, animated: true)
-        return vm.resultCart
     }
 
     func showDrinks(cart: Cart, drinks: [Drink]) -> AnyPublisher<Cart, Never> {

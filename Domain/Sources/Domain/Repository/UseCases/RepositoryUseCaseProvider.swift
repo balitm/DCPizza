@@ -37,4 +37,8 @@ public struct RepositoryUseCaseProvider: UseCaseProvider, DatabaseContainerProto
     public func makeIngredientsService(pizza: Pizza) -> IngredientsUseCase {
         IngredientsRepository(data: _data, pizza: pizza)
     }
+
+    public func makeCartService() -> CartUseCase {
+        CartRepository(data: _data)
+    }
 }

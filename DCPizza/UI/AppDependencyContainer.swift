@@ -10,18 +10,16 @@ import UIKit
 import Domain
 
 class AppDependencyContainer {
-    let networkUseCase: NetworkUseCase
-    let menuUseCase: MenuUseCase
+    let menuService: MenuUseCase
     let provider: UseCaseProvider
 
     init() {
         provider = RepositoryUseCaseProvider()
-        networkUseCase = provider.makeNetworkUseCase()
-        menuUseCase = provider.makeMenuUseCase()
+        menuService = provider.makeMenuUseCase()
     }
 
     func makeMenuTableViewModel() -> MenuTableViewModel {
-        MenuTableViewModel(menuUseCase: menuUseCase)
+        MenuTableViewModel(service: menuService)
     }
 
     func makeNavigator(by viewController: UIViewController) -> Navigator {
@@ -30,9 +28,8 @@ class AppDependencyContainer {
                          dependencyContainer: self)
     }
 
-    func makeCartViewModel(cart: Cart, drinks: [Drink]) -> CartViewModel {
-        let dependencyContainer = CartDependencyContainer(appDependencyContainer: self)
-        return dependencyContainer.makeCartViewModel(cart: cart, drinks: drinks)
+    func makeCartViewModel() -> CartViewModel {
+        CartViewModel(service: provider.makeCartService())
     }
 
     func makeIngredientsViewModel(pizza: Pizza, image: UIImage?) -> IngredientsViewModel {

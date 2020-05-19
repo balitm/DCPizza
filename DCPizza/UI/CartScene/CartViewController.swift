@@ -41,14 +41,6 @@ class CartViewController: UIViewController {
         tableView.tableFooterView = UIView()
         _bind()
     }
-
-    override func willMove(toParent parent: UIViewController?) {
-        super.willMove(toParent: parent)
-
-        if parent == nil {
-            _viewModel.cart.send(completion: .finished)
-        }
-    }
 }
 
 private extension CartViewController {
@@ -95,15 +87,15 @@ private extension CartViewController {
         ]
 
         // Add drinks.
-        rightPublisher
-            .flatMap({ _ in
-                out.showDrinks
-                    .first()
-            })
-            // .print()
-            .flatMap({ [unowned self] in
-                self._navigator.showDrinks(cart: $0.cart, drinks: $0.drinks)
-            })
-            .subscribe(AnySubscriber(_viewModel.cart))
+//        rightPublisher
+//            .flatMap({ _ in
+//                out.showDrinks
+//                    .first()
+//            })
+//            // .print()
+//            .flatMap({ [unowned self] in
+//                self._navigator.showDrinks(cart: $0.cart, drinks: $0.drinks)
+//            })
+//            .subscribe(AnySubscriber(_viewModel.cart))
     }
 }

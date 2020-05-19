@@ -30,16 +30,16 @@ final class MenuTableViewModel: ViewModelType {
         let showAdded: AnyPublisher<Void, Never>
     }
 
-    private let _menuUseCase: MenuUseCase
+    private let _service: MenuUseCase
     private var _bag = Set<AnyCancellable>()
 
-    init(menuUseCase: MenuUseCase) {
-        _menuUseCase = menuUseCase
+    init(service: MenuUseCase) {
+        _service = service
     }
 
     func transform(input: Input) -> Output {
         let cachedPizzas = CurrentValueRelay(Pizzas.empty)
-        _menuUseCase.pizzas()
+        _service.pizzas()
             .compactMap({
                 switch $0 {
                 case let .success(pizzas):
@@ -79,16 +79,14 @@ final class MenuTableViewModel: ViewModelType {
                         DLog("cancel")
                     })
             })
-            .share()
 
         // Update cart on add events.
-        cartEvents.combineLatest(cachedPizzas)
-            .flatMap({ [menuUseCase = _menuUseCase] in
-                menuUseCase.add(pizza: $0.1.pizzas[$0.0])
+        let showAdded = cartEvents.combineLatest(cachedPizzas)
+            .flatMap({ [service = _service] in
+                service.add(pizza: $0.1.pizzas[$0.0])
+                    .print()
                     .catch({ _ in Empty<Void, Never>() })
             })
-            .sink {}
-            .store(in: &_bag)
 
         // A pizza is selected.
         let selected = input.selected
@@ -119,14 +117,12 @@ final class MenuTableViewModel: ViewModelType {
         let selection = Publishers.Merge(selected, scratch)
 
         input.saveCart
-            .flatMap({ [menuUseCase = _menuUseCase] in
-                menuUseCase.saveCart()
+            .flatMap({ [service = _service] in
+                service.saveCart()
                     .catch({ _ in Empty<Void, Never>() })
             })
             .sink {}
             .store(in: &_bag)
-
-        let showAdded = cartEvents.map({ _ in () })
 
         return Output(tableData: viewModels.eraseToAnyPublisher(),
                       selection: selection.eraseToAnyPublisher(),
