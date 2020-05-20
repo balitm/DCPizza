@@ -10,20 +10,20 @@ import Combine
 @testable import Domain
 
 class IngredientsUseCaseTests: UseCaseTestsBase {
-    var useCase: IngredientsRepository!
+    var service: IngredientsRepository!
 
     override func setUp() {
         super.setUp()
 
         let pizza = component.pizzas.pizzas[0]
-        useCase = IngredientsRepository(data: data, pizza: pizza)
+        service = IngredientsRepository(data: data, pizza: pizza)
     }
 
     func testIngredients() {
         let selected = CurrentValueSubject<Int, Never>(0)
 
         expectation { expectation in
-            _ = useCase.ingredients(selected: AnyPublisher(selected))
+            _ = service.ingredients(selected: AnyPublisher(selected))
                 .sink(receiveValue: {
                     XCTAssertGreaterThan($0.count, 0)
                 })
@@ -34,8 +34,8 @@ class IngredientsUseCaseTests: UseCaseTestsBase {
     }
 
     func testAddPizza() {
-        addPizzaTest { [useCase = useCase!] in
-            useCase.addToCart()
+        addPizzaTest { [service = service!] in
+            service.addToCart()
         }
     }
 }

@@ -12,6 +12,7 @@ struct IngredientsRepository: IngredientsUseCase {
     private let _data: Initializer
     private let _pizza: Pizza
     private let _name: String
+    private let _ingredients = CurrentValueSubject<[IngredientSelection], Never>([])
 
     init(data: Initializer, pizza: Pizza) {
         _data = data
@@ -20,8 +21,6 @@ struct IngredientsRepository: IngredientsUseCase {
     }
 
     func ingredients(selected: AnyPublisher<Int, Never>) -> AnyPublisher<[IngredientSelection], Never> {
-        let subject = CurrentValueSubject<[IngredientSelection], Never>([])
-
         // Create selections publisher.
         _data.$component
             .tryMap({
@@ -33,12 +32,12 @@ struct IngredientsRepository: IngredientsUseCase {
             .map({ [pizza = _pizza] in
                 _createSelecteds(pizza, $0)
             })
-            .subscribe(AnySubscriber(subject))
+            .subscribe(AnySubscriber(_ingredients))
 
         // Bind selected event to selections publisher.
         selected
-            .flatMap({ idx in
-                subject
+            .flatMap({ [unowned ingredients = _ingredients] idx in
+                ingredients
                     .first()
                     .map({ (idx: idx, selecteds: $0) })
             })
@@ -48,13 +47,21 @@ struct IngredientsRepository: IngredientsUseCase {
                 ings[$0.idx] = IngredientSelection(ingredient: item.ingredient, isOn: !item.isOn)
                 return ings
             })
-            .subscribe(AnySubscriber(subject))
+            .subscribe(AnySubscriber(_ingredients))
 
-        return subject.eraseToAnyPublisher()
+        return _ingredients.eraseToAnyPublisher()
     }
 
     func addToCart() -> AnyPublisher<Void, Error> {
-        Publishers.CartActionPublisher(data: _data, action: .pizza(pizza: _pizza))
+        Just(_pizza).zip(_ingredients)
+            .map({ (pair: (pizza: Pizza, ingredients: [IngredientSelection])) -> Pizza in
+                Pizza(copy: pair.pizza, with: pair.ingredients.compactMap { $0.isOn ? $0.ingredient : nil })
+            })
+            .mapError({ _ in API.ErrorType.disabled })
+            .flatMap({ [unowned data = _data] in
+                Publishers.CartActionPublisher(data: data, action: .pizza(pizza: $0))
+            })
+            .first()
             .eraseToAnyPublisher()
     }
 

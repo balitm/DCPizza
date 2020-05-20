@@ -71,20 +71,12 @@ final class MenuTableViewModel: ViewModelType {
             })
             .flatMap({
                 Publishers.MergeMany($0)
-                    .handleEvents(receiveOutput: {
-                        DLog("recved pair: ", $0)
-                    }, receiveCompletion: {
-                        DLog("completion: ", $0)
-                    }, receiveCancel: {
-                        DLog("cancel")
-                    })
             })
 
         // Update cart on add events.
         let showAdded = cartEvents.combineLatest(cachedPizzas)
             .flatMap({ [service = _service] in
                 service.add(pizza: $0.1.pizzas[$0.0])
-                    .print()
                     .catch({ _ in Empty<Void, Never>() })
             })
 
