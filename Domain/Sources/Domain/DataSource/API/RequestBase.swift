@@ -353,11 +353,10 @@ private extension Subscribers {
         init(request: R, subscriber: S) {
             _request = request
             _subscriber = subscriber
-            _sendRequest()
         }
 
         func request(_ demand: Subscribers.Demand) {
-            // TODO: - Optionaly Adjust The Demand
+            _sendRequest()
         }
 
         func cancel() {
