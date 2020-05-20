@@ -22,39 +22,26 @@ struct DrinksTableViewModel: ViewModelType {
         let showAdded: AnyPublisher<Void, Never>
     }
 
-    var resultCart: AnyPublisher<Cart, Never> { cart.dropFirst().eraseToAnyPublisher() }
-    let cart: CurrentValueSubject<Cart, Never>
-    private let _drinks: [Drink]
+    private let _service: DrinksUseCase
 
-    init(drinks: [Drink], cart: Cart) {
-        _drinks = drinks
-        self.cart = CurrentValueSubject(cart)
+    init(service: DrinksUseCase) {
+        _service = service
     }
 
     func transform(input: Input) -> Output {
-        let items = _drinks.map {
-            DrinkCellViewModel(name: $0.name, priceText: format(price: $0.price))
-        }
-        let selected = input.selected.share()
+        let items = _service.drinks()
+            .map({
+                $0.map { DrinkCellViewModel(name: $0.name, priceText: format(price: $0.price)) }
+            })
 
         // Add drink to cart.
-        selected
-            .flatMap({ [unowned cart] index in
-                cart
-                    .first()
-                    .map({ (index: index, cart: $0) })
+        let showAdded = input.selected
+            .flatMap({ [service = _service] in
+                service.addToCart(drinkIndex: $0)
+                    .catch({ _ in Empty<Void, Never>() })
             })
-            .map({ [drinks = _drinks] in
-                var newCart = $0.cart
-                newCart.add(drink: drinks[$0.index])
-                return newCart
-            })
-            .subscribe(AnySubscriber(cart))
 
-        let showAdded = selected
-            .map { _ in () }
-
-        return Output(tableData: Just(items).eraseToAnyPublisher(),
+        return Output(tableData: items.eraseToAnyPublisher(),
                       showAdded: showAdded.eraseToAnyPublisher())
     }
 }

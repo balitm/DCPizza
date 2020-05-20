@@ -15,7 +15,7 @@ protocol Navigator {
 
     func showIngredients(of pizza: Pizza, image: UIImage?)
     func showCart()
-    func showDrinks(cart: Cart, drinks: [Drink]) -> AnyPublisher<Cart, Never>
+    func showDrinks()
     func showAdded()
     func showSuccess()
 }
@@ -45,11 +45,10 @@ final class DefaultNavigator: Navigator {
         _navigationController.pushViewController(vc, animated: true)
     }
 
-    func showDrinks(cart: Cart, drinks: [Drink]) -> AnyPublisher<Cart, Never> {
-        let vm = DrinksTableViewModel(drinks: drinks, cart: cart)
+    func showDrinks() {
+        let vm = _dependencyContainer.makeDrinksTableViewModel()
         let vc = DrinksTableViewController.create(with: self, viewModel: vm)
         _navigationController.pushViewController(vc, animated: true)
-        return vm.resultCart
     }
 
     func showSuccess() {

@@ -84,18 +84,12 @@ private extension CartViewController {
                     self.checkoutTap.isEnabled = $0
                     self.checkoutLabel.alpha = $0 ? 1.0 : 0.5
                 }),
-        ]
 
-        // Add drinks.
-//        rightPublisher
-//            .flatMap({ _ in
-//                out.showDrinks
-//                    .first()
-//            })
-//            // .print()
-//            .flatMap({ [unowned self] in
-//                self._navigator.showDrinks(cart: $0.cart, drinks: $0.drinks)
-//            })
-//            .subscribe(AnySubscriber(_viewModel.cart))
+            // Add drinks.
+            rightPublisher
+                .sink(receiveValue: { [unowned self] in
+                    self._navigator.showDrinks()
+                }),
+        ]
     }
 }

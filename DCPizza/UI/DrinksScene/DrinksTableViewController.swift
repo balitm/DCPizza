@@ -38,12 +38,6 @@ class DrinksTableViewController: UITableViewController {
         _bind()
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-
-        _viewModel.cart.send(completion: .finished)
-    }
-
     private func _bind() {
         let selected = tableView.cmb.itemSelected()
             .map({ $0.row })

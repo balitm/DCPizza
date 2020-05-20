@@ -11,11 +11,13 @@ import Domain
 
 class AppDependencyContainer {
     let menuService: MenuUseCase
+    let drinksService: DrinksUseCase
     let provider: UseCaseProvider
 
     init() {
         provider = RepositoryUseCaseProvider()
         menuService = provider.makeMenuUseCase()
+        drinksService = provider.makeDrinsService()
     }
 
     func makeMenuTableViewModel() -> MenuTableViewModel {
@@ -30,6 +32,10 @@ class AppDependencyContainer {
 
     func makeCartViewModel() -> CartViewModel {
         CartViewModel(service: provider.makeCartService())
+    }
+
+    func makeDrinksTableViewModel() -> DrinksTableViewModel {
+        DrinksTableViewModel(service: drinksService)
     }
 
     func makeIngredientsViewModel(pizza: Pizza, image: UIImage?) -> IngredientsViewModel {
