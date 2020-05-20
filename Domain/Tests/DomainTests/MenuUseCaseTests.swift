@@ -85,9 +85,9 @@ class MenuUseCaseTests: UseCaseTestsBase {
     }
 
     func testAddPizza() {
-        addPizzaTest { [useCase = useCase!, component = component!] in
+        addItemTest(addItem: { [useCase = useCase!, component = component!] in
             let pizza = component.pizzas.pizzas.first!
-            return useCase.add(pizza: pizza)
-        }
+            return useCase.addToCart(pizza: pizza)
+        })
     }
 }

@@ -76,7 +76,7 @@ final class MenuTableViewModel: ViewModelType {
         // Update cart on add events.
         let showAdded = cartEvents.combineLatest(cachedPizzas)
             .flatMap({ [service = _service] in
-                service.add(pizza: $0.1.pizzas[$0.0])
+                service.addToCart(pizza: $0.1.pizzas[$0.0])
                     .catch({ _ in Empty<Void, Never>() })
             })
 

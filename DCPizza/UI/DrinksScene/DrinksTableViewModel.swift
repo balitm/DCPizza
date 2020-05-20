@@ -44,7 +44,6 @@ struct DrinksTableViewModel: ViewModelType {
                     .first()
                     .map({ (index: index, cart: $0) })
             })
-            // .print()
             .map({ [drinks = _drinks] in
                 var newCart = $0.cart
                 newCart.add(drink: drinks[$0.index])

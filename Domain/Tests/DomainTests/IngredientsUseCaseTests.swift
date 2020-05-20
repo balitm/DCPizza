@@ -34,8 +34,8 @@ class IngredientsUseCaseTests: UseCaseTestsBase {
     }
 
     func testAddPizza() {
-        addPizzaTest { [service = service!] in
+        addItemTest(addItem: { [service = service!] in
             service.addToCart()
-        }
+        })
     }
 }

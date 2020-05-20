@@ -55,12 +55,13 @@ class UseCaseTestsBase: XCTestCase {
         wait(for: [expectation], timeout: 30.0)
     }
 
-    func addPizzaTest(addPizza: () -> AnyPublisher<Void, Error>) {
+    func addItemTest(addItem: () -> AnyPublisher<Void, Error>,
+                     test: (Cart) -> Void = { XCTAssertEqual($0.pizzas.count, 1) }) {
         data.cart.empty()
         XCTAssert(data.cart.pizzas.isEmpty)
         XCTAssert(data.cart.drinks.isEmpty)
         expectation { expectation in
-            _ = addPizza()
+            _ = addItem()
                 .sink(receiveCompletion: {
                     if case let Subscribers.Completion.failure(error) = $0 {
                         XCTAssert(false, "failed with: \(error)")
@@ -70,6 +71,6 @@ class UseCaseTestsBase: XCTestCase {
                     XCTAssert(true)
                 })
         }
-        XCTAssertEqual(data.cart.pizzas.count, 1)
+        test(data.cart)
     }
 }
