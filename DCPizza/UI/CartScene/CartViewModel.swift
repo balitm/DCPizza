@@ -38,7 +38,7 @@ final class CartViewModel: ViewModelType {
     func transform(input: Input) -> Output {
         let models = _service.items()
             .zip(_service.total())
-            .map({ (pair: (items: [Cart.Item], total: Double)) -> [Item] in
+            .map({ (pair: (items: [CartItem], total: Double)) -> [Item] in
                 var items = [Item.padding(viewModel: PaddingCellViewModel(height: 12))]
                 items.append(contentsOf:
                     pair.items.map { Item.item(viewModel: CartItemCellViewModel(item: $0)) }

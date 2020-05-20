@@ -13,7 +13,7 @@ struct CartItemCellViewModel {
     let name: String
     let priceText: String
 
-    init(item: Cart.Item) {
+    init(item: CartItem) {
         name = item.name
         priceText = format(price: item.price)
     }

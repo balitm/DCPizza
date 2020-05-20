@@ -1,6 +1,6 @@
 //
 //  DrinksUseCase.swift
-//
+//  Domain
 //
 //  Created by Balázs Kilvády on 5/20/20.
 //

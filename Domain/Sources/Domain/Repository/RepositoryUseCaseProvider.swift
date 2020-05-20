@@ -26,10 +26,6 @@ public struct RepositoryUseCaseProvider: UseCaseProvider, DatabaseContainerProto
         _data = Initializer(container: container, network: network)
     }
 
-    public func makeNetworkUseCase() -> NetworkUseCase {
-        RepositoryNetworkUseCase(container: container)
-    }
-
     public func makeMenuUseCase() -> MenuUseCase {
         MenuRepository(data: _data)
     }

@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  CombineExtension.swift
+//  Domain
 //
 //  Created by Balázs Kilvády on 4/24/20.
 //
@@ -35,7 +35,7 @@ extension CombineCompatible {
     /// Combinable extensions.
     public static var cmb: Combinable<Self>.Type {
         get {
-            return Combinable<Self>.self
+            Combinable<Self>.self
         }
         set {
             // this enables using Combinable to "mutate" base type
@@ -45,7 +45,7 @@ extension CombineCompatible {
     /// Combinable extensions.
     public var cmb: Combinable<Self> {
         get {
-            return Combinable(self)
+            Combinable(self)
         }
         set {
             // this enables using Combinable to "mutate" base object

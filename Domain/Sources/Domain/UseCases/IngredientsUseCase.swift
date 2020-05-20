@@ -1,6 +1,6 @@
 //
 //  IngredientsUseCase.swift
-//
+//  Domain
 //
 //  Created by Balázs Kilvády on 5/15/20.
 //

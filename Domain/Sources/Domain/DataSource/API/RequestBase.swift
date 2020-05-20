@@ -1,5 +1,6 @@
 //
 //  RequestProtocols.swift
+//  Domain
 //
 //  Created by Balázs Kilvády on 7/29/17.
 //  Copyright © 2017 Balázs Kilvády. All rights reserved.

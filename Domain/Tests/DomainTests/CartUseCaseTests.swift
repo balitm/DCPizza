@@ -190,13 +190,13 @@ class CartUseCaseTests: UseCaseTestsBase {
         }
     }
 
-    private func _pizzaIndexes(_ items: [Cart.Item]) -> [Int] {
+    private func _pizzaIndexes(_ items: [CartItem]) -> [Int] {
         items.enumerated().compactMap { item -> Int? in
             self.component.pizzas.pizzas.contains(where: { $0.name == item.element.name }) ? item.offset : nil
         }
     }
 
-    private func _drinkIndexes(_ items: [Cart.Item]) -> [Int] {
+    private func _drinkIndexes(_ items: [CartItem]) -> [Int] {
         items.enumerated().compactMap { item -> Int? in
             self.component.drinks.contains(where: { $0.name == item.element.name }) ? item.offset : nil
         }

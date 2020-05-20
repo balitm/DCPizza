@@ -1,6 +1,6 @@
 //
 //  CartRepository.swift
-//
+//  Domain
 //
 //  Created by Balázs Kilvády on 5/16/20.
 //
@@ -15,7 +15,7 @@ struct CartRepository: CartUseCase {
         _data = data
     }
 
-    func items() -> AnyPublisher<[Cart.Item], Never> {
+    func items() -> AnyPublisher<[CartItem], Never> {
         _data.$cart
             .map { $0.items() }
             .eraseToAnyPublisher()
@@ -46,10 +46,7 @@ struct CartRepository: CartUseCase {
                                 DLog("Error received emptying the cart: ", $0)
                                 return API.ErrorType.processingFailed
                             })
-                    ) { _, _ in
-                        ()
-                    }
-//                    .print()
+                    ) { _, _ in () }
             })
             .eraseToAnyPublisher()
     }

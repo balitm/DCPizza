@@ -1,6 +1,6 @@
 //
 //  IngredientsRepository.swift
-//
+//  Domain
 //
 //  Created by Balázs Kilvády on 5/16/20.
 //

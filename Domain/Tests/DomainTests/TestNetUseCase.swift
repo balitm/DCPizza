@@ -216,22 +216,6 @@ struct TestNetUseCase: NetworkProtocol {
         return _decode(DS.Pizzas.self, jsonStr)
     }
 
-    func getInitData() -> AnyPublisher<InitData, API.ErrorType> {
-        let netData = Publishers.Zip3(getPizzas(),
-                                      getIngredients(),
-                                      getDrinks())
-            .map({ (tuple: (pizzas: DS.Pizzas, ingredients: [DS.Ingredient], drinks: [DS.Drink])) -> InitData in
-                let ingredients = tuple.ingredients.sorted { $0.name < $1.name }
-                return InitData(pizzas: tuple.pizzas.asDomain(with: ingredients, drinks: tuple.drinks),
-                                ingredients: ingredients,
-                                drinks: tuple.drinks,
-                                cart: Domain.Cart(pizzas: [],
-                                                  drinks: [],
-                                                  basePrice: tuple.pizzas.basePrice))
-            })
-        return netData.eraseToAnyPublisher()
-    }
-
     func checkout(cart: DS.Cart) -> AnyPublisher<Void, API.ErrorType> {
         Result.Publisher(()).eraseToAnyPublisher()
     }
