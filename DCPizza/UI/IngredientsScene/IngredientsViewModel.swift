@@ -97,7 +97,7 @@ final class IngredientsViewModel: ViewModelType {
                 return "ADD TO CART (\(format(price: sum)))"
             })
 
-        let footerEvent = _makeFooterPublisher(selectedIngredients.map { _ in () }.eraseToAnyPublisher())
+        let footerEvent = _makeFooterPublisher(selectedIngredients.eraseToAnyPublisher())
             .makeConnectable()
 
         return Output(title: _service.name().map({ $0 as String? }).eraseToAnyPublisher(),
@@ -111,11 +111,11 @@ final class IngredientsViewModel: ViewModelType {
 
 private extension IngredientsViewModel {
     /// Create footer event publisher.
-    func _makeFooterPublisher(_ publisher: AnyPublisher<Void, Never>) -> AnyPublisher<FooterEvent, Never> {
+    func _makeFooterPublisher(_ publisher: AnyPublisher<[Ingredient], Never>) -> AnyPublisher<FooterEvent, Never> {
         let footerEvent = CurrentValueRelay(FooterEvent.hide)
 
         publisher
-            .map({ FooterEvent.show })
+            .compactMap({ $0.isEmpty ? nil : FooterEvent.show })
             .subscribe(AnySubscriber(footerEvent))
 
         publisher
