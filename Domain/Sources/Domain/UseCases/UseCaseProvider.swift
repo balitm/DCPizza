@@ -13,4 +13,5 @@ public protocol UseCaseProvider {
     func makeIngredientsService(pizza: Pizza) -> IngredientsUseCase
     func makeCartService() -> CartUseCase
     func makeDrinsService() -> DrinksUseCase
+    func makeSaveService() -> SaveUseCase
 }

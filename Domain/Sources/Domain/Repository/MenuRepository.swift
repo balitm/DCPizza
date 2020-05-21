@@ -28,8 +28,4 @@ struct MenuRepository: MenuUseCase {
     func addToCart(pizza: Pizza) -> AnyPublisher<Void, Error> {
         Publishers.CartActionPublisher(data: _data, action: .pizza(pizza: pizza)).eraseToAnyPublisher()
     }
-
-    func saveCart() -> AnyPublisher<Void, Error> {
-        Publishers.CartActionPublisher(data: _data, action: .save).eraseToAnyPublisher()
-    }
 }

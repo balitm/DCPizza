@@ -41,4 +41,8 @@ public struct RepositoryUseCaseProvider: UseCaseProvider, DatabaseContainerProto
     public func makeDrinsService() -> DrinksUseCase {
         DrinksRepository(data: _data)
     }
+
+    public func makeSaveService() -> SaveUseCase {
+        SaveRepository(data: _data)
+    }
 }
