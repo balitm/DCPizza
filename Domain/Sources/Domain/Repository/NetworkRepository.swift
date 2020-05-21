@@ -32,6 +32,8 @@ extension API {
 
         func checkout(cart: DS.Cart) -> AnyPublisher<Void, API.ErrorType> {
             Checkout(pizzas: cart.pizzas, drinks: cart.drinks).cmb.perform()
+                .map({ _ in () })
+                .eraseToAnyPublisher()
         }
     }
 }

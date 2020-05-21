@@ -40,15 +40,6 @@ protocol HandlerBlockProtocol: HandlerBlockTypesProtocol {
     var errorBlock: ErrorBlock { get set }
 }
 
-protocol ModelProtocol {
-    associatedtype Result
-
-    init()
-
-    /// Creates model object from JSON responses.
-    func process(json: Data) throws -> Result
-}
-
 protocol PerformProtocol: AnyObject {
     func _performIn()
 }
@@ -207,18 +198,11 @@ extension API {
 
     // MARK: - Request base class
 
-    class RequestBase<M: ModelProtocol>: _BaseRequest<M.Result>, CombinableType {
-        typealias Target = M.Result
-        typealias Model = M
-        typealias ResponseParser = (_ request: URLRequest?, _ response: HTTPURLResponse?, _ data: Data?, _ error: Error?) -> Alamofire.Result<Target>
+    class RequestBase<M: Decodable>: _BaseRequest<M>, CombinableType {
+        typealias Target = M
 
         var mainPath = ""
         var fallbackPath = ""
-
-        /// Serializes received response into Result<Model>.
-        var responseParser: ResponseParser = { request, response, data, error in
-            .failure(error!)
-        }
 
         required init() {
             super.init()
@@ -230,10 +214,6 @@ extension API {
             method = httpParams == nil ? .get : .post
         }
 
-        func createModel() -> Model {
-            Model()
-        }
-
         override func _perform() {
             if path.isEmpty { path = mainPath }
 
@@ -242,55 +222,27 @@ extension API {
                          method: method,
                          parameters: httpParams,
                          encoding: TimeoutParameterEncoding(encoding: encoding, timeout: timeout),
-                         headers: headers)
+                         headers: HTTPHeaders(headers ?? [:]))
 
             DLog("Requesting: ", path)
-            responseParser = _responeParser()
 
             afRequest = request
             // debugPrint(request)
-            request.validate().response(responseSerializer: _dataResponseSerializer) { response in
-                // debugPrint(response)
-                switch response.result {
-                case let .success(result):
-                    self.handleSuccess(result)
-                case let .failure(error):
-                    if self.path != self.fallbackPath {
-                        self.path = self.fallbackPath
-                        self._perform()
-                    } else {
-                        self.handleError(.netError(error: error))
+            request
+                .validate()
+                .responseDecodable(completionHandler: { (ds: DataResponse<Target, AFError>) in
+                    switch ds.result {
+                    case let .success(model):
+                        self.handleSuccess(model)
+                    case let .failure(error):
+                        if self.path != self.fallbackPath {
+                            self.path = self.fallbackPath
+                            self._perform()
+                        } else {
+                            self.handleError(.netError(error: error))
+                        }
                     }
-                }
-            }
-        }
-
-        private func _responeParser() -> ResponseParser {
-            { [unowned self] request, response, data, error in
-                if let error = error { return .failure(error) }
-                let data = data ?? Data()
-
-                do {
-                    let model = self.createModel()
-                    let result = try model.process(json: data)
-                    return .success(result)
-                } catch {
-                    return .failure(error)
-                }
-            }
-        }
-
-        private lazy var _dataResponseSerializer = DataResponseSerializer<Target> { [unowned self] urlRequest, response, data, error in
-            var result: Alamofire.Result<Target>
-
-            if let error = error {
-                result = .failure(error)
-            } else {
-                // swiftformat:disable redundantSelf
-                result = self.responseParser(urlRequest, response, data, error)
-            }
-
-            return result
+                })
         }
     }
 }

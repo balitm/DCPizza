@@ -9,9 +9,7 @@
 import Foundation
 
 extension API {
-    typealias IngredientsModel = ModelBase<[DS.Ingredient]>
-
-    class GetIngredients: RequestBase<IngredientsModel> {
+    class GetIngredients: RequestBase<[DS.Ingredient]> {
         required init() {
             super.init()
             mainPath = "https://api.jsonbin.io/b/5e91eda1172eb64389622c7a"

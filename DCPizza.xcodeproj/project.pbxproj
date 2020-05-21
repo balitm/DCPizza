@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		29306D9B2476B9CA001A6684 /* AlamofireNetworkActivityIndicator in Frameworks */ = {isa = PBXBuildFile; productRef = 29306D9A2476B9CA001A6684 /* AlamofireNetworkActivityIndicator */; };
 		2941A3F423FAF0DC005838BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2941A3F323FAF0DC005838BA /* AppDelegate.swift */; };
 		2941A3FB23FAF0DC005838BA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2941A3F923FAF0DC005838BA /* Main.storyboard */; };
 		2941A3FD23FAF0DE005838BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2941A3FC23FAF0DE005838BA /* Assets.xcassets */; };
@@ -122,6 +123,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29306D9B2476B9CA001A6684 /* AlamofireNetworkActivityIndicator in Frameworks */,
 				2955A4CA24574A1A0093E3F2 /* CombineDataSources in Frameworks */,
 				295616782440CEBB0063542A /* Domain in Frameworks */,
 			);
@@ -380,6 +382,7 @@
 			packageProductDependencies = (
 				295616772440CEBB0063542A /* Domain */,
 				2955A4C924574A1A0093E3F2 /* CombineDataSources */,
+				29306D9A2476B9CA001A6684 /* AlamofireNetworkActivityIndicator */,
 			);
 			productName = DCPizza;
 			productReference = 2941A3F023FAF0DC005838BA /* DCPizza.app */;
@@ -433,6 +436,7 @@
 			mainGroup = 2941A3E723FAF0DC005838BA;
 			packageReferences = (
 				2955A4C824574A1A0093E3F2 /* XCRemoteSwiftPackageReference "CombineDataSources" */,
+				29306D992476B9CA001A6684 /* XCRemoteSwiftPackageReference "AlamofireNetworkActivityIndicator" */,
 			);
 			productRefGroup = 2941A3F123FAF0DC005838BA /* Products */;
 			projectDirPath = "";
@@ -803,6 +807,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		29306D992476B9CA001A6684 /* XCRemoteSwiftPackageReference "AlamofireNetworkActivityIndicator" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/AlamofireNetworkActivityIndicator";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.0;
+			};
+		};
 		2955A4C824574A1A0093E3F2 /* XCRemoteSwiftPackageReference "CombineDataSources" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/CombineCommunity/CombineDataSources.git";
@@ -814,6 +826,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		29306D9A2476B9CA001A6684 /* AlamofireNetworkActivityIndicator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 29306D992476B9CA001A6684 /* XCRemoteSwiftPackageReference "AlamofireNetworkActivityIndicator" */;
+			productName = AlamofireNetworkActivityIndicator;
+		};
 		2955A4C924574A1A0093E3F2 /* CombineDataSources */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2955A4C824574A1A0093E3F2 /* XCRemoteSwiftPackageReference "CombineDataSources" */;
