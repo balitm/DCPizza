@@ -16,7 +16,6 @@ final class MenuTableViewController: UITableViewController {
 
     private var _viewModel: MenuTableViewModel!
     private var _navigator: Navigator!
-    private let _saveCart = PassthroughSubject<Void, Never>()
     private var _bag = Set<AnyCancellable>()
 
     func setup(with navigator: Navigator, viewModel: MenuTableViewModel) {
@@ -43,11 +42,6 @@ final class MenuTableViewController: UITableViewController {
         DLog("Unwinded to menu.")
     }
 
-    /// Save the current cart.
-    func saveCart() {
-        _saveCart.send(())
-    }
-
     // MARK: - bind functions
 
     private func _bind() {
@@ -66,8 +60,7 @@ final class MenuTableViewController: UITableViewController {
 
         let out = _viewModel.transform(input: MenuTableViewModel.Input(
             selected: selected,
-            scratch: rightPublisher,
-            saveCart: _saveCart.eraseToAnyPublisher()
+            scratch: rightPublisher
         ))
 
         _bag = [

@@ -3,16 +3,23 @@
 //  Creative
 //
 //  Created by Bali on 12/6/14.
-//  Copyright (c) 2014 kil-dev. All rights reserved.
+//  Copyright (c) 2020 kil-dev. All rights reserved.
 //
 
 import UIKit
+import Combine
+import Domain
 // import AlamofireNetworkActivityIndicator
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
+
     private let _injectionContainer = AppDependencyContainer()
+    private var _bag = Set<AnyCancellable>()
+    private lazy var _service: SaveUseCase = {
+        _injectionContainer.makeSaveService()
+    }()
 
     class var shared: AppDelegate {
         UIApplication.shared.delegate as! AppDelegate
@@ -36,7 +43,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func _saveCart() {
-        _menuViewController?.saveCart()
+        _service.saveCart()
+            .catch({ _ in Empty<Void, Never>() })
+            .sink {}
+            .store(in: &_bag)
     }
 
     private var _menuViewController: MenuTableViewController? {

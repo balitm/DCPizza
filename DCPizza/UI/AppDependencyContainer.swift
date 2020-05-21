@@ -42,4 +42,8 @@ class AppDependencyContainer {
         let dependencyContainer = IngredientsDependencyContainer(appDependencyContainer: self, pizza: pizza)
         return dependencyContainer.makeIngredientsViewModel(image: image)
     }
+
+    func makeSaveService() -> SaveUseCase {
+        provider.makeSaveService()
+    }
 }

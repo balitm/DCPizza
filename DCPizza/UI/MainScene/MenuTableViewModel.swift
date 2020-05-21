@@ -21,7 +21,6 @@ final class MenuTableViewModel: ViewModelType {
     struct Input {
         let selected: AnyPublisher<Selected, Never>
         let scratch: AnyPublisher<Void, Never>
-        let saveCart: AnyPublisher<Void, Never>
     }
 
     struct Output {
@@ -107,14 +106,6 @@ final class MenuTableViewModel: ViewModelType {
             })
 
         let selection = Publishers.Merge(selected, scratch)
-
-        input.saveCart
-            .flatMap({ [service = _service] in
-                service.saveCart()
-                    .catch({ _ in Empty<Void, Never>() })
-            })
-            .sink {}
-            .store(in: &_bag)
 
         return Output(tableData: viewModels.eraseToAnyPublisher(),
                       selection: selection.eraseToAnyPublisher(),
