@@ -1,9 +1,9 @@
-### DCPizza
+## Clean architecture with Combine
 
-Domain/repository example.
+A sample pizza shop client using Reactive Domain/repository. Combine is used for reactive programming. A back-port to RxSwift is in progress.   
 
-**Build**  
-(brew install carthage)  
+### Build
+Swift Package Manager is used for managing the distributions and dependencies. The Domain and its underlying  sub-modules are in a private Swift Package called Domain.
 
-In project's root:  
-carthage update --platform iOS --derived-data CartDerived --no-use-binaries --cache-builds
+### Details
+![](Doc/stream.png)
