@@ -7,25 +7,30 @@
 //
 
 import Foundation
-import class UIKit.UIImage
+import Combine
+import class AlamofireImage.Image
 
 public struct Pizza {
     public let name: String
     public let ingredients: [Ingredient]
     public let imageUrl: URL?
+    public var image: AnyPublisher<Image?, Never> { image_.eraseToAnyPublisher() }
+    let image_: CurrentValueSubject<Image?, Never>
 
     public init(copy other: Pizza, with ingredients: [Ingredient]) {
         name = other.name
         imageUrl = other.imageUrl
         self.ingredients = ingredients
+        image_ = other.image_
     }
 
     public init() {
         name = "Custom"
         imageUrl = nil
         ingredients = []
+        image_ = CurrentValueSubject<Image?, Never>(nil)
     }
-    
+
     init(
         name: String,
         ingredients: [Ingredient],
@@ -34,6 +39,7 @@ public struct Pizza {
         self.name = name
         self.ingredients = ingredients
         self.imageUrl = imageUrl
+        image_ = CurrentValueSubject<Image?, Never>(nil)
     }
 
     public func price(from basePrice: Double) -> Double {

@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import AlamofireImage
 import Combine
 
 protocol RequestReportCallback {
@@ -62,9 +63,6 @@ extension API {
         var handlerKey = 0
         var isRenewable = true
         var timeout = KNetwork.defaultTimeout
-        var isDirect = false
-        var isSync = false
-        var isShowError = true
         var afRequest: Request?
 
         var encoding: ParameterEncoding
@@ -243,6 +241,45 @@ extension API {
                         }
                     }
                 })
+        }
+    }
+}
+
+// MARK: - Image downloader
+
+extension API {
+    class ImageDownloader: _BaseRequest<Image>, CombinableType {
+        typealias Target = Image
+
+        init(path: String) {
+            super.init()
+            self.path = path
+        }
+
+        required init() {
+            super.init()
+        }
+
+        override func _perform() {
+            let downloader = AlamofireImage.ImageDownloader()
+
+            DLog("- Downloading: ", path, " - ", id)
+
+            let res = downloader.download(URLRequest(url: _url)) { [weak self] response in
+                guard let self = self else { return }
+
+                // print(response.request)
+                // print(response.response)
+
+                switch response.result {
+                case let .success(image):
+                    self.handleSuccess(image)
+                case let .failure(error):
+                    self.handleError(.netError(error: error))
+                }
+            }
+
+            afRequest = res?.request
         }
     }
 }

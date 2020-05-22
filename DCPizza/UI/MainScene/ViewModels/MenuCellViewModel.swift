@@ -15,7 +15,7 @@ struct MenuCellViewModel {
     let nameText: String
     let ingredientsText: String
     let priceText: String
-    let imageUrl: URL?
+    let image: AnyPublisher<UIImage?, Never>
     let tap = PassthroughSubject<Void, Never>()
 
     init(basePrice: Double, pizza: Pizza) {
@@ -23,7 +23,7 @@ struct MenuCellViewModel {
         let price = pizza.price(from: basePrice)
         priceText = format(price: price)
         ingredientsText = pizza.ingredientNames()
-        imageUrl = pizza.imageUrl
+        image = pizza.image
     }
 }
 

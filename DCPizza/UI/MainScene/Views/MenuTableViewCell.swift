@@ -8,7 +8,6 @@
 
 import UIKit
 import Combine
-import AlamofireImage
 import Domain
 
 final class MenuTableViewCell: UITableViewCell {
@@ -40,10 +39,13 @@ extension MenuTableViewCell: CellViewModelProtocol {
         nameLabel.text = viewModel.nameText
         ingredientsLabel.text = viewModel.ingredientsText
         priceLabel.text = viewModel.priceText
-        if let url = viewModel.imageUrl {
-            pizzaView.af_setImage(withURL: url)
-        }
 
+        // Image updater.
+        viewModel.image
+            .assign(to: \.image, on: pizzaView)
+            .store(in: &_bag)
+
+        // Tap event.
         _tap.cmb.event()
             .sink(receiveValue: {
                 viewModel.tap.send(())
