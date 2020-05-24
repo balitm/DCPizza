@@ -34,12 +34,10 @@ final class IngredientsViewModel: ViewModelType {
     }
 
     private let _service: IngredientsUseCase
-    private let _image: UIImage?
     private var _bag = Set<AnyCancellable>()
     private var _timerCancellable: AnyCancellable?
 
-    init(service: IngredientsUseCase, image: UIImage?) {
-        _image = image
+    init(service: IngredientsUseCase) {
         _service = service
     }
 
@@ -57,7 +55,7 @@ final class IngredientsViewModel: ViewModelType {
 
         // Table data source.
         let tableData = selecteds
-            .map({ sels -> [Item] in
+            .map({ [image = _service.image()] sels -> [Item] in
                 let items = sels.map { elem -> Item in
                     Item.ingredient(
                         viewModel: IngredientsItemCellViewModel(name: elem.ingredient.name,
@@ -65,7 +63,7 @@ final class IngredientsViewModel: ViewModelType {
                                                                 isContained: elem.isOn)
                     )
                 }
-                let header = [Item.header(viewModel: IngredientsHeaderCellViewModel(image: self._image))]
+                let header = [Item.header(viewModel: IngredientsHeaderCellViewModel(image: image))]
                 return header + items
             })
 

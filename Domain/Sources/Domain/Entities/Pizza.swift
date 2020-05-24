@@ -15,7 +15,7 @@ public struct Pizza {
     public let ingredients: [Ingredient]
     public let imageUrl: URL?
     public var image: AnyPublisher<Image?, Never> { image_.eraseToAnyPublisher() }
-    let image_: CurrentValueSubject<Image?, Never>
+    let image_: CurrentValueRelay<Image?>
 
     public init(copy other: Pizza, with ingredients: [Ingredient]) {
         name = other.name
@@ -28,7 +28,7 @@ public struct Pizza {
         name = "Custom"
         imageUrl = nil
         ingredients = []
-        image_ = CurrentValueSubject<Image?, Never>(nil)
+        image_ = CurrentValueRelay<Image?>(nil)
     }
 
     init(
@@ -39,7 +39,7 @@ public struct Pizza {
         self.name = name
         self.ingredients = ingredients
         self.imageUrl = imageUrl
-        image_ = CurrentValueSubject<Image?, Never>(nil)
+        image_ = CurrentValueRelay<Image?>(nil)
     }
 
     public func price(from basePrice: Double) -> Double {

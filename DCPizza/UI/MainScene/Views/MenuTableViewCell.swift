@@ -43,13 +43,6 @@ extension MenuTableViewCell: CellViewModelProtocol {
 
         // Image updater.
         viewModel.image
-            .handleEvents(receiveOutput: { _ in
-                DLog("cell recved image for ", viewModel.nameText, " - ", viewModel.url?.absoluteString ?? "nil")
-            }, receiveCompletion: { c in
-                DLog("cell recved completion: ", c)
-            }, receiveCancel: {
-                DLog("cell recved cancel.")
-            })
             .assign(to: \.image, on: pizzaView)
             .store(in: &_bag)
 

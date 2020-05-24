@@ -58,16 +58,13 @@ final class Initializer {
                         guard let imageUrl = pizza.imageUrl else { return }
                         let downloader = API.ImageDownloader(path: imageUrl.absoluteString)
                         downloader.cmb.perform()
-//                            .delay(for: .init(.seconds(3)), scheduler: DispatchQueue.global())
                             .map({ $0 as Image? })
-                            .catch({ _ in Just<Image?>(nil) })
-//                            .receive(on: RunLoop.main)
-//                            .handleEvents(receiveOutput: { _ in
-//                                DLog("recved image for ", pizza.name, " - ", pizza.imageUrl?.absoluteString ?? "nil")
-//                            }, receiveCompletion: { c in
-//                                DLog("recved completion: ", c)
-//                            }, receiveCancel: {
-//                                DLog("recved cancel.")
+                            .catch({ error -> Just<Image?> in
+                                DLog("Error during image receiving: ", error)
+                                return Just<Image?>(nil)
+                            })
+//                            .handleEvents(receiveOutput: {
+//                                DLog("Inserting ", $0 == nil ? "nil" : "not nil")
 //                            })
                             .subscribe(AnySubscriber(pizza.image_))
                     }

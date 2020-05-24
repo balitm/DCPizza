@@ -12,20 +12,14 @@ import Combine
 import class UIKit.UIImage
 
 final class MenuTableViewModel: ViewModelType {
-    typealias Selected = (index: Int, image: UIImage?)
-    typealias Selection = (
-        pizza: Pizza,
-        image: UIImage?
-    )
-
     struct Input {
-        let selected: AnyPublisher<Selected, Never>
+        let selected: AnyPublisher<Int, Never>
         let scratch: AnyPublisher<Void, Never>
     }
 
     struct Output {
         let tableData: AnyPublisher<[MenuCellViewModel], Never>
-        let selection: AnyPublisher<Selection, Never>
+        let selection: AnyPublisher<Pizza, Never>
         let showAdded: AnyPublisher<Void, Never>
     }
 
@@ -84,28 +78,14 @@ final class MenuTableViewModel: ViewModelType {
             .flatMap({ selected in
                 cachedPizzas
                     .first()
-                    .map({
-                        (pizzas: $0.pizzas, selected: selected)
-                    })
-            })
-            .map({ t -> Selection in
-                let pizza = t.pizzas[t.selected.index]
-                let image = t.selected.image
-                return (pizza, image)
+                    .map({ $0.pizzas[selected] })
             })
 
         // Pizza from scratch is selected.
         let scratch = input.scratch
-            .flatMap({
-                cachedPizzas
-                    .first()
-            })
-            .map({ (t: Pizzas) -> Selection in
-                let pizza = Pizza()
-                return (pizza, nil)
-            })
+            .map({ Pizza() })
 
-        let selection = Publishers.Merge(selected, scratch)
+        let selection = selected.merge(with: scratch)
 
         return Output(tableData: viewModels.eraseToAnyPublisher(),
                       selection: selection.eraseToAnyPublisher(),

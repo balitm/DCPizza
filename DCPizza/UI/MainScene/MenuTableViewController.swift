@@ -12,8 +12,6 @@ import Combine
 import CombineDataSources
 
 final class MenuTableViewController: UITableViewController {
-    typealias Selected = MenuTableViewModel.Selected
-
     private var _viewModel: MenuTableViewModel!
     private var _navigator: Navigator!
     private var _bag = Set<AnyCancellable>()
@@ -52,10 +50,7 @@ final class MenuTableViewController: UITableViewController {
             .map({ _ in () })
             .eraseToAnyPublisher()
         let selected = tableView.cmb.itemSelected()
-            .compactMap({ ip -> Selected? in
-                guard let cell = self.tableView.cellForRow(at: ip) as? MenuTableViewCell else { return nil }
-                return (ip.row, cell.pizzaView.image)
-            })
+            .map({ $0.row })
             .eraseToAnyPublisher()
 
         let out = _viewModel.transform(input: MenuTableViewModel.Input(
@@ -73,7 +68,7 @@ final class MenuTableViewController: UITableViewController {
             // Show ingredients.
             out.selection
                 .sink(receiveValue: { [unowned self] in
-                    _ = self._navigator.showIngredients(of: $0.pizza, image: $0.image)
+                    _ = self._navigator.showIngredients(of: $0)
                 }),
 
             // Show cart.

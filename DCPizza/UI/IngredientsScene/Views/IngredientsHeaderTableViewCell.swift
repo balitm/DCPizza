@@ -7,13 +7,19 @@
 //
 
 import UIKit
+import Combine
 
 final class IngredientsHeaderTableViewCell: SeparableTableViewCell {
     @IBOutlet weak var pizzaView: UIImageView!
+
+    private var _bag = Set<AnyCancellable>()
 }
 
 extension IngredientsHeaderTableViewCell: CellViewModelProtocol {
     func config(with viewModel: IngredientsHeaderCellViewModel) {
-        pizzaView.image = viewModel.image
+        _bag = [
+            viewModel.image
+                .assign(to: \.image, on: pizzaView),
+        ]
     }
 }
