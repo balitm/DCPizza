@@ -53,16 +53,23 @@ final class Initializer {
             // Download pizza images.
             $component
                 .compactMap({ try? $0.get() })
-                .sink(receiveValue: {
-                    $0.pizzas.pizzas.forEach {
-                        guard let imageUrl = $0.imageUrl else { return }
+                .sink(receiveValue: { components in
+                    components.pizzas.pizzas.forEach { pizza in
+                        guard let imageUrl = pizza.imageUrl else { return }
                         let downloader = API.ImageDownloader(path: imageUrl.absoluteString)
                         downloader.cmb.perform()
 //                            .delay(for: .init(.seconds(3)), scheduler: DispatchQueue.global())
                             .map({ $0 as Image? })
                             .catch({ _ in Just<Image?>(nil) })
 //                            .receive(on: RunLoop.main)
-                            .subscribe(AnySubscriber($0.image_))
+//                            .handleEvents(receiveOutput: { _ in
+//                                DLog("recved image for ", pizza.name, " - ", pizza.imageUrl?.absoluteString ?? "nil")
+//                            }, receiveCompletion: { c in
+//                                DLog("recved completion: ", c)
+//                            }, receiveCancel: {
+//                                DLog("recved cancel.")
+//                            })
+                            .subscribe(AnySubscriber(pizza.image_))
                     }
                 }),
 
