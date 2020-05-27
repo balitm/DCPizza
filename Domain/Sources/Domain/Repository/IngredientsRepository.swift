@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import class AlamofireImage.Image
 
 struct IngredientsRepository: IngredientsUseCase {
     private let _data: Initializer
@@ -67,6 +68,10 @@ struct IngredientsRepository: IngredientsUseCase {
 
     func name() -> AnyPublisher<String, Never> {
         Just(_name).eraseToAnyPublisher()
+    }
+
+    func image() -> AnyPublisher<Image?, Never> {
+        _pizza.image
     }
 }
 

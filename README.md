@@ -13,3 +13,7 @@ The **Data layer** gives implementations to the use cases defined in the Domain 
 In the **UI layer** the MVVM pattern is used to communicate with implementations in the Domain interface. The ViewModels are transforming the Domain entities to UI consumable data.
 
 ![](Doc/stream.png)
+
+The repositories in the Data layer are implementing the use cases of the Domain layer. Repositories are using common data sources with Database and API compatible *Data source entities* and they present *Domain entities* to the UI layer.
+
+![](Doc/layers.png)

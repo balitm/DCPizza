@@ -8,7 +8,6 @@
 
 import Foundation
 import Domain
-import class UIKit.UIImage
 
 class IngredientsDependencyContainer {
     let provider: UseCaseProvider
@@ -19,7 +18,7 @@ class IngredientsDependencyContainer {
         service = provider.makeIngredientsService(pizza: pizza)
     }
 
-    func makeIngredientsViewModel(image: UIImage?) -> IngredientsViewModel {
-        IngredientsViewModel(service: service, image: image)
+    func makeIngredientsViewModel() -> IngredientsViewModel {
+        IngredientsViewModel(service: service)
     }
 }

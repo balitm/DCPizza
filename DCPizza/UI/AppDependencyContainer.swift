@@ -38,9 +38,9 @@ class AppDependencyContainer {
         DrinksTableViewModel(service: drinksService)
     }
 
-    func makeIngredientsViewModel(pizza: Pizza, image: UIImage?) -> IngredientsViewModel {
+    func makeIngredientsViewModel(pizza: Pizza) -> IngredientsViewModel {
         let dependencyContainer = IngredientsDependencyContainer(appDependencyContainer: self, pizza: pizza)
-        return dependencyContainer.makeIngredientsViewModel(image: image)
+        return dependencyContainer.makeIngredientsViewModel()
     }
 
     func makeSaveService() -> SaveUseCase {
