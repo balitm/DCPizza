@@ -77,7 +77,7 @@ private extension IngredientsViewController {
             }
         }
         tableController.rowAnimations = (
-            insert: UITableView.RowAnimation.none,
+            insert: UITableView.RowAnimation.fade,
             update: UITableView.RowAnimation.none,
             delete: UITableView.RowAnimation.none
         )

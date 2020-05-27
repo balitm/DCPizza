@@ -19,7 +19,7 @@ final class MenuTableViewModel: ViewModelType {
 
     struct Output {
         let tableData: AnyPublisher<[MenuCellViewModel], Never>
-        let selection: AnyPublisher<Pizza, Never>
+        let selection: AnyPublisher<AnyPublisher<Pizza, Never>, Never>
         let showAdded: AnyPublisher<Void, Never>
     }
 
@@ -78,15 +78,15 @@ final class MenuTableViewModel: ViewModelType {
 
         // A pizza is selected.
         let selected = input.selected
-            .combineLatest(cachedPizzas)
-            .map({ (pair: (index: Int, pizzas: Pizzas)) -> Pizza in
-                let pizza = pair.pizzas.pizzas[pair.index]
-                return pizza
+            .map({ index in
+                cachedPizzas
+                    .map({ $0.pizzas[index] })
+                    .eraseToAnyPublisher()
             })
 
         // Pizza from scratch is selected.
         let scratch = input.scratch
-            .map({ Pizza() })
+            .map({ Just(Pizza()).eraseToAnyPublisher() })
 
         let selection = selected.merge(with: scratch)
 

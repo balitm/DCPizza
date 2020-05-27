@@ -11,14 +11,12 @@ import class AlamofireImage.Image
 
 struct IngredientsRepository: IngredientsUseCase {
     private let _data: Initializer
-    private let _pizza: Pizza
-    private let _name: String
+    private let _pizza: AnyPublisher<Pizza, Never>
     private let _ingredients = CurrentValueSubject<[IngredientSelection], Never>([])
 
-    init(data: Initializer, pizza: Pizza) {
+    init(data: Initializer, pizza: AnyPublisher<Pizza, Never>) {
         _data = data
         _pizza = pizza
-        _name = pizza.ingredients.isEmpty ? "CREATE A PIZZA" : pizza.name.uppercased()
     }
 
     func ingredients(selected: AnyPublisher<Int, Never>) -> AnyPublisher<[IngredientSelection], Never> {
@@ -30,8 +28,12 @@ struct IngredientsRepository: IngredientsUseCase {
             .catch({ _ in
                 Empty<[Ingredient], Never>()
             })
-            .map({ [pizza = _pizza] in
-                _createSelecteds(pizza, $0)
+            .flatMap({ [pizza = _pizza] ingredients in
+                pizza
+                    .first()
+                    .map({
+                        _createSelecteds($0, ingredients)
+                    })
             })
             .subscribe(AnySubscriber(_ingredients))
 
@@ -54,7 +56,7 @@ struct IngredientsRepository: IngredientsUseCase {
     }
 
     func addToCart() -> AnyPublisher<Void, Error> {
-        Just(_pizza).zip(_ingredients)
+        _pizza.zip(_ingredients)
             .map({ (pair: (pizza: Pizza, ingredients: [IngredientSelection])) -> Pizza in
                 Pizza(copy: pair.pizza, with: pair.ingredients.compactMap { $0.isOn ? $0.ingredient : nil })
             })
@@ -67,7 +69,14 @@ struct IngredientsRepository: IngredientsUseCase {
     }
 
     func name() -> AnyPublisher<String, Never> {
-        Just(_name).eraseToAnyPublisher()
+        _pizza.map({
+            $0.ingredients.isEmpty ? "CREATE A PIZZA" : $0.name.uppercased()
+        })
+            .eraseToAnyPublisher()
+    }
+
+    func pizza() -> AnyPublisher<Pizza, Never> {
+        _pizza
     }
 }
 

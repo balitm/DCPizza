@@ -16,7 +16,7 @@ class IngredientsUseCaseTests: UseCaseTestsBase {
         super.setUp()
 
         let pizza = component.pizzas.pizzas[0]
-        service = IngredientsRepository(data: data, pizza: pizza)
+        service = IngredientsRepository(data: data, pizza: Just(pizza).eraseToAnyPublisher())
     }
 
     func testIngredients() {

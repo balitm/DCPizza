@@ -58,9 +58,7 @@ final class MenuTableViewController: UITableViewController {
             scratch: rightPublisher
         ))
 
-        let tableController = TableViewItemsController<[[MenuCellViewModel]]>(cellType: MenuTableViewCell.self, cellConfig: { cell, ip, model in
-            cell.config(with: model)
-        })
+        let tableController = TableViewItemsController<[[MenuCellViewModel]]>(MenuTableViewCell.self)
         tableController.rowAnimations = (
             insert: UITableView.RowAnimation.fade,
             update: UITableView.RowAnimation.fade,

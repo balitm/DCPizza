@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Combine
 
 public struct RepositoryUseCaseProvider: UseCaseProvider, DatabaseContainerProtocol {
     var container: DS.Container?
@@ -30,7 +31,7 @@ public struct RepositoryUseCaseProvider: UseCaseProvider, DatabaseContainerProto
         MenuRepository(data: _data)
     }
 
-    public func makeIngredientsService(pizza: Pizza) -> IngredientsUseCase {
+    public func makeIngredientsService(pizza: AnyPublisher<Pizza, Never>) -> IngredientsUseCase {
         IngredientsRepository(data: _data, pizza: pizza)
     }
 

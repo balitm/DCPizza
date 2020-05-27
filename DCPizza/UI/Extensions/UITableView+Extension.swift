@@ -58,7 +58,7 @@ extension UITableView {
 }
 
 extension TableViewItemsController {
-    convenience init<C>(cellType: C.Type, cellConfig: @escaping CellConfig<Element, C>) where C: UITableViewCell & CellViewModelProtocol, Element == C.ViewModel {
+    convenience init<C>(_ cellType: C.Type) where C: UITableViewCell & CellViewModelProtocol, Element == C.ViewModel {
         self.init { dataSource, tableView, indexPath, value in
             tableView.createCell(cellType, value, indexPath)
         }

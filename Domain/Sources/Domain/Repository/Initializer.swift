@@ -101,7 +101,6 @@ final class Initializer {
             $component
                 .compactMap({ try? $0.get() })
                 .first()
-                .subscribe(on: DispatchQueue.global(qos: .default))
                 .map({ [weak container] c -> Cart in
                     DLog("###### init card. #########")
                     let dsCart = container?.values(DS.Cart.self).first ?? DS.Cart(pizzas: [], drinks: [])
@@ -109,7 +108,6 @@ final class Initializer {
                     cart.basePrice = c.pizzas.basePrice
                     return cart
                 })
-                .receive(on: RunLoop.main)
                 .assign(to: \.cart, on: self),
         ]
     }

@@ -54,16 +54,17 @@ final class IngredientsViewModel: ViewModelType {
         )
 
         // Table data source.
-        let tableData = selecteds
-            .map({ [image = Just<UIImage?>(nil).eraseToAnyPublisher()] sels -> [Item] in
-                let items = sels.map { elem -> Item in
+        let tableData = selecteds.combineLatest(_service.pizza())
+            .map({ (pair: (sels: [IngredientSelection], pizza: Pizza)) -> [Item] in
+                let items = pair.sels.map { elem -> Item in
                     Item.ingredient(
                         viewModel: IngredientsItemCellViewModel(name: elem.ingredient.name,
                                                                 priceText: format(price: elem.ingredient.price),
                                                                 isContained: elem.isOn)
                     )
                 }
-                let header = [Item.header(viewModel: IngredientsHeaderCellViewModel(image: image))]
+
+                let header = [Item.header(viewModel: IngredientsHeaderCellViewModel(image: pair.pizza.image))]
                 return header + items
             })
 
