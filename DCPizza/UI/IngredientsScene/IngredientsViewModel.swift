@@ -55,7 +55,7 @@ final class IngredientsViewModel: ViewModelType {
 
         // Table data source.
         let tableData = selecteds
-            .map({ [image = _service.image()] sels -> [Item] in
+            .map({ [image = Just<UIImage?>(nil).eraseToAnyPublisher()] sels -> [Item] in
                 let items = sels.map { elem -> Item in
                     Item.ingredient(
                         viewModel: IngredientsItemCellViewModel(name: elem.ingredient.name,

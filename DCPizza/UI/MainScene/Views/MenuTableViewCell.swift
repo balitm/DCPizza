@@ -42,9 +42,7 @@ extension MenuTableViewCell: CellViewModelProtocol {
         priceLabel.text = viewModel.priceText
 
         // Image updater.
-        viewModel.image
-            .assign(to: \.image, on: pizzaView)
-            .store(in: &_bag)
+        pizzaView.image = viewModel.image
 
         // Tap event.
         _tap.cmb.event()

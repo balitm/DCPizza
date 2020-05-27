@@ -69,10 +69,6 @@ struct IngredientsRepository: IngredientsUseCase {
     func name() -> AnyPublisher<String, Never> {
         Just(_name).eraseToAnyPublisher()
     }
-
-    func image() -> AnyPublisher<Image?, Never> {
-        _pizza.image
-    }
 }
 
 /// Create array of Ingredients with selectcion flag.

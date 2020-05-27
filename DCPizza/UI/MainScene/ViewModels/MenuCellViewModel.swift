@@ -15,7 +15,7 @@ struct MenuCellViewModel {
     let nameText: String
     let ingredientsText: String
     let priceText: String
-    let image: AnyPublisher<UIImage?, Never>
+    let image: UIImage?
     let url: URL?
     let tap = PassthroughSubject<Void, Never>()
 
@@ -32,9 +32,13 @@ struct MenuCellViewModel {
 extension MenuCellViewModel: Hashable {
     static func ==(lhs: MenuCellViewModel, rhs: MenuCellViewModel) -> Bool {
         lhs.nameText == rhs.nameText
+            && lhs.image == rhs.image
     }
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(nameText.hash)
+        if let image = image {
+            hasher.combine(image.hash)
+        }
     }
 }

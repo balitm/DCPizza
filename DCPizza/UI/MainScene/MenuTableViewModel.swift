@@ -41,14 +41,17 @@ final class MenuTableViewModel: ViewModelType {
                     return nil
                 }
             })
-            .subscribe(AnySubscriber(cachedPizzas))
+            .subscribe(cachedPizzas)
+            .store(in: &_bag)
 
         let viewModels = cachedPizzas
+            .throttle(for: 0.4, scheduler: RunLoop.current, latest: true)
             .map({ pizzas -> [MenuCellViewModel] in
                 let basePrice = pizzas.basePrice
                 let vms = pizzas.pizzas.map {
                     MenuCellViewModel(basePrice: basePrice, pizza: $0)
                 }
+                DLog("############## update pizza vms. #########")
                 return vms
             })
             .share()
@@ -75,10 +78,10 @@ final class MenuTableViewModel: ViewModelType {
 
         // A pizza is selected.
         let selected = input.selected
-            .flatMap({ selected in
-                cachedPizzas
-                    .first()
-                    .map({ $0.pizzas[selected] })
+            .combineLatest(cachedPizzas)
+            .map({ (pair: (index: Int, pizzas: Pizzas)) -> Pizza in
+                let pizza = pair.pizzas.pizzas[pair.index]
+                return pizza
             })
 
         // Pizza from scratch is selected.
