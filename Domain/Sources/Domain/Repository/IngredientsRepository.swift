@@ -69,9 +69,10 @@ struct IngredientsRepository: IngredientsUseCase {
     }
 
     func name() -> AnyPublisher<String, Never> {
-        _pizza.map({
-            $0.ingredients.isEmpty ? "CREATE A PIZZA" : $0.name.uppercased()
-        })
+        _pizza
+            .map({
+                $0.ingredients.isEmpty ? "CREATE A PIZZA" : $0.name.uppercased()
+            })
             .eraseToAnyPublisher()
     }
 

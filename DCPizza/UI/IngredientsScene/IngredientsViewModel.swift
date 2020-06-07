@@ -12,9 +12,6 @@ import Combine
 import class UIKit.UIImage
 
 final class IngredientsViewModel: ViewModelType {
-    /// Ingredient with selectcion flag.
-    typealias Selected = (isOn: Bool, ingredient: Ingredient)
-
     /// Event to drive the buy footer of the controller.
     enum FooterEvent {
         case show, hide
@@ -74,7 +71,8 @@ final class IngredientsViewModel: ViewModelType {
             .map({ sels -> [Ingredient] in
                 sels.compactMap { $0.isOn ? $0.ingredient : nil }
             })
-            .subscribe(AnySubscriber(selectedIngredients))
+            .subscribe(selectedIngredients)
+            .store(in: &_bag)
 
         // Add pizza to cart.
         input.addEvent
@@ -115,7 +113,8 @@ private extension IngredientsViewModel {
 
         publisher
             .compactMap({ $0.isEmpty ? nil : FooterEvent.show })
-            .subscribe(AnySubscriber(footerEvent))
+            .subscribe(footerEvent)
+            .store(in: &_bag)
 
         publisher
             .sink(receiveValue: { [unowned self] _ in
@@ -124,9 +123,7 @@ private extension IngredientsViewModel {
                     .autoconnect()
                     .first()
                     .map({ _ in FooterEvent.hide })
-                    .sink(receiveValue: {
-                        footerEvent.send($0)
-                    })
+                    .subscribe(footerEvent)
             })
             .store(in: &_bag)
 
