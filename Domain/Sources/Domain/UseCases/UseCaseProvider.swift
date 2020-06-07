@@ -7,10 +7,11 @@
 //
 
 import Foundation
+import Combine
 
 public protocol UseCaseProvider {
     func makeMenuUseCase() -> MenuUseCase
-    func makeIngredientsService(pizza: Pizza) -> IngredientsUseCase
+    func makeIngredientsService(pizza: AnyPublisher<Pizza, Never>) -> IngredientsUseCase
     func makeCartService() -> CartUseCase
     func makeDrinsService() -> DrinksUseCase
     func makeSaveService() -> SaveUseCase

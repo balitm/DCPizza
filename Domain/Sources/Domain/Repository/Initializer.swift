@@ -32,6 +32,31 @@ final class Initializer {
         self.container = container
         self.network = network
 
+        let subscriber = AnySubscriber<(image: Image?, index: Int), Never>(receiveSubscription: {
+            $0.request(.unlimited)
+            DLog("Recived subscription: ", type(of: $0))
+        }, receiveValue: { [unowned self] value in
+            self.$component
+                .compactMap({ try? $0.get() })
+                .first()
+                .map({ component in
+                    DLog("insert image to: ", value.index)
+                    let pizza = component.pizzas.pizzas[value.index]
+                    var pizzas = component.pizzas.pizzas
+                    pizzas[value.index] = Pizza(copy: pizza, image: value.image)
+                    let all = Pizzas(pizzas: pizzas, basePrice: component.pizzas.basePrice)
+                    return ComponentsResult.success(
+                        Components(pizzas: all, ingredients: component.ingredients, drinks: component.drinks)
+                    )
+                })
+                .assign(to: \.component, on: self)
+                .store(in: &self._bag)
+
+            return .unlimited
+        }, receiveCompletion: {
+            DLog("Received completion: ", $0)
+        })
+
         _bag = [
             // Get components.
             Publishers.Zip3(network.getPizzas(),
@@ -53,9 +78,10 @@ final class Initializer {
             // Download pizza images.
             $component
                 .compactMap({ try? $0.get() })
-                .sink(receiveValue: { components in
-                    components.pizzas.pizzas.forEach { pizza in
-                        guard let imageUrl = pizza.imageUrl else { return }
+                .first()
+                .sink(receiveValue: { component in
+                    component.pizzas.pizzas.enumerated().forEach { item in
+                        guard let imageUrl = item.element.imageUrl else { return }
                         let downloader = API.ImageDownloader(path: imageUrl.absoluteString)
                         downloader.cmb.perform()
                             .map({ $0 as Image? })
@@ -66,22 +92,22 @@ final class Initializer {
 //                            .handleEvents(receiveOutput: {
 //                                DLog("Inserting ", $0 == nil ? "nil" : "not nil")
 //                            })
-                            .subscribe(AnySubscriber(pizza.image_))
+                            .map({ ($0, item.offset) })
+                            .subscribe(subscriber)
                     }
                 }),
 
             // Init card.
             $component
-                .subscribe(on: DispatchQueue.global(qos: .default))
-                .map({ [weak container] comp -> Cart in
-                    guard case let ComponentsResult.success(c) = comp else { return Cart.empty }
-
+                .compactMap({ try? $0.get() })
+                .first()
+                .map({ [weak container] c -> Cart in
+                    DLog("###### init card. #########")
                     let dsCart = container?.values(DS.Cart.self).first ?? DS.Cart(pizzas: [], drinks: [])
                     var cart = dsCart.asDomain(with: c.ingredients, drinks: c.drinks)
                     cart.basePrice = c.pizzas.basePrice
                     return cart
                 })
-                .receive(on: RunLoop.main)
                 .assign(to: \.cart, on: self),
         ]
     }

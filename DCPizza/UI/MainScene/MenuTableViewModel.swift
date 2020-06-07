@@ -19,7 +19,7 @@ final class MenuTableViewModel: ViewModelType {
 
     struct Output {
         let tableData: AnyPublisher<[MenuCellViewModel], Never>
-        let selection: AnyPublisher<Pizza, Never>
+        let selection: AnyPublisher<AnyPublisher<Pizza, Never>, Never>
         let showAdded: AnyPublisher<Void, Never>
     }
 
@@ -41,14 +41,17 @@ final class MenuTableViewModel: ViewModelType {
                     return nil
                 }
             })
-            .subscribe(AnySubscriber(cachedPizzas))
+            .subscribe(cachedPizzas)
+            .store(in: &_bag)
 
         let viewModels = cachedPizzas
+            .throttle(for: 0.4, scheduler: RunLoop.current, latest: true)
             .map({ pizzas -> [MenuCellViewModel] in
                 let basePrice = pizzas.basePrice
                 let vms = pizzas.pizzas.map {
                     MenuCellViewModel(basePrice: basePrice, pizza: $0)
                 }
+                DLog("############## update pizza vms. #########")
                 return vms
             })
             .share()
@@ -75,15 +78,15 @@ final class MenuTableViewModel: ViewModelType {
 
         // A pizza is selected.
         let selected = input.selected
-            .flatMap({ selected in
+            .map({ index in
                 cachedPizzas
-                    .first()
-                    .map({ $0.pizzas[selected] })
+                    .map({ $0.pizzas[index] })
+                    .eraseToAnyPublisher()
             })
 
         // Pizza from scratch is selected.
         let scratch = input.scratch
-            .map({ Pizza() })
+            .map({ Just(Pizza()).eraseToAnyPublisher() })
 
         let selection = selected.merge(with: scratch)
 

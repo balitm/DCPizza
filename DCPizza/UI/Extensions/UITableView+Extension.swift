@@ -57,6 +57,14 @@ extension UITableView {
     }
 }
 
+extension TableViewItemsController {
+    convenience init<C>(_ cellType: C.Type) where C: UITableViewCell & CellViewModelProtocol, Element == C.ViewModel {
+        self.init { dataSource, tableView, indexPath, value in
+            tableView.createCell(cellType, value, indexPath)
+        }
+    }
+}
+
 // MARK: - Combine selection publisher
 
 extension UITableView: CombineCompatible {}

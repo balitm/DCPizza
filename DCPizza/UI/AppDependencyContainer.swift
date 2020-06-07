@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Combine
 import Domain
 
 class AppDependencyContainer {
@@ -38,7 +39,7 @@ class AppDependencyContainer {
         DrinksTableViewModel(service: drinksService)
     }
 
-    func makeIngredientsViewModel(pizza: Pizza) -> IngredientsViewModel {
+    func makeIngredientsViewModel(pizza: AnyPublisher<Pizza, Never>) -> IngredientsViewModel {
         let dependencyContainer = IngredientsDependencyContainer(appDependencyContainer: self, pizza: pizza)
         return dependencyContainer.makeIngredientsViewModel()
     }

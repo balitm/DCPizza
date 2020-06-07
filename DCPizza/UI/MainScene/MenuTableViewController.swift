@@ -58,12 +58,17 @@ final class MenuTableViewController: UITableViewController {
             scratch: rightPublisher
         ))
 
+        let tableController = TableViewItemsController<[[MenuCellViewModel]]>(MenuTableViewCell.self)
+        tableController.rowAnimations = (
+            insert: UITableView.RowAnimation.fade,
+            update: UITableView.RowAnimation.fade,
+            delete: UITableView.RowAnimation.none
+        )
+
         _bag = [
             // Table view data source.
             out.tableData
-                .bind(subscriber: tableView.rowsSubscriber(cellType: MenuTableViewCell.self, cellConfig: { cell, ip, model in
-                    cell.config(with: model)
-                })),
+                .bind(subscriber: tableView.rowsSubscriber(tableController)),
 
             // Show ingredients.
             out.selection
