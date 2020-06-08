@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import SwiftUI
 
 struct KColors {
     static let tint = UIColor(hex: 0xE14D45)
     static let barTint = UIColor.white
+
+    static let textColor = Color(hex: 0x4a4a4a)
 }
