@@ -22,7 +22,7 @@ struct MenuRow: View {
                 Spacer()
             }
             self.viewModel.image.map {
-                Image(uiImage: $0)
+                $0
             }
             VStack {
                 Spacer()
