@@ -13,13 +13,12 @@ struct MenuListView: View {
     @EnvironmentObject private var _viewModel: MenuTableViewModel
 
     init() {
-        // 2.
         UINavigationBar.appearance().largeTitleTextAttributes = [
             .foregroundColor: KColors.tint,
         ]
 
-        // 3.
         UINavigationBar.appearance().titleTextAttributes = [
+            .foregroundColor: KColors.tint,
             .font: UIFont.systemFont(ofSize: 17, weight: .heavy),
         ]
     }

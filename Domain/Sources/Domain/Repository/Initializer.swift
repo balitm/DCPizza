@@ -76,26 +76,26 @@ final class Initializer {
                 .assign(to: \.component, on: self),
 
             // Download pizza images.
-            $component
-                .compactMap({ try? $0.get() })
-                .first()
-                .sink(receiveValue: { component in
-                    component.pizzas.pizzas.enumerated().forEach { item in
-                        guard let imageUrl = item.element.imageUrl else { return }
-                        let downloader = API.ImageDownloader(path: imageUrl.absoluteString)
-                        downloader.cmb.perform()
-                            .map({ $0 as Image? })
-                            .catch({ error -> Just<Image?> in
-                                DLog("Error during image receiving: ", error)
-                                return Just<Image?>(nil)
-                            })
-//                            .handleEvents(receiveOutput: {
-//                                DLog("Inserting ", $0 == nil ? "nil" : "not nil")
+//            $component
+//                .compactMap({ try? $0.get() })
+//                .first()
+//                .sink(receiveValue: { component in
+//                    component.pizzas.pizzas.enumerated().forEach { item in
+//                        guard let imageUrl = item.element.imageUrl else { return }
+//                        let downloader = API.ImageDownloader(path: imageUrl.absoluteString)
+//                        downloader.cmb.perform()
+//                            .map({ $0 as Image? })
+//                            .catch({ error -> Just<Image?> in
+//                                DLog("Error during image receiving: ", error)
+//                                return Just<Image?>(nil)
 //                            })
-                            .map({ ($0, item.offset) })
-                            .subscribe(subscriber)
-                    }
-                }),
+            ////                            .handleEvents(receiveOutput: {
+            ////                                DLog("Inserting ", $0 == nil ? "nil" : "not nil")
+            ////                            })
+//                            .map({ ($0, item.offset) })
+//                            .subscribe(subscriber)
+//                    }
+//                }),
 
             // Init card.
             $component
