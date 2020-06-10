@@ -11,7 +11,7 @@ import Domain
 import struct SwiftUI.Image
 import Combine
 
-struct MenuCellViewModel {
+struct MenuRowViewModel {
     let nameText: String
     let ingredientsText: String
     let priceText: String
@@ -29,20 +29,6 @@ struct MenuCellViewModel {
     }
 }
 
-// extension MenuCellViewModel: Hashable {
-//    static func ==(lhs: MenuCellViewModel, rhs: MenuCellViewModel) -> Bool {
-//        lhs.nameText == rhs.nameText
-//            && lhs.image == rhs.image
-//    }
-//
-//    func hash(into hasher: inout Hasher) {
-//        hasher.combine(nameText.hash)
-//        if let image = image {
-//            hasher.combine(image.hash)
-//        }
-//    }
-// }
-
-extension MenuCellViewModel: Identifiable {
+extension MenuRowViewModel: Identifiable {
     var id: String { nameText }
 }

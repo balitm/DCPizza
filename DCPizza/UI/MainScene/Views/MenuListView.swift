@@ -10,7 +10,7 @@ import SwiftUI
 import Domain
 
 struct MenuListView: View {
-    @EnvironmentObject private var _viewModel: MenuTableViewModel
+    @EnvironmentObject private var _viewModel: MenuListViewModel
 
     init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [
@@ -25,8 +25,11 @@ struct MenuListView: View {
 
     var body: some View {
         NavigationView {
-            List(_viewModel.tableData) { vm in
-                MenuRow(viewModel: vm)
+            List {
+                ForEach(_viewModel.tableData) { vm in
+                    MenuRow(viewModel: vm)
+                        .listRowInsets(EdgeInsets())
+                }
             }
             .navigationBarTitle(Text("NENNO'S PIZZA"))
         }
@@ -36,7 +39,7 @@ struct MenuListView: View {
 struct MenuListView_Previews: PreviewProvider {
     static var previews: some View {
         let service = NetworklessUseCaseProvider().makeMenuUseCase()
-        let viewModel = MenuTableViewModel(service: service)
+        let viewModel = MenuListViewModel(service: service)
 
         return MenuListView()
             .environmentObject(viewModel)

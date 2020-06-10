@@ -39,10 +39,10 @@
 		295DC8BE24910C0C00E0591F /* UIGestureRecognizer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC89124910C0C00E0591F /* UIGestureRecognizer+Extension.swift */; };
 		295DC8BF24910C0C00E0591F /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC89224910C0C00E0591F /* Color+Extension.swift */; };
 		295DC8C024910C0C00E0591F /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC89324910C0C00E0591F /* UIColor+Extensions.swift */; };
-		295DC8C124910C0C00E0591F /* MenuCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC89624910C0C00E0591F /* MenuCellViewModel.swift */; };
+		295DC8C124910C0C00E0591F /* MenuRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC89624910C0C00E0591F /* MenuRowViewModel.swift */; };
 		295DC8C224910C0C00E0591F /* MenuListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC89824910C0C00E0591F /* MenuListView.swift */; };
 		295DC8C324910C0C00E0591F /* MenuRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC89924910C0C00E0591F /* MenuRow.swift */; };
-		295DC8C424910C0C00E0591F /* MenuTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC89A24910C0C00E0591F /* MenuTableViewModel.swift */; };
+		295DC8C424910C0C00E0591F /* MenuListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC89A24910C0C00E0591F /* MenuListViewModel.swift */; };
 		295DC8C524910C0C00E0591F /* DrinksTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC89C24910C0C00E0591F /* DrinksTableViewController.swift */; };
 		295DC8C624910C0C00E0591F /* DrinksTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC89D24910C0C00E0591F /* DrinksTableViewModel.swift */; };
 		295DC8C724910C0C00E0591F /* DrinkCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC89F24910C0C00E0591F /* DrinkCellViewModel.swift */; };
@@ -102,10 +102,10 @@
 		295DC89124910C0C00E0591F /* UIGestureRecognizer+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIGestureRecognizer+Extension.swift"; sourceTree = "<group>"; };
 		295DC89224910C0C00E0591F /* Color+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
 		295DC89324910C0C00E0591F /* UIColor+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
-		295DC89624910C0C00E0591F /* MenuCellViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuCellViewModel.swift; sourceTree = "<group>"; };
+		295DC89624910C0C00E0591F /* MenuRowViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuRowViewModel.swift; sourceTree = "<group>"; };
 		295DC89824910C0C00E0591F /* MenuListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuListView.swift; sourceTree = "<group>"; };
 		295DC89924910C0C00E0591F /* MenuRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuRow.swift; sourceTree = "<group>"; };
-		295DC89A24910C0C00E0591F /* MenuTableViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewModel.swift; sourceTree = "<group>"; };
+		295DC89A24910C0C00E0591F /* MenuListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuListViewModel.swift; sourceTree = "<group>"; };
 		295DC89C24910C0C00E0591F /* DrinksTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrinksTableViewController.swift; sourceTree = "<group>"; };
 		295DC89D24910C0C00E0591F /* DrinksTableViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrinksTableViewModel.swift; sourceTree = "<group>"; };
 		295DC89F24910C0C00E0591F /* DrinkCellViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrinkCellViewModel.swift; sourceTree = "<group>"; };
@@ -269,7 +269,6 @@
 			children = (
 				295DC89724910C0C00E0591F /* Views */,
 				295DC89524910C0C00E0591F /* ViewModels */,
-				295DC89A24910C0C00E0591F /* MenuTableViewModel.swift */,
 			);
 			path = MainScene;
 			sourceTree = "<group>";
@@ -277,7 +276,8 @@
 		295DC89524910C0C00E0591F /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				295DC89624910C0C00E0591F /* MenuCellViewModel.swift */,
+				295DC89A24910C0C00E0591F /* MenuListViewModel.swift */,
+				295DC89624910C0C00E0591F /* MenuRowViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -492,7 +492,7 @@
 				295DC8B624910C0C00E0591F /* IngredientsHeaderCellViewModel.swift in Sources */,
 				295DC8C524910C0C00E0591F /* DrinksTableViewController.swift in Sources */,
 				295DC8A924910C0C00E0591F /* ViewModelType.swift in Sources */,
-				295DC8C424910C0C00E0591F /* MenuTableViewModel.swift in Sources */,
+				295DC8C424910C0C00E0591F /* MenuListViewModel.swift in Sources */,
 				295DC8B924910C0C00E0591F /* IngredientsViewModel.swift in Sources */,
 				295DC8AE24910C0C00E0591F /* CartTotalCellViewModel.swift in Sources */,
 				295DC8B024910C0C00E0591F /* CartItemTableViewCell.swift in Sources */,
@@ -511,7 +511,7 @@
 				295DC8B824910C0C00E0591F /* IngredientsHeaderTableViewCell.swift in Sources */,
 				295DC8C024910C0C00E0591F /* UIColor+Extensions.swift in Sources */,
 				295DC8C624910C0C00E0591F /* DrinksTableViewModel.swift in Sources */,
-				295DC8C124910C0C00E0591F /* MenuCellViewModel.swift in Sources */,
+				295DC8C124910C0C00E0591F /* MenuRowViewModel.swift in Sources */,
 				295DC8AC24910C0C00E0591F /* PaddingCellViewModel.swift in Sources */,
 				295DC8AA24910C0C00E0591F /* AddedViewController.swift in Sources */,
 				295DC8AD24910C0C00E0591F /* CartItemCellViewModel.swift in Sources */,

@@ -21,8 +21,8 @@ class AppDependencyContainer {
         drinksService = provider.makeDrinksService()
     }
 
-    func makeMenuTableViewModel() -> MenuTableViewModel {
-        MenuTableViewModel(service: menuService)
+    func makeMenuListViewModel() -> MenuListViewModel {
+        MenuListViewModel(service: menuService)
     }
 
     func makeNavigator(by viewController: UIViewController) -> Navigator {

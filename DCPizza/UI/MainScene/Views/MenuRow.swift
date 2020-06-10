@@ -10,22 +10,28 @@ import SwiftUI
 import Domain
 
 struct MenuRow: View {
-    let viewModel: MenuCellViewModel
+    let viewModel: MenuRowViewModel
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .top) {
             VStack {
                 Image("bg_wood")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(height: 128)
+                    .clipped()
                 Spacer()
             }
             self.viewModel.image.map {
                 $0
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(height: 179)
+                    .clipped()
             }
             VStack {
                 Spacer()
+                    .frame(height: 109)
                 HStack {
                     VStack(alignment: .leading) {
                         HStack {
@@ -62,6 +68,7 @@ struct MenuRow: View {
                 .background(Blur(style: .systemMaterialLight))
             }
         }
+//        .frame(height: 179)
     }
 }
 
@@ -69,8 +76,8 @@ struct MenuRow_Previews: PreviewProvider {
     static var previews: some View {
         let pizzas = PizzaData.pizzas
         return Group {
-            MenuRow(viewModel: MenuCellViewModel(basePrice: pizzas.basePrice, pizza: pizzas.pizzas[0]))
-            MenuRow(viewModel: MenuCellViewModel(basePrice: pizzas.basePrice, pizza: pizzas.pizzas[1]))
+            MenuRow(viewModel: MenuRowViewModel(basePrice: pizzas.basePrice, pizza: pizzas.pizzas[0]))
+            MenuRow(viewModel: MenuRowViewModel(basePrice: pizzas.basePrice, pizza: pizzas.pizzas[1]))
         }
         .previewLayout(.fixed(width: 300, height: 179))
     }

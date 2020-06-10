@@ -11,13 +11,13 @@ import Domain
 import Combine
 import struct SwiftUI.Image
 
-final class MenuTableViewModel: ObservableObject {
+final class MenuListViewModel: ObservableObject {
     // Input
     @Published var selected = -1
     @Published var scratch: Void = ()
 
     // Output
-    @Published var tableData = [MenuCellViewModel]()
+    @Published var tableData = [MenuRowViewModel]()
 //    @Published var selection: AnyPublisher<AnyPublisher<Pizza, Never>, Never>
 //    @Published var showAdded: AnyPublisher<Void, Never>
 
@@ -40,10 +40,10 @@ final class MenuTableViewModel: ObservableObject {
 
         cachedPizzas
             .throttle(for: 0.4, scheduler: RunLoop.current, latest: true)
-            .map({ pizzas -> [MenuCellViewModel] in
+            .map({ pizzas -> [MenuRowViewModel] in
                 let basePrice = pizzas.basePrice
                 let vms = pizzas.pizzas.map {
-                    MenuCellViewModel(basePrice: basePrice, pizza: $0)
+                    MenuRowViewModel(basePrice: basePrice, pizza: $0)
                 }
                 DLog("############## update pizza vms. #########")
                 return vms
@@ -56,10 +56,10 @@ final class MenuTableViewModel: ObservableObject {
 //
 //        let viewModels = cachedPizzas
 //            .throttle(for: 0.4, scheduler: RunLoop.current, latest: true)
-//            .map({ pizzas -> [MenuCellViewModel] in
+//            .map({ pizzas -> [MenuRowViewModel] in
 //                let basePrice = pizzas.basePrice
 //                let vms = pizzas.pizzas.map {
-//                    MenuCellViewModel(basePrice: basePrice, pizza: $0)
+//                    MenuRowViewModel(basePrice: basePrice, pizza: $0)
 //                }
 //                DLog("############## update pizza vms. #########")
 //                return vms
