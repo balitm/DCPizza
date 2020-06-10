@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import class AlamofireImage.Image
 
 struct TestNetUseCase: NetworkProtocol {
     private func _publish<T: Decodable>(_ data: T) -> AnyPublisher<T, API.ErrorType> {
@@ -23,6 +24,10 @@ struct TestNetUseCase: NetworkProtocol {
 
     func getPizzas() -> AnyPublisher<DS.Pizzas, API.ErrorType> {
         _publish(PizzaData.dsPizzas)
+    }
+
+    func getImage(url: URL) -> AnyPublisher<Image, API.ErrorType> {
+        Empty<Image, API.ErrorType>().eraseToAnyPublisher()
     }
 
     func checkout(cart: DS.Cart) -> AnyPublisher<Void, API.ErrorType> {

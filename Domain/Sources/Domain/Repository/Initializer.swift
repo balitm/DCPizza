@@ -82,8 +82,7 @@ final class Initializer {
                 .sink(receiveValue: { component in
                     component.pizzas.pizzas.enumerated().forEach { item in
                         guard let imageUrl = item.element.imageUrl else { return }
-                        let downloader = API.ImageDownloader(path: imageUrl.absoluteString)
-                        downloader.cmb.perform()
+                        network.getImage(url: imageUrl)
                             .map({ $0 as Image? })
                             .catch({ error -> Just<Image?> in
                                 DLog("Error during image receiving: ", error)
