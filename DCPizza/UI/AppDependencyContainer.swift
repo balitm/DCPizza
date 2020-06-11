@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 import Combine
 import Domain
 
@@ -19,6 +20,12 @@ class AppDependencyContainer {
         provider = RepositoryUseCaseProvider()
         menuService = provider.makeMenuService()
         drinksService = provider.makeDrinksService()
+    }
+
+    func makeMenuView() -> some View {
+        let mv = makeMenuListViewModel()
+        return MenuListView()
+            .environmentObject(mv)
     }
 
     func makeMenuListViewModel() -> MenuListViewModel {

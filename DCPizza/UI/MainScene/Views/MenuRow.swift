@@ -10,7 +10,7 @@ import SwiftUI
 import Domain
 
 struct MenuRow: View {
-    let viewModel: MenuRowViewModel
+    var viewModel: MenuRowViewModel
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -46,7 +46,9 @@ struct MenuRow: View {
                     }
                     Spacer()
                         .frame(width: 30)
-                    Button(action: {}) {
+                    Button(action: {
+                        self.viewModel.addToCart()
+                    }) {
                         HStack {
                             Image("ic_cart_button")
                                 .resizable()
@@ -63,12 +65,12 @@ struct MenuRow: View {
                         .background(RoundedRectangle(cornerRadius: 8)
                             .fill(Color(hex: 0xFFCD2B)))
                     }
+                    .buttonStyle(BorderlessButtonStyle())
                 }
                 .padding()
                 .background(Blur(style: .systemMaterialLight))
             }
         }
-//        .frame(height: 179)
     }
 }
 
@@ -76,8 +78,8 @@ struct MenuRow_Previews: PreviewProvider {
     static var previews: some View {
         let pizzas = PizzaData.pizzas
         return Group {
-            MenuRow(viewModel: MenuRowViewModel(basePrice: pizzas.basePrice, pizza: pizzas.pizzas[0]))
-            MenuRow(viewModel: MenuRowViewModel(basePrice: pizzas.basePrice, pizza: pizzas.pizzas[1]))
+            MenuRow(viewModel: MenuRowViewModel(index: 0, basePrice: pizzas.basePrice, pizza: pizzas.pizzas[0]))
+            MenuRow(viewModel: MenuRowViewModel(index: 1, basePrice: pizzas.basePrice, pizza: pizzas.pizzas[1]))
         }
         .previewLayout(.fixed(width: 300, height: 179))
     }

@@ -1,0 +1,33 @@
+//
+//  AddedView.swift
+//  DCPizza
+//
+//  Created by Balázs Kilvády on 6/12/20.
+//  Copyright © 2020 kil-dev. All rights reserved.
+//
+
+import SwiftUI
+
+struct AddedView: View {
+    var body: some View {
+        GeometryReader { proxy in
+            VStack {
+                Text("ADDED TO CART")
+                    .font(.system(size: 12, weight: .semibold))
+                    .frame(width: proxy.size.width, height: 20)
+                    .background(KColors.cTint)
+                Spacer()
+            }
+            .padding(0)
+            .background(Color(white: 1, opacity: 0.5))
+        }
+//        .edgesIgnoringSafeArea(.all)
+//        .navigationBarBackButtonHidden(true)
+    }
+}
+
+struct AddedView_Previews: PreviewProvider {
+    static var previews: some View {
+        AddedView()
+    }
+}

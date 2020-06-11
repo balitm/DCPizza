@@ -12,27 +12,26 @@ import Domain
 struct MenuListView: View {
     @EnvironmentObject private var _viewModel: MenuListViewModel
 
-    init() {
-        UINavigationBar.appearance().largeTitleTextAttributes = [
-            .foregroundColor: KColors.tint,
-        ]
-
-        UINavigationBar.appearance().titleTextAttributes = [
-            .foregroundColor: KColors.tint,
-            .font: UIFont.systemFont(ofSize: 17, weight: .heavy),
-        ]
-    }
-
     var body: some View {
         NavigationView {
             List {
-                ForEach(_viewModel.tableData) { vm in
-                    MenuRow(viewModel: vm)
-                        .listRowInsets(EdgeInsets())
+                ForEach(_viewModel.listData) { vm in
+                    ZStack {
+                        MenuRow(viewModel: vm)
+                        NavigationLink(destination: AddedView()) {
+                            EmptyView()
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                    .listRowInsets(EdgeInsets())
                 }
             }
             .navigationBarTitle(Text("NENNO'S PIZZA"))
+            .sheet(isPresented: $_viewModel.showAdded) {
+                AddedView()
+            }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 

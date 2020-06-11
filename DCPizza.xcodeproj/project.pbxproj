@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		29374E662494059E001D83AD /* AddedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29374E652494059E001D83AD /* AddedView.swift */; };
 		295DC86924910A5800E0591F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 295DC86724910A5800E0591F /* Main.storyboard */; };
 		295DC8A224910C0C00E0591F /* Navigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC86B24910C0C00E0591F /* Navigator.swift */; };
 		295DC8A324910C0C00E0591F /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC86D24910C0C00E0591F /* SuccessViewController.swift */; };
@@ -70,6 +71,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		29374E652494059E001D83AD /* AddedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddedView.swift; sourceTree = "<group>"; };
 		295DC86824910A5800E0591F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		295DC86B24910C0C00E0591F /* Navigator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Navigator.swift; sourceTree = "<group>"; };
 		295DC86D24910C0C00E0591F /* SuccessViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				295DC87624910C0C00E0591F /* AddedViewController.swift */,
+				29374E652494059E001D83AD /* AddedView.swift */,
 			);
 			path = AddedScene;
 			sourceTree = "<group>";
@@ -494,6 +497,7 @@
 				295DC8A924910C0C00E0591F /* ViewModelType.swift in Sources */,
 				295DC8C424910C0C00E0591F /* MenuListViewModel.swift in Sources */,
 				295DC8B924910C0C00E0591F /* IngredientsViewModel.swift in Sources */,
+				29374E662494059E001D83AD /* AddedView.swift in Sources */,
 				295DC8AE24910C0C00E0591F /* CartTotalCellViewModel.swift in Sources */,
 				295DC8B024910C0C00E0591F /* CartItemTableViewCell.swift in Sources */,
 				295DC8B424910C0C00E0591F /* IngredientsDependencyContainer.swift in Sources */,

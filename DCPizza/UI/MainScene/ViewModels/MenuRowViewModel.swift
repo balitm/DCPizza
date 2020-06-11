@@ -11,15 +11,18 @@ import Domain
 import struct SwiftUI.Image
 import Combine
 
-struct MenuRowViewModel {
+final class MenuRowViewModel: ObservableObject {
+    @Published var tap = -1
+
+    let index: Int
     let nameText: String
     let ingredientsText: String
     let priceText: String
     let image: Image?
     let url: URL?
-    let tap = PassthroughSubject<Void, Never>()
 
-    init(basePrice: Double, pizza: Pizza) {
+    init(index: Int, basePrice: Double, pizza: Pizza) {
+        self.index = index
         nameText = pizza.name
         let price = pizza.price(from: basePrice)
         priceText = format(price: price)
@@ -27,8 +30,12 @@ struct MenuRowViewModel {
         image = pizza.image.map { Image(uiImage: $0) }
         url = pizza.imageUrl
     }
+
+    func addToCart() {
+        tap = index
+    }
 }
 
 extension MenuRowViewModel: Identifiable {
-    var id: String { nameText }
+    var id: Int { index + (image != nil ? 0x10 : 0) }
 }

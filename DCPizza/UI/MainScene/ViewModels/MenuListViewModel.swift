@@ -17,15 +17,16 @@ final class MenuListViewModel: ObservableObject {
     @Published var scratch: Void = ()
 
     // Output
-    @Published var tableData = [MenuRowViewModel]()
+    @Published var listData = [MenuRowViewModel]()
 //    @Published var selection: AnyPublisher<AnyPublisher<Pizza, Never>, Never>
-//    @Published var showAdded: AnyPublisher<Void, Never>
+    @Published var showAdded = false
 
     private var _bag = Set<AnyCancellable>()
 
     init(service: MenuUseCase) {
         let cachedPizzas = CurrentValueRelay(Pizzas.empty)
 
+        // Cache pizzas.
         service.pizzas()
             .compactMap({
                 switch $0 {
@@ -38,17 +39,39 @@ final class MenuListViewModel: ObservableObject {
             .subscribe(cachedPizzas)
             .store(in: &_bag)
 
+        // Fill up listData.
         cachedPizzas
             .throttle(for: 0.4, scheduler: RunLoop.current, latest: true)
             .map({ pizzas -> [MenuRowViewModel] in
                 let basePrice = pizzas.basePrice
-                let vms = pizzas.pizzas.map {
-                    MenuRowViewModel(basePrice: basePrice, pizza: $0)
+                let vms = pizzas.pizzas.enumerated().map {
+                    MenuRowViewModel(index: $0.offset, basePrice: basePrice, pizza: $0.element)
                 }
                 DLog("############## update pizza vms. #########")
                 return vms
             })
-            .assign(to: \.tableData, on: self)
+            .assign(to: \.listData, on: self)
+            .store(in: &_bag)
+
+        let cartEvents = $listData
+            .map({ vms in
+                vms.map({
+                    $0.$tap
+                        .dropFirst()
+                })
+            })
+            .flatMap({
+                Publishers.MergeMany($0)
+            })
+
+        // Update cart on add events.
+        cartEvents.combineLatest(cachedPizzas)
+            .flatMap({ (pair: (index: Int, pizzas: Pizzas)) in
+                service.addToCart(pizza: pair.pizzas.pizzas[pair.index])
+                    .catch({ _ in Empty<Void, Never>() })
+                    .map({ true })
+            })
+            .assign(to: \.showAdded, on: self)
             .store(in: &_bag)
     }
 
