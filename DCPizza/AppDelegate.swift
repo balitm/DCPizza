@@ -26,6 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             .font: UIFont.systemFont(ofSize: 17, weight: .heavy),
         ]
 
+        UINavigationBar.appearance().tintColor = KColors.tint
+
         return true
     }
 

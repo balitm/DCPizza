@@ -13,7 +13,6 @@ import Combine
 protocol Navigator {
     var storyboard: UIStoryboard { get }
 
-    func showIngredients(of pizza: AnyPublisher<Pizza, Never>)
     func showCart()
     func showDrinks()
     func showAdded()
@@ -31,12 +30,6 @@ final class DefaultNavigator: Navigator {
         self.storyboard = storyboard
         _navigationController = navigationController
         _dependencyContainer = dependencyContainer
-    }
-
-    func showIngredients(of pizza: AnyPublisher<Pizza, Never>) {
-        let vm = _dependencyContainer.makeIngredientsViewModel(pizza: pizza)
-        let vc = IngredientsViewController.create(with: self, viewModel: vm)
-        _navigationController.pushViewController(vc, animated: true)
     }
 
     func showCart() {

@@ -7,10 +7,12 @@
 //
 
 import SwiftUI
+import Combine
 import Domain
 
 struct MenuListView: View {
     @EnvironmentObject private var _viewModel: MenuListViewModel
+    let ingredientsFactory: AppDependencyContainer
 
     var body: some View {
         NavigationView {
@@ -18,7 +20,12 @@ struct MenuListView: View {
                 ForEach(_viewModel.listData) { vm in
                     ZStack {
                         MenuRow(viewModel: vm)
-                        NavigationLink(destination: AddedView()) {
+                        NavigationLink(destination:
+                            self.ingredientsFactory
+                                .makeIngredientsView(
+                                    pizza: self._viewModel.pizza(at: vm.index)
+                                )
+                        ) {
                             EmptyView()
                         }
                         .buttonStyle(PlainButtonStyle())
@@ -26,12 +33,11 @@ struct MenuListView: View {
                     .listRowInsets(EdgeInsets())
                 }
             }
-            .navigationBarTitle(Text("NENNO'S PIZZA"))
+            .navigationBarTitle("NENNO'S PIZZA")
             .sheet(isPresented: $_viewModel.showAdded) {
                 AddedView()
             }
         }
-        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 
@@ -40,7 +46,7 @@ struct MenuListView_Previews: PreviewProvider {
         let service = NetworklessUseCaseProvider().makeMenuUseCase()
         let viewModel = MenuListViewModel(service: service)
 
-        return MenuListView()
+        return MenuListView(ingredientsFactory: AppDependencyContainer())
             .environmentObject(viewModel)
     }
 }

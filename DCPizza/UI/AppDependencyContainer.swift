@@ -23,19 +23,13 @@ class AppDependencyContainer {
     }
 
     func makeMenuView() -> some View {
+        func makeMenuListViewModel() -> MenuListViewModel {
+            MenuListViewModel(service: menuService)
+        }
+
         let mv = makeMenuListViewModel()
-        return MenuListView()
+        return MenuListView(ingredientsFactory: self)
             .environmentObject(mv)
-    }
-
-    func makeMenuListViewModel() -> MenuListViewModel {
-        MenuListViewModel(service: menuService)
-    }
-
-    func makeNavigator(by viewController: UIViewController) -> Navigator {
-        DefaultNavigator(storyboard: viewController.storyboard!,
-                         navigationController: viewController.navigationController!,
-                         dependencyContainer: self)
     }
 
     func makeCartViewModel() -> CartViewModel {
@@ -46,9 +40,15 @@ class AppDependencyContainer {
         DrinksTableViewModel(service: drinksService)
     }
 
-    func makeIngredientsViewModel(pizza: AnyPublisher<Pizza, Never>) -> IngredientsViewModel {
-        let dependencyContainer = IngredientsDependencyContainer(appDependencyContainer: self, pizza: pizza)
-        return dependencyContainer.makeIngredientsViewModel()
+    // Ingredients.
+
+    func makeIngredientsView(pizza: AnyPublisher<Pizza, Never>) -> some View {
+        let dependencyContainer = makeIngredientsDependencyContainer(pizza: pizza)
+        return dependencyContainer.makeIngredientsView()
+    }
+
+    public func makeIngredientsDependencyContainer(pizza: AnyPublisher<Pizza, Never>) -> IngredientsDependencyContainer {
+        IngredientsDependencyContainer(appDependencyContainer: self, pizza: pizza)
     }
 
     func makeSaveService() -> SaveUseCase {

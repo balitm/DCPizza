@@ -15,4 +15,5 @@ struct KColors {
 
     static let textColor = Color(hex: 0x4a4a4a)
     static let cTint = Color(hex: 0xE14D45)
+    static let yellow = Color(hex: 0xFFCD2B)
 }

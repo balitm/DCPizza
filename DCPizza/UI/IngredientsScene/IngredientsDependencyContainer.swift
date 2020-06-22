@@ -6,8 +6,8 @@
 //  Copyright © 2020 kil-dev. All rights reserved.
 //
 
-import Foundation
 import Combine
+import SwiftUI
 import Domain
 
 class IngredientsDependencyContainer {
@@ -19,7 +19,9 @@ class IngredientsDependencyContainer {
         service = provider.makeIngredientsService(pizza: pizza)
     }
 
-    func makeIngredientsViewModel() -> IngredientsViewModel {
-        IngredientsViewModel(service: service)
+    func makeIngredientsView() -> some View {
+        let vm = IngredientsViewModel(service: service)
+        return IngredientsListView()
+            .environmentObject(vm)
     }
 }
