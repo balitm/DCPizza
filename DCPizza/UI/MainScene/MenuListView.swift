@@ -34,6 +34,12 @@ struct MenuListView: View {
                 }
             }
             .navigationBarTitle("NENNO'S PIZZA")
+            .navigationBarItems(trailing: NavigationLink(destination:
+                self.ingredientsFactory
+                    .makeIngredientsView(pizza: Just(Pizza()).eraseToAnyPublisher())
+            ) {
+                Image(systemName: "plus")
+            })
             .sheet(isPresented: $_viewModel.showAdded) {
                 AddedView()
             }

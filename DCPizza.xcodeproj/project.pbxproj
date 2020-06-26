@@ -272,6 +272,8 @@
 			children = (
 				295DC89724910C0C00E0591F /* Views */,
 				295DC89524910C0C00E0591F /* ViewModels */,
+				295DC89824910C0C00E0591F /* MenuListView.swift */,
+				295DC89A24910C0C00E0591F /* MenuListViewModel.swift */,
 			);
 			path = MainScene;
 			sourceTree = "<group>";
@@ -279,7 +281,6 @@
 		295DC89524910C0C00E0591F /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				295DC89A24910C0C00E0591F /* MenuListViewModel.swift */,
 				295DC89624910C0C00E0591F /* MenuRowViewModel.swift */,
 			);
 			path = ViewModels;
@@ -288,7 +289,6 @@
 		295DC89724910C0C00E0591F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				295DC89824910C0C00E0591F /* MenuListView.swift */,
 				295DC89924910C0C00E0591F /* MenuRow.swift */,
 			);
 			path = Views;
