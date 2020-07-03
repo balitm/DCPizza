@@ -9,11 +9,16 @@
 import SwiftUI
 import Combine
 import Domain
+import Resolver
 
 struct IngredientsListView: View {
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
-    @EnvironmentObject private var _viewModel: IngredientsViewModel
+    @ObservedObject private var _viewModel: IngredientsViewModel
     @State private var _isShowFooter = false
+
+    init(viewModel: IngredientsViewModel) {
+        _viewModel = viewModel
+    }
 
     var body: some View {
         GeometryReader { geometry in
@@ -34,6 +39,7 @@ struct IngredientsListView: View {
                 if self._isShowFooter {
                     FooterView(geometry: geometry)
                         .transition(.move(edge: .bottom))
+                        .environmentObject(self._viewModel)
                 }
             }
         }
@@ -85,12 +91,8 @@ struct FooterView: View {
 
 struct IngredientsListView_Previews: PreviewProvider {
     static var previews: some View {
-        let service = NetworklessUseCaseProvider().makeIngredientsService(
-            pizza: Just(PizzaData.pizzas.pizzas[0]).eraseToAnyPublisher()
-        )
-        let viewModel = IngredientsViewModel(service: service)
-
-        return IngredientsListView()
-            .environmentObject(viewModel)
+        Resolver.switchToNetworkless()
+        let pizza = Just(PizzaData.pizzas.pizzas[0]).eraseToAnyPublisher()
+        return Resolver.resolve(IngredientsListView.self, args: pizza)
     }
 }

@@ -9,10 +9,14 @@
 import SwiftUI
 import Combine
 import Domain
+import Resolver
 
-struct MenuListView: View {
-    @EnvironmentObject private var _viewModel: MenuListViewModel
-    let ingredientsFactory: AppDependencyContainer
+struct MenuListView: View, Resolving {
+    @ObservedObject private var _viewModel: MenuListViewModel
+
+    init(viewModel: MenuListViewModel) {
+        _viewModel = viewModel
+    }
 
     var body: some View {
         NavigationView {
@@ -21,10 +25,10 @@ struct MenuListView: View {
                     ZStack {
                         MenuRow(viewModel: vm)
                         NavigationLink(destination:
-                            self.ingredientsFactory
-                                .makeIngredientsView(
-                                    pizza: self._viewModel.pizza(at: vm.index)
-                                )
+                            self.resolver.resolve(
+                                IngredientsListView.self,
+                                args: self._viewModel.pizza(at: vm.index)
+                            )
                         ) {
                             EmptyView()
                         }
@@ -35,8 +39,8 @@ struct MenuListView: View {
             }
             .navigationBarTitle("NENNO'S PIZZA")
             .navigationBarItems(trailing: NavigationLink(destination:
-                self.ingredientsFactory
-                    .makeIngredientsView(pizza: Just(Pizza()).eraseToAnyPublisher())
+                resolver.resolve(IngredientsListView.self,
+                                 args: Just(Pizza()).eraseToAnyPublisher())
             ) {
                 Image(systemName: "plus")
             })
@@ -49,10 +53,7 @@ struct MenuListView: View {
 
 struct MenuListView_Previews: PreviewProvider {
     static var previews: some View {
-        let service = NetworklessUseCaseProvider().makeMenuUseCase()
-        let viewModel = MenuListViewModel(service: service)
-
-        return MenuListView(ingredientsFactory: AppDependencyContainer())
-            .environmentObject(viewModel)
+        Resolver.switchToNetworkless()
+        return Resolver.resolve(MenuListView.self)
     }
 }

@@ -10,21 +10,16 @@ import Foundation
 import Combine
 
 public struct RepositoryUseCaseProvider: UseCaseProvider, DatabaseContainerProtocol {
-    var container: DS.Container?
     private let _data: Initializer
 
     public init() {
-        container = RepositoryUseCaseProvider.initContainer()
+        let container = RepositoryUseCaseProvider.initContainer()
         _data = Initializer(container: container, network: API.Network())
     }
 
     init(container: DS.Container? = nil, network: NetworkProtocol) {
-        if let container = container {
-            self.container = container
-        } else {
-            self.container = RepositoryUseCaseProvider.initContainer()
-        }
-        _data = Initializer(container: container, network: network)
+        _data = Initializer(container: container ?? RepositoryUseCaseProvider.initContainer(),
+                            network: network)
     }
 
     public func makeMenuService() -> MenuUseCase {
