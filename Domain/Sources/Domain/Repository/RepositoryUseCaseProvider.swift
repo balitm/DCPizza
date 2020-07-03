@@ -27,7 +27,7 @@ public struct RepositoryUseCaseProvider: UseCaseProvider, DatabaseContainerProto
         _data = Initializer(container: container, network: network)
     }
 
-    public func makeMenuUseCase() -> MenuUseCase {
+    public func makeMenuService() -> MenuUseCase {
         MenuRepository(data: _data)
     }
 
@@ -39,7 +39,7 @@ public struct RepositoryUseCaseProvider: UseCaseProvider, DatabaseContainerProto
         CartRepository(data: _data)
     }
 
-    public func makeDrinsService() -> DrinksUseCase {
+    public func makeDrinksService() -> DrinksUseCase {
         DrinksRepository(data: _data)
     }
 
