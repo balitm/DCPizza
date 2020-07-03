@@ -17,8 +17,8 @@ class AppDependencyContainer {
 
     init() {
         provider = RepositoryUseCaseProvider()
-        menuService = provider.makeMenuUseCase()
-        drinksService = provider.makeDrinsService()
+        menuService = provider.makeMenuService()
+        drinksService = provider.makeDrinksService()
     }
 
     func makeMenuTableViewModel() -> MenuTableViewModel {

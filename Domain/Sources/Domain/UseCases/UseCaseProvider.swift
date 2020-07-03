@@ -10,9 +10,9 @@ import Foundation
 import Combine
 
 public protocol UseCaseProvider {
-    func makeMenuUseCase() -> MenuUseCase
+    func makeMenuService() -> MenuUseCase
     func makeIngredientsService(pizza: AnyPublisher<Pizza, Never>) -> IngredientsUseCase
     func makeCartService() -> CartUseCase
-    func makeDrinsService() -> DrinksUseCase
+    func makeDrinksService() -> DrinksUseCase
     func makeSaveService() -> SaveUseCase
 }
