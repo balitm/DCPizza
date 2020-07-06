@@ -22,7 +22,8 @@ extension Resolver: ResolverRegistering {
             .scope(application)
 
         registerMainServices()
-        registerInjectionServices()
+        registerIngredients()
+        registerCarts()
     }
 
     /// switch use case / service provider to the networkless mock.

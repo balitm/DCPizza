@@ -11,6 +11,8 @@
 		2951270324AA6E2A00B8D657 /* Resolver in Frameworks */ = {isa = PBXBuildFile; productRef = 2951270224AA6E2A00B8D657 /* Resolver */; };
 		2951270524AA70A900B8D657 /* AppDelegate+Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2951270424AA70A900B8D657 /* AppDelegate+Injection.swift */; };
 		2951270724AA747400B8D657 /* Main+Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2951270624AA747400B8D657 /* Main+Injection.swift */; };
+		295C184124B381DE00F345F0 /* Cart+Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C184024B381DE00F345F0 /* Cart+Injection.swift */; };
+		295C184324B38F9D00F345F0 /* ListSeparatorStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C184224B38F9D00F345F0 /* ListSeparatorStyle.swift */; };
 		295DC86924910A5800E0591F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 295DC86724910A5800E0591F /* Main.storyboard */; };
 		295DC8A224910C0C00E0591F /* Navigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC86B24910C0C00E0591F /* Navigator.swift */; };
 		295DC8A324910C0C00E0591F /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC86D24910C0C00E0591F /* SuccessViewController.swift */; };
@@ -21,14 +23,9 @@
 		295DC8A824910C0C00E0591F /* SeparableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC87324910C0C00E0591F /* SeparableTableViewCell.swift */; };
 		295DC8A924910C0C00E0591F /* ViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC87424910C0C00E0591F /* ViewModelType.swift */; };
 		295DC8AA24910C0C00E0591F /* AddedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC87624910C0C00E0591F /* AddedViewController.swift */; };
-		295DC8AB24910C0C00E0591F /* CartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC87824910C0C00E0591F /* CartViewModel.swift */; };
-		295DC8AC24910C0C00E0591F /* PaddingCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC87A24910C0C00E0591F /* PaddingCellViewModel.swift */; };
-		295DC8AD24910C0C00E0591F /* CartItemCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC87B24910C0C00E0591F /* CartItemCellViewModel.swift */; };
-		295DC8AE24910C0C00E0591F /* CartTotalCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC87C24910C0C00E0591F /* CartTotalCellViewModel.swift */; };
-		295DC8AF24910C0C00E0591F /* PaddingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC87E24910C0C00E0591F /* PaddingTableViewCell.swift */; };
-		295DC8B024910C0C00E0591F /* CartItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC87F24910C0C00E0591F /* CartItemTableViewCell.swift */; };
-		295DC8B124910C0C00E0591F /* CartTotalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC88024910C0C00E0591F /* CartTotalTableViewCell.swift */; };
-		295DC8B224910C0C00E0591F /* CartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC88124910C0C00E0591F /* CartViewController.swift */; };
+		295DC8AC24910C0C00E0591F /* PaddingRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC87A24910C0C00E0591F /* PaddingRowViewModel.swift */; };
+		295DC8AD24910C0C00E0591F /* CartItemRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC87B24910C0C00E0591F /* CartItemRowViewModel.swift */; };
+		295DC8AE24910C0C00E0591F /* CartTotalRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC87C24910C0C00E0591F /* CartTotalRowViewModel.swift */; };
 		295DC8B924910C0C00E0591F /* IngredientsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC88B24910C0C00E0591F /* IngredientsViewModel.swift */; };
 		295DC8BA24910C0C00E0591F /* AppDependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC88C24910C0C00E0591F /* AppDependencyContainer.swift */; };
 		295DC8BB24910C0C00E0591F /* UIStoryboard+load.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC88E24910C0C00E0591F /* UIStoryboard+load.swift */; };
@@ -48,6 +45,11 @@
 		295DC8CB24910E6000E0591F /* CombineDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 295DC8CA24910E6000E0591F /* CombineDataSources */; };
 		295DC8CE24910EEF00E0591F /* AlamofireNetworkActivityIndicator in Frameworks */ = {isa = PBXBuildFile; productRef = 295DC8CD24910EEF00E0591F /* AlamofireNetworkActivityIndicator */; };
 		2962870C24AFB5AC00EA90AF /* Ingredients+Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2962870B24AFB5AC00EA90AF /* Ingredients+Injection.swift */; };
+		2994181724B331A90048DDD5 /* CartListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2994181624B331A90048DDD5 /* CartListView.swift */; };
+		2994181924B333350048DDD5 /* PaddingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2994181824B333350048DDD5 /* PaddingRow.swift */; };
+		2994181B24B336DD0048DDD5 /* CartItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2994181A24B336DD0048DDD5 /* CartItemRow.swift */; };
+		2994181D24B33A5D0048DDD5 /* CartTotalRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2994181C24B33A5D0048DDD5 /* CartTotalRow.swift */; };
+		2994181E24B3431D0048DDD5 /* CartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC87824910C0C00E0591F /* CartViewModel.swift */; };
 		29B56A512490197F0070EBC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B56A502490197F0070EBC8 /* AppDelegate.swift */; };
 		29B56A532490197F0070EBC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B56A522490197F0070EBC8 /* SceneDelegate.swift */; };
 		29B56A57249019800070EBC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29B56A56249019800070EBC8 /* Assets.xcassets */; };
@@ -77,6 +79,8 @@
 		29374E652494059E001D83AD /* AddedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddedView.swift; sourceTree = "<group>"; };
 		2951270424AA70A900B8D657 /* AppDelegate+Injection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+Injection.swift"; sourceTree = "<group>"; };
 		2951270624AA747400B8D657 /* Main+Injection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Main+Injection.swift"; sourceTree = "<group>"; };
+		295C184024B381DE00F345F0 /* Cart+Injection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cart+Injection.swift"; sourceTree = "<group>"; };
+		295C184224B38F9D00F345F0 /* ListSeparatorStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSeparatorStyle.swift; sourceTree = "<group>"; };
 		295DC86824910A5800E0591F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		295DC86B24910C0C00E0591F /* Navigator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Navigator.swift; sourceTree = "<group>"; };
 		295DC86D24910C0C00E0591F /* SuccessViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
@@ -88,13 +92,9 @@
 		295DC87424910C0C00E0591F /* ViewModelType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelType.swift; sourceTree = "<group>"; };
 		295DC87624910C0C00E0591F /* AddedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddedViewController.swift; sourceTree = "<group>"; };
 		295DC87824910C0C00E0591F /* CartViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartViewModel.swift; sourceTree = "<group>"; };
-		295DC87A24910C0C00E0591F /* PaddingCellViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaddingCellViewModel.swift; sourceTree = "<group>"; };
-		295DC87B24910C0C00E0591F /* CartItemCellViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartItemCellViewModel.swift; sourceTree = "<group>"; };
-		295DC87C24910C0C00E0591F /* CartTotalCellViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartTotalCellViewModel.swift; sourceTree = "<group>"; };
-		295DC87E24910C0C00E0591F /* PaddingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaddingTableViewCell.swift; sourceTree = "<group>"; };
-		295DC87F24910C0C00E0591F /* CartItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartItemTableViewCell.swift; sourceTree = "<group>"; };
-		295DC88024910C0C00E0591F /* CartTotalTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartTotalTableViewCell.swift; sourceTree = "<group>"; };
-		295DC88124910C0C00E0591F /* CartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartViewController.swift; sourceTree = "<group>"; };
+		295DC87A24910C0C00E0591F /* PaddingRowViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaddingRowViewModel.swift; sourceTree = "<group>"; };
+		295DC87B24910C0C00E0591F /* CartItemRowViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartItemRowViewModel.swift; sourceTree = "<group>"; };
+		295DC87C24910C0C00E0591F /* CartTotalRowViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartTotalRowViewModel.swift; sourceTree = "<group>"; };
 		295DC88B24910C0C00E0591F /* IngredientsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IngredientsViewModel.swift; sourceTree = "<group>"; };
 		295DC88C24910C0C00E0591F /* AppDependencyContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDependencyContainer.swift; sourceTree = "<group>"; };
 		295DC88E24910C0C00E0591F /* UIStoryboard+load.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIStoryboard+load.swift"; sourceTree = "<group>"; };
@@ -112,6 +112,10 @@
 		295DC89F24910C0C00E0591F /* DrinkCellViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrinkCellViewModel.swift; sourceTree = "<group>"; };
 		295DC8A124910C0C00E0591F /* DrinkTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrinkTableViewCell.swift; sourceTree = "<group>"; };
 		2962870B24AFB5AC00EA90AF /* Ingredients+Injection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Ingredients+Injection.swift"; sourceTree = "<group>"; };
+		2994181624B331A90048DDD5 /* CartListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartListView.swift; sourceTree = "<group>"; };
+		2994181824B333350048DDD5 /* PaddingRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingRow.swift; sourceTree = "<group>"; };
+		2994181A24B336DD0048DDD5 /* CartItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartItemRow.swift; sourceTree = "<group>"; };
+		2994181C24B33A5D0048DDD5 /* CartTotalRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartTotalRow.swift; sourceTree = "<group>"; };
 		29B56A4D2490197F0070EBC8 /* DCPizza.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DCPizza.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		29B56A502490197F0070EBC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		29B56A522490197F0070EBC8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -186,6 +190,7 @@
 				295DC87224910C0C00E0591F /* Constant.swift */,
 				295DC87324910C0C00E0591F /* SeparableTableViewCell.swift */,
 				295DC87424910C0C00E0591F /* ViewModelType.swift */,
+				295C184224B38F9D00F345F0 /* ListSeparatorStyle.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -202,10 +207,11 @@
 		295DC87724910C0C00E0591F /* CartScene */ = {
 			isa = PBXGroup;
 			children = (
-				295DC87824910C0C00E0591F /* CartViewModel.swift */,
 				295DC87924910C0C00E0591F /* ViewModels */,
 				295DC87D24910C0C00E0591F /* Views */,
-				295DC88124910C0C00E0591F /* CartViewController.swift */,
+				295DC87824910C0C00E0591F /* CartViewModel.swift */,
+				2994181624B331A90048DDD5 /* CartListView.swift */,
+				295C184024B381DE00F345F0 /* Cart+Injection.swift */,
 			);
 			path = CartScene;
 			sourceTree = "<group>";
@@ -213,9 +219,9 @@
 		295DC87924910C0C00E0591F /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				295DC87A24910C0C00E0591F /* PaddingCellViewModel.swift */,
-				295DC87B24910C0C00E0591F /* CartItemCellViewModel.swift */,
-				295DC87C24910C0C00E0591F /* CartTotalCellViewModel.swift */,
+				295DC87A24910C0C00E0591F /* PaddingRowViewModel.swift */,
+				295DC87B24910C0C00E0591F /* CartItemRowViewModel.swift */,
+				295DC87C24910C0C00E0591F /* CartTotalRowViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -223,9 +229,9 @@
 		295DC87D24910C0C00E0591F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				295DC87E24910C0C00E0591F /* PaddingTableViewCell.swift */,
-				295DC87F24910C0C00E0591F /* CartItemTableViewCell.swift */,
-				295DC88024910C0C00E0591F /* CartTotalTableViewCell.swift */,
+				2994181824B333350048DDD5 /* PaddingRow.swift */,
+				2994181A24B336DD0048DDD5 /* CartItemRow.swift */,
+				2994181C24B33A5D0048DDD5 /* CartTotalRow.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -504,22 +510,23 @@
 			files = (
 				295DC8C524910C0C00E0591F /* DrinksTableViewController.swift in Sources */,
 				29BF83B524A0BD4400F69B05 /* IngredientsListView.swift in Sources */,
+				295C184124B381DE00F345F0 /* Cart+Injection.swift in Sources */,
+				2994181924B333350048DDD5 /* PaddingRow.swift in Sources */,
 				295DC8A924910C0C00E0591F /* ViewModelType.swift in Sources */,
 				29C3BE8C249FAB1E00AE7F6F /* IngredientsHeaderRowViewModel.swift in Sources */,
+				2994181B24B336DD0048DDD5 /* CartItemRow.swift in Sources */,
+				295C184324B38F9D00F345F0 /* ListSeparatorStyle.swift in Sources */,
 				295DC8C424910C0C00E0591F /* MenuListViewModel.swift in Sources */,
 				29C3BE90249FB06800AE7F6F /* IngredientsItemRowViewModel.swift in Sources */,
 				295DC8B924910C0C00E0591F /* IngredientsViewModel.swift in Sources */,
 				29374E662494059E001D83AD /* AddedView.swift in Sources */,
-				295DC8AE24910C0C00E0591F /* CartTotalCellViewModel.swift in Sources */,
-				295DC8B024910C0C00E0591F /* CartItemTableViewCell.swift in Sources */,
+				295DC8AE24910C0C00E0591F /* CartTotalRowViewModel.swift in Sources */,
 				295DC8BC24910C0C00E0591F /* UIBarButtonItem+Combine.swift in Sources */,
-				295DC8B124910C0C00E0591F /* CartTotalTableViewCell.swift in Sources */,
 				29B56A512490197F0070EBC8 /* AppDelegate.swift in Sources */,
 				295DC8C724910C0C00E0591F /* DrinkCellViewModel.swift in Sources */,
 				295DC8C224910C0C00E0591F /* MenuListView.swift in Sources */,
 				295DC8A224910C0C00E0591F /* Navigator.swift in Sources */,
 				295DC8BB24910C0C00E0591F /* UIStoryboard+load.swift in Sources */,
-				295DC8AB24910C0C00E0591F /* CartViewModel.swift in Sources */,
 				295DC8A724910C0C00E0591F /* Constant.swift in Sources */,
 				295DC8C324910C0C00E0591F /* MenuRow.swift in Sources */,
 				295DC8A624910C0C00E0591F /* Blur.swift in Sources */,
@@ -527,19 +534,20 @@
 				295DC8C024910C0C00E0591F /* UIColor+Extensions.swift in Sources */,
 				295DC8C624910C0C00E0591F /* DrinksTableViewModel.swift in Sources */,
 				295DC8C124910C0C00E0591F /* MenuRowViewModel.swift in Sources */,
-				295DC8AC24910C0C00E0591F /* PaddingCellViewModel.swift in Sources */,
+				295DC8AC24910C0C00E0591F /* PaddingRowViewModel.swift in Sources */,
 				295DC8AA24910C0C00E0591F /* AddedViewController.swift in Sources */,
+				2994181D24B33A5D0048DDD5 /* CartTotalRow.swift in Sources */,
 				29C3BE8A249FA40200AE7F6F /* IngredientsHeaderRow.swift in Sources */,
-				295DC8AD24910C0C00E0591F /* CartItemCellViewModel.swift in Sources */,
-				295DC8B224910C0C00E0591F /* CartViewController.swift in Sources */,
+				295DC8AD24910C0C00E0591F /* CartItemRowViewModel.swift in Sources */,
 				2951270524AA70A900B8D657 /* AppDelegate+Injection.swift in Sources */,
 				295DC8BE24910C0C00E0591F /* UIGestureRecognizer+Extension.swift in Sources */,
 				2962870C24AFB5AC00EA90AF /* Ingredients+Injection.swift in Sources */,
+				2994181E24B3431D0048DDD5 /* CartViewModel.swift in Sources */,
 				295DC8C824910C0C00E0591F /* DrinkTableViewCell.swift in Sources */,
 				295DC8A524910C0C00E0591F /* PriceFormatter.swift in Sources */,
+				2994181724B331A90048DDD5 /* CartListView.swift in Sources */,
 				295DC8A424910C0C00E0591F /* RoundedView.swift in Sources */,
 				29B56A532490197F0070EBC8 /* SceneDelegate.swift in Sources */,
-				295DC8AF24910C0C00E0591F /* PaddingTableViewCell.swift in Sources */,
 				29C3BE8E249FAE2900AE7F6F /* IngredientsItemRow.swift in Sources */,
 				295DC8A824910C0C00E0591F /* SeparableTableViewCell.swift in Sources */,
 				295DC8BD24910C0C00E0591F /* UITableView+Extension.swift in Sources */,

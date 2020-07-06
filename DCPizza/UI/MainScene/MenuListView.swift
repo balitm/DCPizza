@@ -37,12 +37,19 @@ struct MenuListView: View, Resolving {
                     .listRowInsets(EdgeInsets())
                 }
             }
+            .listSeparatorStyle(style: .none)
             .navigationBarTitle("NENNO'S PIZZA")
-            .navigationBarItems(trailing: NavigationLink(destination:
-                resolver.resolve(IngredientsListView.self,
-                                 args: Just(Pizza()).eraseToAnyPublisher())
-            ) {
-                Image(systemName: "plus")
+            .navigationBarItems(
+                leading: NavigationLink(destination:
+                    resolver.resolve(CartListView.self)
+                ) {
+                    Image("ic_cart_navbar")
+                },
+                trailing: NavigationLink(destination:
+                    resolver.resolve(IngredientsListView.self,
+                                     args: Just(Pizza()).eraseToAnyPublisher())
+                ) {
+                    Image(systemName: "plus")
             })
             .sheet(isPresented: $_viewModel.showAdded) {
                 AddedView()

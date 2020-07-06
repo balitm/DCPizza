@@ -12,7 +12,7 @@ import Domain
 import Resolver
 
 struct IngredientsListView: View {
-    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
+    @Environment(\.presentationMode) private var _mode: Binding<PresentationMode>
     @ObservedObject private var _viewModel: IngredientsViewModel
     @State private var _isShowFooter = false
 
@@ -36,8 +36,10 @@ struct IngredientsListView: View {
                         // .buttonStyle(PlainButtonStyle())
                     }
                 }
+                .listSeparatorStyle(style: .singleLine)
+
                 if self._isShowFooter {
-                    FooterView(geometry: geometry)
+                    _FooterView(geometry: geometry)
                         .transition(.move(edge: .bottom))
                         .environmentObject(self._viewModel)
                 }
@@ -52,7 +54,7 @@ struct IngredientsListView: View {
         .navigationBarTitle(Text(_viewModel.title), displayMode: .inline)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: {
-            self.mode.wrappedValue.dismiss()
+            self._mode.wrappedValue.dismiss()
         }) {
             Image(systemName: "chevron.left")
                 .font(.system(size: 20, weight: .semibold))
@@ -66,14 +68,13 @@ struct IngredientsListView: View {
     }
 }
 
-struct FooterView: View {
+private struct _FooterView: View {
     @EnvironmentObject private var _viewModel: IngredientsViewModel
     let geometry: GeometryProxy
 
     var body: some View {
         VStack(spacing: 0) {
             Button(action: {
-                DLog("tapped.")
                 self._viewModel.addToCart()
             }) {
                 Text(_viewModel.cartText)

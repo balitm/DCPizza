@@ -20,10 +20,6 @@ class AppDependencyContainer {
         drinksService = provider.makeDrinksService()
     }
 
-    func makeCartViewModel() -> CartViewModel {
-        CartViewModel(service: provider.makeCartService())
-    }
-
     func makeDrinksTableViewModel() -> DrinksTableViewModel {
         DrinksTableViewModel(service: drinksService)
     }

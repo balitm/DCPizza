@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct AddedView: View {
+    @Environment(\.presentationMode) private var _mode: Binding<PresentationMode>
+
     var body: some View {
         GeometryReader { proxy in
             VStack {
@@ -20,6 +22,9 @@ struct AddedView: View {
             }
             .padding(0)
             .background(Color(white: 1, opacity: 0.5))
+            .onTapGesture {
+                self._mode.wrappedValue.dismiss()
+            }
         }
 //        .edgesIgnoringSafeArea(.all)
 //        .navigationBarBackButtonHidden(true)

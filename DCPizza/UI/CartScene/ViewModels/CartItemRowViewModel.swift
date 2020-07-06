@@ -9,14 +9,14 @@
 import Foundation
 import Domain
 
-struct CartItemCellViewModel {
+struct CartItemRowViewModel {
     let name: String
     let priceText: String
+    let index: Int
 
-    init(item: CartItem) {
+    init(item: CartItem, index: Int) {
+        self.index = index
         name = item.name
         priceText = format(price: item.price)
     }
 }
-
-extension CartItemCellViewModel: Hashable {}

@@ -10,68 +10,79 @@ import Foundation
 import Domain
 import Combine
 
-final class CartViewModel: ViewModelType {
-    enum Item: Hashable {
-        case padding(viewModel: PaddingCellViewModel)
-        case item(viewModel: CartItemCellViewModel)
-        case total(viewModel: CartTotalCellViewModel)
+final class CartViewModel: ObservableObject {
+    enum Item: Identifiable {
+        case padding(viewModel: PaddingRowViewModel)
+        case item(viewModel: CartItemRowViewModel)
+        case total(viewModel: CartTotalRowViewModel)
+
+        var id: String {
+            switch self {
+            case let .padding(vm):
+                return "\(vm.height)"
+            case let .item(viewModel):
+                return viewModel.name
+            case .total:
+                return "total"
+            }
+        }
     }
 
-    struct Input {
-        let selected: AnyPublisher<Int, Never>
-        let checkout: AnyPublisher<Void, Never>
-    }
+    // Input
+    @Published var selected = -1
 
-    struct Output {
-        let tableData: AnyPublisher<[Item], Never>
-        let showSuccess: AnyPublisher<Void, Never>
-        let canCheckout: AnyPublisher<Bool, Never>
-    }
+    // Output
+    @Published var listData = [Item]()
+    @Published var showSuccess = false
+    @Published var canCheckout = false
 
     private let _service: CartUseCase
     private var _bag = Set<AnyCancellable>()
 
     init(service: CartUseCase) {
         _service = service
-    }
 
-    func transform(input: Input) -> Output {
-        let models = _service.items()
+        // List data.
+        _service.items()
             .zip(_service.total())
             .map({ (pair: (items: [CartItem], total: Double)) -> [Item] in
-                var items = [Item.padding(viewModel: PaddingCellViewModel(height: 12))]
+                var items = [Item.padding(viewModel: PaddingRowViewModel(height: 12))]
                 items.append(contentsOf:
-                    pair.items.map { Item.item(viewModel: CartItemCellViewModel(item: $0)) }
+                    pair.items.enumerated().map({
+                        Item.item(viewModel: CartItemRowViewModel(item: $0.element, index: $0.offset))
+                    })
                 )
-                items.append(.padding(viewModel: PaddingCellViewModel(height: 24)))
-                items.append(.total(viewModel: CartTotalCellViewModel(price: pair.total)))
+                items.append(.padding(viewModel: PaddingRowViewModel(height: 24)))
+                items.append(.total(viewModel: CartTotalRowViewModel(price: pair.total)))
                 return items
             })
+            .assign(to: \.listData, on: self)
+            .store(in: &_bag)
 
-        input.selected
+        // Remove item on tap/selected.
+        $selected
+            .print()
+            .filter({ $0 >= 0 })
             .flatMap({ [service = _service] idx -> AnyPublisher<Void, Never> in
-                assert(idx > 0)
-                return service.remove(at: idx - 1)
+                service.remove(at: idx)
                     .catch({ _ in Empty<Void, Never>() })
                     .eraseToAnyPublisher()
             })
             .sink {}
             .store(in: &_bag)
 
-        let checkout = input.checkout
-            .flatMap({ [service = _service] in
-                service.checkout()
-                    .catch({ _ in Empty<Void, Never>() })
-            })
-
-        let canCheckout = _service.items()
+        // Can checkout (cart is not empty).
+        _service.items()
             .map({ !$0.isEmpty })
-
-        return Output(
-            tableData: models.eraseToAnyPublisher(),
-            showSuccess: checkout
-                .eraseToAnyPublisher(),
-            canCheckout: canCheckout.eraseToAnyPublisher()
-        )
+            .assign(to: \.canCheckout, on: self)
+            .store(in: &_bag)
     }
+
+    // func transform(input: Input) -> Output {
+    //     let checkout = input.checkout
+    //         .flatMap({ [service = _service] in
+    //             service.checkout()
+    //                 .catch({ _ in Empty<Void, Never>() })
+    //         })
+    // }
 }

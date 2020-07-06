@@ -6,14 +6,12 @@
 //  Copyright © 2020 kil-dev. All rights reserved.
 //
 
-import Foundation
-
 import Resolver
 import Domain
 import Combine
 
 extension Resolver {
-    static func registerInjectionServices() {
+    static func registerIngredients() {
         // Ingredients.
         register { (_, arg) -> IngredientsUseCase in
             let pizza = _pizza(arg)
