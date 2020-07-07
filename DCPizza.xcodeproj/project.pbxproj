@@ -207,8 +207,8 @@
 		295DC87724910C0C00E0591F /* CartScene */ = {
 			isa = PBXGroup;
 			children = (
-				295DC87924910C0C00E0591F /* ViewModels */,
 				295DC87D24910C0C00E0591F /* Views */,
+				295DC87924910C0C00E0591F /* ViewModels */,
 				295DC87824910C0C00E0591F /* CartViewModel.swift */,
 				2994181624B331A90048DDD5 /* CartListView.swift */,
 				295C184024B381DE00F345F0 /* Cart+Injection.swift */,

@@ -12,18 +12,21 @@ import Combine
 
 final class CartViewModel: ObservableObject {
     enum Item: Identifiable {
+        private static let _totalIdOffset = 10000
+        private static let _paddingIdOffset = 10001
+
         case padding(viewModel: PaddingRowViewModel)
         case item(viewModel: CartItemRowViewModel)
         case total(viewModel: CartTotalRowViewModel)
 
-        var id: String {
+        var id: Int {
             switch self {
-            case let .padding(vm):
-                return "\(vm.height)"
+            case let .padding(viewModel):
+                return Item._paddingIdOffset + Int(viewModel.height)
             case let .item(viewModel):
-                return viewModel.name
+                return viewModel.id
             case .total:
-                return "total"
+                return Item._totalIdOffset
             }
         }
     }

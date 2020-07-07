@@ -13,10 +13,12 @@ struct CartItemRowViewModel {
     let name: String
     let priceText: String
     let index: Int
+    let id: Int
 
     init(item: CartItem, index: Int) {
         self.index = index
         name = item.name
+        id = item.id
         priceText = format(price: item.price)
     }
 }
