@@ -81,11 +81,14 @@ final class CartViewModel: ObservableObject {
             .store(in: &_bag)
     }
 
-    // func transform(input: Input) -> Output {
-    //     let checkout = input.checkout
-    //         .flatMap({ [service = _service] in
-    //             service.checkout()
-    //                 .catch({ _ in Empty<Void, Never>() })
-    //         })
-    // }
+    func checkout() {
+        _service.checkout()
+            .catch({ error -> Empty<Void, Never> in
+                DLog("recved error: ", error)
+                return Empty<Void, Never>()
+            })
+            .map({ true })
+            .assign(to: \.showSuccess, on: self)
+            .store(in: &_bag)
+    }
 }

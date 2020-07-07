@@ -40,13 +40,13 @@ struct CartListView: View {
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: {
             self._mode.wrappedValue.dismiss()
-            }) {
+        }) {
             Image(systemName: "chevron.left")
                 .font(.system(size: 20, weight: .semibold))
-            })
+        })
         .sheet(isPresented: $_viewModel.showSuccess, content: {
-            AddedView()
-            })
+            SuccessView()
+        })
     }
 
     private func _itemRow(_ item: _Item) -> AnyView {
@@ -74,14 +74,14 @@ private struct _FooterView: View {
     var body: some View {
         VStack(spacing: 0) {
             Button(action: {
-                DLog("tapped.")
-                // self._viewModel.addToCart()
+                self._viewModel.checkout()
             }) {
                 Text("CHECKOUT")
                     .font(.system(size: 16, weight: .bold))
                     .frame(width: geometry.size.width, height: 50)
-                    .foregroundColor(.white)
+                    .foregroundColor(self._viewModel.canCheckout ? .white : .gray)
             }
+            .disabled(!self._viewModel.canCheckout)
             if geometry.safeAreaInsets.bottom > 0 {
                 Spacer()
                     .frame(height: geometry.safeAreaInsets.bottom)

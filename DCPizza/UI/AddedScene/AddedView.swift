@@ -20,14 +20,11 @@ struct AddedView: View {
                     .background(KColors.cTint)
                 Spacer()
             }
-            .padding(0)
-            .background(Color(white: 1, opacity: 0.5))
+            .background(Color.white)
             .onTapGesture {
                 self._mode.wrappedValue.dismiss()
             }
         }
-//        .edgesIgnoringSafeArea(.all)
-//        .navigationBarBackButtonHidden(true)
     }
 }
 
