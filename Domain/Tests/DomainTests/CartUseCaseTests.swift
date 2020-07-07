@@ -30,7 +30,13 @@ class CartUseCaseTests: UseCaseTestsBase {
             component.drinks[0],
             component.drinks[1],
         ]
-        data.cart = Cart(pizzas: pizzas, drinks: drinks, basePrice: data.cart.basePrice)
+        data.cart = Cart.empty
+        pizzas.forEach {
+            data.cart.add(pizza: $0)
+        }
+        drinks.forEach {
+            data.cart.add(drink: $0)
+        }
     }
 
     func testItems() {
