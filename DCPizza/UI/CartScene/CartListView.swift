@@ -29,6 +29,7 @@ struct CartListView: View {
                             .listRowInsets(EdgeInsets())
                     }
                 }
+                .environment(\.defaultMinListRowHeight, 12)
                 .listSeparatorStyle(style: .none)
 
                 _FooterView(geometry: geometry)

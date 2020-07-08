@@ -12,8 +12,9 @@ struct PaddingRow: View {
     let viewModel: PaddingRowViewModel
 
     var body: some View {
-        EmptyView()
+        Rectangle()
             .frame(height: viewModel.height)
+            .foregroundColor(.white)
     }
 }
 
