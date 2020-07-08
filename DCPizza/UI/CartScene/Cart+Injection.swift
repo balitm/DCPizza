@@ -15,10 +15,10 @@ extension Resolver {
             resolve(UseCaseProvider.self).makeCartService()
         }
         register {
-            CartViewModel(service: resolve())
+            CartViewModel()
         }
         register {
-            CartListView(viewModel: resolve())
+            CartListView()
         }
     }
 }

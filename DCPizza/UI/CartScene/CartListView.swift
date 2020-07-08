@@ -14,11 +14,7 @@ private typealias _Item = CartViewModel.Item
 
 struct CartListView: View {
     @Environment(\.presentationMode) private var _mode: Binding<PresentationMode>
-    @ObservedObject private var _viewModel: CartViewModel
-
-    init(viewModel: CartViewModel) {
-        _viewModel = viewModel
-    }
+    @InjectedObject private var _viewModel: CartViewModel
 
     var body: some View {
         GeometryReader { geometry in

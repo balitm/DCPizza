@@ -12,11 +12,7 @@ import Domain
 import Resolver
 
 struct MenuListView: View, Resolving {
-    @ObservedObject private var _viewModel: MenuListViewModel
-
-    init(viewModel: MenuListViewModel) {
-        _viewModel = viewModel
-    }
+    @InjectedObject private var _viewModel: MenuListViewModel
 
     var body: some View {
         NavigationView {

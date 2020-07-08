@@ -9,6 +9,7 @@
 import Foundation
 import Domain
 import Combine
+import Resolver
 
 final class CartViewModel: ObservableObject {
     enum Item: Identifiable {
@@ -39,12 +40,10 @@ final class CartViewModel: ObservableObject {
     @Published var showSuccess = false
     @Published var canCheckout = false
 
-    private let _service: CartUseCase
+    @Injected private var _service: CartUseCase
     private var _bag = Set<AnyCancellable>()
 
-    init(service: CartUseCase) {
-        _service = service
-
+    init() {
         // List data.
         _service.items()
             .zip(_service.total())

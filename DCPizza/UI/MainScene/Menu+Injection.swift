@@ -1,5 +1,5 @@
 //
-//  Main+Injection.swift
+//  Menu+Injection.swift
 //  DCPizza
 //
 //  Created by Balázs Kilvády on 6/29/20.
@@ -20,7 +20,7 @@ extension Resolver {
             MenuListViewModel(service: resolve())
         }
         register(MenuListView.self) {
-            MenuListView(viewModel: resolve())
+            MenuListView()
         }
     }
 }
