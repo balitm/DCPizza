@@ -11,31 +11,32 @@ import Domain
 import Combine
 
 final class CartViewModel: ObservableObject {
-    enum Item: Identifiable {
-        private static let _totalIdOffset = 10000
-        private static let _paddingIdOffset = 10001
-
-        case padding(viewModel: PaddingRowViewModel)
-        case item(viewModel: CartItemRowViewModel)
-        case total(viewModel: CartTotalRowViewModel)
-
-        var id: Int {
-            switch self {
-            case let .padding(viewModel):
-                return Item._paddingIdOffset + Int(viewModel.height)
-            case let .item(viewModel):
-                return viewModel.id
-            case .total:
-                return Item._totalIdOffset
-            }
-        }
-    }
+    // enum Item: Identifiable {
+    //     private static let _totalIdOffset = 10000
+    //     private static let _paddingIdOffset = 10001
+    //
+    //     case padding(viewModel: PaddingRowViewModel)
+    //     case item(viewModel: CartItemRowViewModel)
+    //     case total(viewModel: CartTotalRowViewModel)
+    //
+    //     var id: Int {
+    //         switch self {
+    //         case let .padding(viewModel):
+    //             return Item._paddingIdOffset + Int(viewModel.height)
+    //         case let .item(viewModel):
+    //             return viewModel.id
+    //         case .total:
+    //             return Item._totalIdOffset
+    //         }
+    //     }
+    // }
 
     // Input
     @Published var selected = -1
 
     // Output
-    @Published var listData = [Item]()
+    @Published var listData = [CartItemRowViewModel]()
+    @Published var totalData = CartTotalRowViewModel(price: 0)
     @Published var showSuccess = false
     @Published var canCheckout = false
 
@@ -47,19 +48,19 @@ final class CartViewModel: ObservableObject {
 
         // List data.
         _service.items()
-            .zip(_service.total())
-            .map({ (pair: (items: [CartItem], total: Double)) -> [Item] in
-                var items = [Item.padding(viewModel: PaddingRowViewModel(height: 12))]
-                items.append(contentsOf:
-                    pair.items.enumerated().map({
-                        Item.item(viewModel: CartItemRowViewModel(item: $0.element, index: $0.offset))
-                    })
-                )
-                items.append(.padding(viewModel: PaddingRowViewModel(height: 24)))
-                items.append(.total(viewModel: CartTotalRowViewModel(price: pair.total)))
-                return items
+            .map({ (items: [CartItem]) -> [CartItemRowViewModel] in
+                items.enumerated().map({
+                    CartItemRowViewModel(item: $0.element, index: $0.offset)
+                })
             })
             .assign(to: \.listData, on: self)
+            .store(in: &_bag)
+
+        _service.total()
+            .map({
+                CartTotalRowViewModel(price: $0)
+            })
+            .assign(to: \.totalData, on: self)
             .store(in: &_bag)
 
         // Remove item on tap/selected.
@@ -92,3 +93,5 @@ final class CartViewModel: ObservableObject {
             .store(in: &_bag)
     }
 }
+
+extension CartItemRowViewModel: Identifiable {}

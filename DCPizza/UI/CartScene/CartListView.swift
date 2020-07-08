@@ -9,8 +9,9 @@
 import SwiftUI
 import Domain
 import Resolver
+// import Introspect
 
-private typealias _Item = CartViewModel.Item
+// private typealias _Item = CartViewModel.Item
 
 struct CartListView: View {
     @Environment(\.presentationMode) private var _mode: Binding<PresentationMode>
@@ -24,12 +25,28 @@ struct CartListView: View {
         GeometryReader { geometry in
             VStack(alignment: .center, spacing: 0) {
                 List {
-                    ForEach(self._viewModel.listData) { item in
-                        self._itemRow(item)
+                    Section(header: _ListHeader(), footer: _ListHeader()) {
+                        ForEach(self._viewModel.listData) { item in
+                            CartItemRow(viewModel: item)
+                                .listRowInsets(EdgeInsets())
+                        }
+                    }
+
+                    Section(header: _ListHeader(), footer: _ListHeader()) {
+                        CartTotalRow(viewModel: self._viewModel.totalData)
                             .listRowInsets(EdgeInsets())
                     }
                 }
-                .listSeparatorStyle(style: .none)
+                .listStyle(GroupedListStyle())
+                .environment(\.defaultMinListRowHeight, 12)
+                .environment(\.defaultMinListHeaderHeight, 12)
+
+                // .introspectTableView { tableView in
+                //     tableView.separatorStyle = .none
+                //     // tableView.sectionHeaderHeight = 12
+                //     // tableView.sectionFooterHeight = 12
+                // }
+                .listSeparatorStyle(style: .singleLine)
 
                 _FooterView(geometry: geometry)
                     .environmentObject(self._viewModel)
@@ -48,22 +65,20 @@ struct CartListView: View {
             SuccessView()
         })
     }
+}
 
-    private func _itemRow(_ item: _Item) -> AnyView {
-        switch item {
-        case let .padding(viewModel):
-            return AnyView(PaddingRow(viewModel: viewModel))
-        case let .item(viewModel):
-            return AnyView(
-                Button(action: {
-                    self._viewModel.selected = viewModel.index
-                }) {
-                    CartItemRow(viewModel: viewModel)
-                }
-            )
-        case let .total(viewModel):
-            return AnyView(CartTotalRow(viewModel: viewModel))
-        }
+private struct _ListHeader: View {
+    var body: some View {
+        Rectangle()
+            .frame(maxWidth: .infinity, maxHeight: 12)
+            .foregroundColor(.yellow)
+            .listRowInsets(EdgeInsets())
+    }
+}
+
+private struct _ListFooter: View {
+    var body: some View {
+        Text("Remember to pack plenty of water and bring sunscreen.")
     }
 }
 
