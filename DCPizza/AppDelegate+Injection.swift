@@ -24,6 +24,7 @@ extension Resolver: ResolverRegistering {
         registerMainServices()
         registerIngredients()
         registerCarts()
+        registerDrinks()
     }
 
     /// switch use case / service provider to the networkless mock.

@@ -19,7 +19,7 @@ extension Resolver {
         register {
             MenuListViewModel(service: resolve())
         }
-        register(MenuListView.self) {
+        register {
             MenuListView()
         }
     }
