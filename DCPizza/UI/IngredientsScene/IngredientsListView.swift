@@ -53,12 +53,7 @@ struct IngredientsListView: View {
         .edgesIgnoringSafeArea(.bottom)
         .navigationBarTitle(Text(_viewModel.title), displayMode: .inline)
         .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: Button(action: {
-            self._mode.wrappedValue.dismiss()
-        }) {
-            Image(systemName: "chevron.left")
-                .font(.system(size: 20, weight: .semibold))
-        })
+        .backNavigationBarItems(_mode)
         .sheet(isPresented: $_viewModel.showAdded) {
             AddedView()
         }

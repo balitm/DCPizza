@@ -12,9 +12,10 @@ import Resolver
 
 private typealias _Item = CartViewModel.Item
 
-struct CartListView: View {
+struct CartListView: View, Resolving {
     @Environment(\.presentationMode) private var _mode: Binding<PresentationMode>
     @InjectedObject private var _viewModel: CartViewModel
+    @InjectedObject private var _drinksViewModel: DrinksViewModel
 
     var body: some View {
         GeometryReader { geometry in
@@ -35,12 +36,13 @@ struct CartListView: View {
         .edgesIgnoringSafeArea(.bottom)
         .navigationBarTitle(Text("CART"), displayMode: .inline)
         .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: Button(action: {
-            self._mode.wrappedValue.dismiss()
-        }) {
-            Image(systemName: "chevron.left")
-                .font(.system(size: 20, weight: .semibold))
-        })
+        .backNavigationBarItems(_mode, trailing:
+            NavigationLink(
+                destination: DrinksListView(viewModel: _drinksViewModel),
+                label: {
+                    Image("ic_drinks")
+                })
+        )
         .sheet(isPresented: $_viewModel.showSuccess, content: {
             SuccessView()
         })

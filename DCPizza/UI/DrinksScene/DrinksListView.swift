@@ -8,24 +8,32 @@
 
 import SwiftUI
 import Resolver
+import Domain
 
-struct DrinksListView: View {
+struct DrinksListView: View, Resolving {
     @Environment(\.presentationMode) private var _mode: Binding<PresentationMode>
-    @InjectedObject private var _viewModel: DrinksViewModel
+    @ObservedObject private var _viewModel: DrinksViewModel
+
+    init(viewModel: DrinksViewModel) {
+        DLog(">>> inited: ", type(of: self))
+        _viewModel = viewModel
+    }
 
     var body: some View {
-        List(_viewModel.listData) { item in
-            DrinkRow(viewModel: item)
+        List {
+            ForEach(_viewModel.listData) { item in
+                Button(action: {
+                    self._viewModel.select(index: item.index)
+                }) {
+                    DrinkRow(viewModel: item)
+                }
+                .listRowInsets(EdgeInsets())
+            }
         }
         .listSeparatorStyle(style: .singleLine)
         .navigationBarTitle(Text("DRINKS"), displayMode: .inline)
         .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: Button(action: {
-            self._mode.wrappedValue.dismiss()
-        }) {
-            Image(systemName: "chevron.left")
-                .font(.system(size: 20, weight: .semibold))
-        })
+        .backNavigationBarItems(_mode)
         .sheet(isPresented: $_viewModel.showAdded, content: {
             AddedView()
         })
