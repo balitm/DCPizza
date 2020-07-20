@@ -10,7 +10,7 @@ import Combine
 import RealmSwift
 @testable import Domain
 
-class CartUseCaseTests: UseCaseTestsBase {
+class CartUseCaseTests: NetworklessUseCaseTestsBase {
     var service: CartUseCase!
 
     override func setUp() {
@@ -145,7 +145,7 @@ class CartUseCaseTests: UseCaseTestsBase {
                 })
                 .sink(receiveValue: { _ in
                     expectation.fulfill()
-            })
+                })
         }
         cancellable?.cancel()
 

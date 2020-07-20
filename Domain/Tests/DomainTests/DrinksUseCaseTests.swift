@@ -9,7 +9,7 @@ import XCTest
 import Combine
 @testable import Domain
 
-class DrinksUseCaseTests: UseCaseTestsBase {
+class DrinksUseCaseTests: NetworklessUseCaseTestsBase {
     var service: DrinksUseCase!
 
     override func setUp() {
@@ -27,6 +27,7 @@ class DrinksUseCaseTests: UseCaseTestsBase {
                     }
                 }, receiveValue: {
                     XCTAssertGreaterThan($0.count, 0)
+                    expectation.fulfill()
                 })
         }
     }

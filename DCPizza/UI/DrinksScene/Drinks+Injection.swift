@@ -19,7 +19,7 @@ extension Resolver {
             DrinksViewModel(service: resolve())
         }
         register {
-            DrinksListView()
+            DrinksListView(viewModel: resolve())
         }
     }
 }

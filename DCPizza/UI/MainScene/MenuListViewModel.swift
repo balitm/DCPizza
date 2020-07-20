@@ -19,7 +19,13 @@ final class MenuListViewModel: ObservableObject {
     private let _cachedPizzas = CurrentValueRelay(Pizzas.empty)
     private var _bag = Set<AnyCancellable>()
 
+    deinit {
+        DLog(">>> deinit: ", type(of: self))
+    }
+
     init(service: MenuUseCase) {
+        DLog(">>> init: ", type(of: self))
+
         // Cache pizzas.
         service.pizzas()
             .compactMap({

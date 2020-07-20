@@ -11,7 +11,7 @@ import Combine
 import RealmSwift
 @testable import Domain
 
-class DomainTests: UseCaseTestsBase {
+class DomainTests: NetworklessUseCaseTestsBase {
     private var _bag = Set<AnyCancellable>()
     var testCart: Cart!
 
@@ -46,7 +46,7 @@ class DomainTests: UseCaseTestsBase {
             XCTAssert(true)
             expectation.fulfill()
         }, receiveValue: { _ in
-            })
+        })
         .store(in: &_bag)
 
         wait(for: [expectation], timeout: 120.0)
@@ -82,8 +82,8 @@ class DomainTests: UseCaseTestsBase {
                 && dsPizzas.pizzas.reduce(true, { r0, pizza in
                     r0 && pizza.ingredients.reduce(true, { r1, id in
                         r1 && component.ingredients.contains { $0.id == id }
+                    })
                 })
-            })
 
         XCTAssertTrue(isConverted)
     }

@@ -17,13 +17,13 @@ struct DrinksRepository: DrinksUseCase {
 
     func drinks() -> AnyPublisher<[Drink], Never> {
         _data.$component
-            .tryMap({
-                try $0.get().drinks
+            .map({
+                (try? $0.get().drinks) ?? []
             })
             .catch({ _ in
                 Empty<[Drink], Never>()
             })
-            .first()
+            .removeDuplicates(by: { $0.count == $1.count })
             .eraseToAnyPublisher()
     }
 
