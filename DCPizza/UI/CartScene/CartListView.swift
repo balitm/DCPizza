@@ -15,6 +15,10 @@ struct CartListView: View, Resolving {
     @InjectedObject private var _viewModel: CartViewModel
     @InjectedObject private var _drinksViewModel: DrinksViewModel
 
+    init() {
+        DLog(">>> inited: ", type(of: self))
+    }
+
     var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .center, spacing: 0) {
@@ -34,7 +38,7 @@ struct CartListView: View, Resolving {
                 .listStyle(GroupedListStyle())
                 .environment(\.defaultMinListRowHeight, 12)
                 .environment(\.defaultMinListHeaderHeight, 12)
-                .listSeparatorStyle(style: .singleLine)
+                .listSeparatorStyle(style: .none)
 
                 _FooterView(geometry: geometry)
                     .environmentObject(self._viewModel)
@@ -65,27 +69,27 @@ private struct _ListHeader: View {
     }
 }
 
-// private struct _ListFooter: View {
-//     var body: some View {
-//         Text("Remember to pack plenty of water and bring sunscreen.")
-//     }
-// }
-//
 private struct _FooterView: View {
     @EnvironmentObject private var _viewModel: CartViewModel
     let geometry: GeometryProxy
 
     var body: some View {
         VStack(spacing: 0) {
-            Button(action: {
-                self._viewModel.checkout()
-            }) {
+            ZStack {
+                Rectangle()
+                    .frame(width: geometry.size.width, height: 50)
+                    .foregroundColor(KColors.cTint)
                 Text("CHECKOUT")
                     .font(.system(size: 16, weight: .bold))
-                    .frame(width: geometry.size.width, height: 50)
+                    .frame(width: geometry.size.width - 32, height: 50)
                     .foregroundColor(self._viewModel.canCheckout ? .white : .gray)
+                    .contentShape(Rectangle())
+                    .onTapGesture(perform: {
+                        self._viewModel.checkout()
+                    })
+                    .disabled(!self._viewModel.canCheckout)
             }
-            .disabled(!self._viewModel.canCheckout)
+
             if geometry.safeAreaInsets.bottom > 0 {
                 Spacer()
                     .frame(height: geometry.safeAreaInsets.bottom)

@@ -14,22 +14,29 @@ struct SuccessView: View {
     var body: some View {
         GeometryReader { proxy in
             VStack {
-                Spacer()
-                Text("Thank you")
-                    .font(.system(size: 34)).italic()
-                    .foregroundColor(KColors.cTint)
-                Text("for your order!")
-                    .font(.system(size: 34)).italic()
-                    .foregroundColor(KColors.cTint)
-                Spacer()
+                VStack {
+                    Spacer()
+                    self._text("Thank you")
+                    self._text("for your order!")
+                    Spacer()
+
+                    // _FooterView(geometry: proxy)
+                }
+                .background(Color.white)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    self._mode.wrappedValue.dismiss()
+                }
 
                 _FooterView(geometry: proxy)
             }
-            .background(Color.white)
-            .onTapGesture {
-                self._mode.wrappedValue.dismiss()
-            }
         }
+    }
+
+    private func _text(_ string: String) -> Text {
+        Text(string)
+            .font(.system(size: 34)).italic()
+            .foregroundColor(KColors.cTint)
     }
 }
 

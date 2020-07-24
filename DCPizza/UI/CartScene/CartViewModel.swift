@@ -12,26 +12,6 @@ import Combine
 import Resolver
 
 final class CartViewModel: ObservableObject {
-    // enum Item: Identifiable {
-    //     private static let _totalIdOffset = 10000
-    //     private static let _paddingIdOffset = 10001
-    //
-    //     case padding(viewModel: PaddingRowViewModel)
-    //     case item(viewModel: CartItemRowViewModel)
-    //     case total(viewModel: CartTotalRowViewModel)
-    //
-    //     var id: Int {
-    //         switch self {
-    //         case let .padding(viewModel):
-    //             return Item._paddingIdOffset + Int(viewModel.height)
-    //         case let .item(viewModel):
-    //             return viewModel.id
-    //         case .total:
-    //             return Item._totalIdOffset
-    //         }
-    //     }
-    // }
-
     // Input
     @Published var selected = -1
 
@@ -64,7 +44,6 @@ final class CartViewModel: ObservableObject {
 
         // Remove item on tap/selected.
         $selected
-            .print()
             .filter({ $0 >= 0 })
             .flatMap({ [service = _service] idx -> AnyPublisher<Void, Never> in
                 service.remove(at: idx)

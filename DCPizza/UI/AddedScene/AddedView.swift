@@ -16,11 +16,13 @@ struct AddedView: View {
             VStack {
                 Text("ADDED TO CART")
                     .font(.system(size: 12, weight: .semibold))
-                    .frame(width: proxy.size.width, height: 20)
+                    .foregroundColor(.white)
+                    .frame(width: proxy.size.width - 32, height: 20)
                     .background(KColors.cTint)
                 Spacer()
             }
-            .background(Color.white)
+            .edgesIgnoringSafeArea([.leading, .trailing, .bottom])
+            .contentShape(Rectangle())
             .onTapGesture {
                 self._mode.wrappedValue.dismiss()
             }
