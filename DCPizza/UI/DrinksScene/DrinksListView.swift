@@ -23,7 +23,7 @@ struct DrinksListView: View, Resolving {
         List {
             ForEach(_viewModel.listData) { item in
                 Button(action: {
-                    self._viewModel.select(index: item.index)
+                    // self._viewModel.select(index: item.index)
                 }) {
                     DrinkRow(viewModel: item)
                 }
