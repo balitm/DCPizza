@@ -9,8 +9,9 @@
 import SwiftUI
 import Resolver
 import Domain
+import Introspect
 
-struct DrinksListView: View, Resolving {
+struct DrinksListView: View {
     @Environment(\.presentationMode) private var _mode: Binding<PresentationMode>
     @ObservedObject private var _viewModel: DrinksViewModel
 
@@ -30,7 +31,10 @@ struct DrinksListView: View, Resolving {
                 .listRowInsets(EdgeInsets())
             }
         }
-        .listSeparatorStyle(style: .singleLine)
+        .introspectTableView(customize: {
+            $0.separatorStyle = .singleLine
+            $0.tableFooterView = UIView()
+        })
         .navigationBarTitle(Text("DRINKS"), displayMode: .inline)
         .navigationBarBackButtonHidden(true)
         .backNavigationBarItems(_mode)

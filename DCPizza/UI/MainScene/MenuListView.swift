@@ -10,6 +10,7 @@ import SwiftUI
 import Combine
 import Domain
 import Resolver
+import Introspect
 
 struct MenuListView: View, Resolving {
     @InjectedObject private var _viewModel: MenuListViewModel
@@ -33,7 +34,9 @@ struct MenuListView: View, Resolving {
                     .listRowInsets(EdgeInsets())
                 }
             }
-            .listSeparatorStyle(style: .none)
+            .introspectTableView {
+                $0.separatorStyle = .none
+            }
             .navigationBarTitle("NENNO'S PIZZA")
             .navigationBarItems(
                 leading: NavigationLink(destination:
@@ -46,7 +49,7 @@ struct MenuListView: View, Resolving {
                                      args: Just(Pizza()).eraseToAnyPublisher())
                 ) {
                     Image(systemName: "plus")
-            })
+                })
             .sheet(isPresented: $_viewModel.showAdded) {
                 AddedView()
             }

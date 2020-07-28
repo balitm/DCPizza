@@ -9,6 +9,7 @@
 import SwiftUI
 import Domain
 import Resolver
+import Introspect
 
 struct CartListView: View, Resolving {
     @Environment(\.presentationMode) private var _mode: Binding<PresentationMode>
@@ -38,7 +39,11 @@ struct CartListView: View, Resolving {
                 .listStyle(GroupedListStyle())
                 .environment(\.defaultMinListRowHeight, 12)
                 .environment(\.defaultMinListHeaderHeight, 12)
-                .listSeparatorStyle(style: .none)
+                .introspectTableView {
+                    $0.separatorStyle = .none
+                    $0.backgroundColor = .clear
+                    $0.backgroundView = nil
+                }
 
                 _FooterView(geometry: geometry)
                     .environmentObject(self._viewModel)
