@@ -16,7 +16,7 @@ struct Cart {
     private(set) var drinks: [Drink]
     var basePrice: Double
 
-    private var _ids: [Int] = []
+    private var _ids: [Int]
     private var _pizzaIds: [Int] { Array(_ids[0 ..< pizzas.endIndex]) }
     private var _drinkIds: [Int] { Array(_ids[pizzas.endIndex...]) }
 
@@ -24,6 +24,8 @@ struct Cart {
         self.pizzas = pizzas
         self.drinks = drinks
         self.basePrice = basePrice
+        Cart._additionNumber = pizzas.count + drinks.count
+        _ids = (0 ..< Cart._additionNumber).map { $0 }
     }
 
     mutating func add(pizza: Pizza) {
