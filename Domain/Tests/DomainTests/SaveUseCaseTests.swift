@@ -9,7 +9,7 @@ import XCTest
 import Combine
 @testable import Domain
 
-class SaveUseCaseTests: UseCaseTestsBase {
+class SaveUseCaseTests: NetworklessUseCaseTestsBase {
     var service: SaveUseCase!
 
     override func setUp() {

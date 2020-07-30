@@ -8,9 +8,7 @@
 
 import Foundation
 
-protocol DatabaseContainerProtocol {
-    var container: DS.Container? { get }
-}
+protocol DatabaseContainerProtocol {}
 
 extension DatabaseContainerProtocol {
     static func initContainer() -> DS.Container? {
@@ -21,17 +19,4 @@ extension DatabaseContainerProtocol {
         }
         return nil
     }
-
-    func execute(_ block: (DS.Container) throws -> Void) {
-        guard let container = container else {
-            DLog("# No usable DB container.")
-            return
-        }
-        do {
-            try block(container)
-        } catch {
-            DLog("# DB operation failed.")
-        }
-    }
-
 }

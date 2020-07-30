@@ -8,14 +8,10 @@
 
 import Foundation
 
-struct CartTotalCellViewModel {
-    let price: Double
+struct CartTotalRowViewModel {
     var priceText: String
 
     init(price: Double) {
-        self.price = price
         priceText = format(price: price)
     }
 }
-
-extension CartTotalCellViewModel: Hashable {}

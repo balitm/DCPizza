@@ -69,11 +69,12 @@ extension API {
 
         required init() {
             encoding = URLEncoding.default
-            _instanceNum += 1; DLog(">>>> Instance num: ", _instanceNum)
+            _instanceNum += 1
+            // DLog(">>>> Instance num: ", _instanceNum)
         }
 
         deinit {
-            DLog(">>>> deinit #", _instanceNum, " - ", path)
+            // DLog(">>>> deinit #" _instanceNum, " - ", path)
             _instanceNum -= 1
         }
 
@@ -222,7 +223,7 @@ extension API {
                          encoding: TimeoutParameterEncoding(encoding: encoding, timeout: timeout),
                          headers: HTTPHeaders(headers ?? [:]))
 
-            DLog("Requesting: ", path)
+            // DLog("Requesting: ", path)
 
             afRequest = request
             // debugPrint(request)
@@ -263,7 +264,7 @@ extension API {
         override func _perform() {
             let downloader = AlamofireImage.ImageDownloader()
 
-            DLog("- Downloading: ", path, " - ", id)
+            // DLog("- Downloading: ", path, " - ", id)
 
             let res = downloader.download(URLRequest(url: _url)) { [weak self] response in
                 guard let self = self else { return }

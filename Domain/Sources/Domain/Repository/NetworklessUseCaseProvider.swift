@@ -9,16 +9,15 @@ import Foundation
 import Combine
 
 public struct NetworklessUseCaseProvider: UseCaseProvider, DatabaseContainerProtocol {
-    var container: DS.Container?
     private let _data: Initializer
 
     public init() {
         let network: NetworkProtocol = TestNetUseCase()
-        container = RepositoryUseCaseProvider.initContainer()
+        let container = NetworklessUseCaseProvider.initContainer()
         _data = Initializer(container: container, network: network)
     }
 
-    public func makeMenuUseCase() -> MenuUseCase {
+    public func makeMenuService() -> MenuUseCase {
         MenuRepository(data: _data)
     }
 
@@ -30,7 +29,7 @@ public struct NetworklessUseCaseProvider: UseCaseProvider, DatabaseContainerProt
         CartRepository(data: _data)
     }
 
-    public func makeDrinsService() -> DrinksUseCase {
+    public func makeDrinksService() -> DrinksUseCase {
         DrinksRepository(data: _data)
     }
 

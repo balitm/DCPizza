@@ -8,9 +8,12 @@
 
 import Foundation
 
-struct DrinkCellViewModel {
+struct DrinkRowViewModel {
     let name: String
     let priceText: String
+    let index: Int
 }
 
-extension DrinkCellViewModel: Hashable {}
+extension DrinkRowViewModel: Identifiable {
+    var id: Int { index }
+}

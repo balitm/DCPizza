@@ -9,11 +9,16 @@
 import SwiftUI
 import Combine
 import Domain
+import Resolver
 
 struct IngredientsListView: View {
-    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
-    @EnvironmentObject private var _viewModel: IngredientsViewModel
+    @Environment(\.presentationMode) private var _mode: Binding<PresentationMode>
+    @ObservedObject private var _viewModel: IngredientsViewModel
     @State private var _isShowFooter = false
+
+    init(viewModel: IngredientsViewModel) {
+        _viewModel = viewModel
+    }
 
     var body: some View {
         GeometryReader { geometry in
@@ -31,9 +36,14 @@ struct IngredientsListView: View {
                         // .buttonStyle(PlainButtonStyle())
                     }
                 }
+                .introspectTableView {
+                    $0.separatorStyle = .singleLine
+                }
+
                 if self._isShowFooter {
-                    FooterView(geometry: geometry)
+                    _FooterView(geometry: geometry)
                         .transition(.move(edge: .bottom))
+                        .environmentObject(self._viewModel)
                 }
             }
         }
@@ -45,12 +55,7 @@ struct IngredientsListView: View {
         .edgesIgnoringSafeArea(.bottom)
         .navigationBarTitle(Text(_viewModel.title), displayMode: .inline)
         .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: Button(action: {
-            self.mode.wrappedValue.dismiss()
-        }) {
-            Image(systemName: "chevron.left")
-                .font(.system(size: 20, weight: .semibold))
-        })
+        .backNavigationBarItems(_mode)
         .sheet(isPresented: $_viewModel.showAdded) {
             AddedView()
         }
@@ -60,14 +65,13 @@ struct IngredientsListView: View {
     }
 }
 
-struct FooterView: View {
+private struct _FooterView: View {
     @EnvironmentObject private var _viewModel: IngredientsViewModel
     let geometry: GeometryProxy
 
     var body: some View {
         VStack(spacing: 0) {
             Button(action: {
-                DLog("tapped.")
                 self._viewModel.addToCart()
             }) {
                 Text(_viewModel.cartText)
@@ -85,12 +89,8 @@ struct FooterView: View {
 
 struct IngredientsListView_Previews: PreviewProvider {
     static var previews: some View {
-        let service = NetworklessUseCaseProvider().makeIngredientsService(
-            pizza: Just(PizzaData.pizzas.pizzas[0]).eraseToAnyPublisher()
-        )
-        let viewModel = IngredientsViewModel(service: service)
-
-        return IngredientsListView()
-            .environmentObject(viewModel)
+        Resolver.switchToNetworkless()
+        let pizza = Just(PizzaData.pizzas.pizzas[0]).eraseToAnyPublisher()
+        return Resolver.resolve(IngredientsListView.self, args: pizza)
     }
 }

@@ -9,10 +9,11 @@
 import SwiftUI
 import Combine
 import Domain
+import Resolver
+import Introspect
 
-struct MenuListView: View {
-    @EnvironmentObject private var _viewModel: MenuListViewModel
-    let ingredientsFactory: AppDependencyContainer
+struct MenuListView: View, Resolving {
+    @InjectedObject private var _viewModel: MenuListViewModel
 
     var body: some View {
         NavigationView {
@@ -21,10 +22,10 @@ struct MenuListView: View {
                     ZStack {
                         MenuRow(viewModel: vm)
                         NavigationLink(destination:
-                            self.ingredientsFactory
-                                .makeIngredientsView(
-                                    pizza: self._viewModel.pizza(at: vm.index)
-                                )
+                            self.resolver.resolve(
+                                IngredientsListView.self,
+                                args: self._viewModel.pizza(at: vm.index)
+                            )
                         ) {
                             EmptyView()
                         }
@@ -33,13 +34,24 @@ struct MenuListView: View {
                     .listRowInsets(EdgeInsets())
                 }
             }
+            .introspectTableView {
+                $0.separatorStyle = .none
+            }
             .navigationBarTitle("NENNO'S PIZZA")
-            .navigationBarItems(trailing: NavigationLink(destination:
-                self.ingredientsFactory
-                    .makeIngredientsView(pizza: Just(Pizza()).eraseToAnyPublisher())
-            ) {
-                Image(systemName: "plus")
-            })
+            .navigationBarItems(
+                leading: NavigationLink(destination:
+                    CartListView()
+                        .environmentObject(resolver.resolve(CartViewModel.self))
+                        .environmentObject(resolver.resolve(DrinksViewModel.self))
+                ) {
+                    Image("ic_cart_navbar")
+                },
+                trailing: NavigationLink(destination:
+                    resolver.resolve(IngredientsListView.self,
+                                     args: Just(Pizza()).eraseToAnyPublisher())
+                ) {
+                    Image(systemName: "plus")
+                })
             .sheet(isPresented: $_viewModel.showAdded) {
                 AddedView()
             }
@@ -49,10 +61,7 @@ struct MenuListView: View {
 
 struct MenuListView_Previews: PreviewProvider {
     static var previews: some View {
-        let service = NetworklessUseCaseProvider().makeMenuUseCase()
-        let viewModel = MenuListViewModel(service: service)
-
-        return MenuListView(ingredientsFactory: AppDependencyContainer())
-            .environmentObject(viewModel)
+        Resolver.switchToNetworkless()
+        return Resolver.resolve(MenuListView.self)
     }
 }

@@ -6,11 +6,8 @@
 //  Copyright © 2020 kil-dev. All rights reserved.
 //
 
-import Foundation
 import typealias UIKit.CGFloat
 
-struct PaddingCellViewModel {
+struct PaddingRowViewModel {
     let height: CGFloat
 }
-
-extension PaddingCellViewModel: Hashable {}

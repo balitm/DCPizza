@@ -10,7 +10,7 @@ import Combine
 import RealmSwift
 @testable import Domain
 
-class CartUseCaseTests: UseCaseTestsBase {
+class CartUseCaseTests: NetworklessUseCaseTestsBase {
     var service: CartUseCase!
 
     override func setUp() {
@@ -30,7 +30,13 @@ class CartUseCaseTests: UseCaseTestsBase {
             component.drinks[0],
             component.drinks[1],
         ]
-        data.cart = Cart(pizzas: pizzas, drinks: drinks, basePrice: data.cart.basePrice)
+        data.cart = Cart.empty
+        pizzas.forEach {
+            data.cart.add(pizza: $0)
+        }
+        drinks.forEach {
+            data.cart.add(drink: $0)
+        }
     }
 
     func testItems() {
@@ -139,7 +145,7 @@ class CartUseCaseTests: UseCaseTestsBase {
                 })
                 .sink(receiveValue: { _ in
                     expectation.fulfill()
-            })
+                })
         }
         cancellable?.cancel()
 

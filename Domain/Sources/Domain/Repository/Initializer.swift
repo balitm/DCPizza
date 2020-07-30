@@ -34,13 +34,13 @@ final class Initializer {
 
         let subscriber = AnySubscriber<(image: Image?, index: Int), Never>(receiveSubscription: {
             $0.request(.unlimited)
-            DLog("Recived subscription: ", type(of: $0))
+            // DLog("Recived subscription: ", type(of: $0))
         }, receiveValue: { [unowned self] value in
             self.$component
                 .compactMap({ try? $0.get() })
                 .first()
                 .map({ component in
-                    DLog("insert image to: ", value.index)
+                    // DLog("insert image to: ", value.index)
                     let pizza = component.pizzas.pizzas[value.index]
                     var pizzas = component.pizzas.pizzas
                     pizzas[value.index] = Pizza(copy: pizza, image: value.image)
@@ -53,8 +53,8 @@ final class Initializer {
                 .store(in: &self._bag)
 
             return .unlimited
-        }, receiveCompletion: {
-            DLog("Received completion: ", $0)
+        }, receiveCompletion: { _ in
+            // DLog("Received completion: ", $0)
         })
 
         _bag = [
@@ -88,9 +88,9 @@ final class Initializer {
                                 DLog("Error during image receiving: ", error)
                                 return Just<Image?>(nil)
                             })
-//                            .handleEvents(receiveOutput: {
-//                                DLog("Inserting ", $0 == nil ? "nil" : "not nil")
-//                            })
+                            // .handleEvents(receiveOutput: {
+                            //     DLog("Inserting ", $0 == nil ? "nil" : "not nil")
+                            // })
                             .map({ ($0, item.offset) })
                             .subscribe(subscriber)
                     }
@@ -101,7 +101,7 @@ final class Initializer {
                 .compactMap({ try? $0.get() })
                 .first()
                 .map({ [weak container] c -> Cart in
-                    DLog("###### init card. #########")
+                    // DLog("###### init cart. #########")
                     let dsCart = container?.values(DS.Cart.self).first ?? DS.Cart(pizzas: [], drinks: [])
                     var cart = dsCart.asDomain(with: c.ingredients, drinks: c.drinks)
                     cart.basePrice = c.pizzas.basePrice

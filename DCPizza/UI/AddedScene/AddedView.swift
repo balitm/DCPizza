@@ -9,20 +9,24 @@
 import SwiftUI
 
 struct AddedView: View {
+    @Environment(\.presentationMode) private var _mode: Binding<PresentationMode>
+
     var body: some View {
         GeometryReader { proxy in
             VStack {
                 Text("ADDED TO CART")
                     .font(.system(size: 12, weight: .semibold))
-                    .frame(width: proxy.size.width, height: 20)
+                    .foregroundColor(.white)
+                    .frame(width: proxy.size.width - 32, height: 20)
                     .background(KColors.cTint)
                 Spacer()
             }
-            .padding(0)
-            .background(Color(white: 1, opacity: 0.5))
+            .edgesIgnoringSafeArea([.leading, .trailing, .bottom])
+            .contentShape(Rectangle())
+            .onTapGesture {
+                self._mode.wrappedValue.dismiss()
+            }
         }
-//        .edgesIgnoringSafeArea(.all)
-//        .navigationBarBackButtonHidden(true)
     }
 }
 

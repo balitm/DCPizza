@@ -14,13 +14,14 @@ import struct SwiftUI.Image
 final class MenuListViewModel: ObservableObject {
     // Output
     @Published var listData = [MenuRowViewModel]()
-    // @Published var selection: AnyPublisher<AnyPublisher<Pizza, Never>, Never>
     @Published var showAdded = false
 
-    private let cachedPizzas = CurrentValueRelay(Pizzas.empty)
+    private let _cachedPizzas = CurrentValueRelay(Pizzas.empty)
     private var _bag = Set<AnyCancellable>()
 
     init(service: MenuUseCase) {
+        DLog(">>> init: ", type(of: self))
+
         // Cache pizzas.
         service.pizzas()
             .compactMap({
@@ -31,11 +32,11 @@ final class MenuListViewModel: ObservableObject {
                     return nil
                 }
             })
-            .subscribe(cachedPizzas)
+            .subscribe(_cachedPizzas)
             .store(in: &_bag)
 
         // Fill up listData.
-        cachedPizzas
+        _cachedPizzas
             .throttle(for: 0.4, scheduler: RunLoop.current, latest: true)
             .map({ pizzas -> [MenuRowViewModel] in
                 let basePrice = pizzas.basePrice
@@ -60,7 +61,7 @@ final class MenuListViewModel: ObservableObject {
             })
 
         // Update cart on add events.
-        cartEvents.combineLatest(cachedPizzas)
+        cartEvents.combineLatest(_cachedPizzas)
             .flatMap({ (pair: (index: Int, pizzas: Pizzas)) in
                 service.addToCart(pizza: pair.pizzas.pizzas[pair.index])
                     .catch({ _ in Empty<Void, Never>() })
@@ -71,7 +72,7 @@ final class MenuListViewModel: ObservableObject {
     }
 
     func pizza(at index: Int) -> AnyPublisher<Pizza, Never> {
-        cachedPizzas
+        _cachedPizzas
             .map({ $0.pizzas[index] })
             .eraseToAnyPublisher()
     }
