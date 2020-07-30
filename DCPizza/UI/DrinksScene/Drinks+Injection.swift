@@ -16,10 +16,7 @@ extension Resolver {
             resolve(UseCaseProvider.self).makeDrinksService()
         }
         register {
-            DrinksViewModel(service: resolve())
-        }
-        register {
-            DrinksListView(viewModel: resolve())
+            DrinksViewModel()
         }
     }
 }

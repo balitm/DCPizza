@@ -13,8 +13,7 @@ import Introspect
 
 struct CartListView: View, Resolving {
     @Environment(\.presentationMode) private var _mode: Binding<PresentationMode>
-    @InjectedObject private var _viewModel: CartViewModel
-    @InjectedObject private var _drinksViewModel: DrinksViewModel
+    @EnvironmentObject private var _viewModel: CartViewModel
 
     init() {
         DLog(">>> inited: ", type(of: self))
@@ -46,7 +45,6 @@ struct CartListView: View, Resolving {
                 }
 
                 _FooterView(geometry: geometry)
-                    .environmentObject(self._viewModel)
             }
         }
         .edgesIgnoringSafeArea(.bottom)
@@ -54,7 +52,7 @@ struct CartListView: View, Resolving {
         .navigationBarBackButtonHidden(true)
         .backNavigationBarItems(_mode, trailing:
             NavigationLink(
-                destination: DrinksListView(viewModel: _drinksViewModel),
+                destination: DrinksListView(),
                 label: {
                     Image("ic_drinks")
                 })

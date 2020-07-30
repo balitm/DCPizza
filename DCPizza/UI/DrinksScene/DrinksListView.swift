@@ -13,18 +13,13 @@ import Introspect
 
 struct DrinksListView: View {
     @Environment(\.presentationMode) private var _mode: Binding<PresentationMode>
-    @ObservedObject private var _viewModel: DrinksViewModel
-
-    init(viewModel: DrinksViewModel) {
-        DLog(">>> inited: ", type(of: self))
-        _viewModel = viewModel
-    }
+    @EnvironmentObject private var _viewModel: DrinksViewModel
 
     var body: some View {
         List {
             ForEach(_viewModel.listData) { item in
                 Button(action: {
-                    // self._viewModel.select(index: item.index)
+                    self._viewModel.select(index: item.index)
                 }) {
                     DrinkRow(viewModel: item)
                 }

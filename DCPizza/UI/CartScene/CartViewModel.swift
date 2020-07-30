@@ -25,6 +25,8 @@ final class CartViewModel: ObservableObject {
     private var _bag = Set<AnyCancellable>()
 
     init() {
+        DLog(">>> init: ", type(of: self))
+
         // List data.
         _service.items()
             .map({ (items: [CartItem]) -> [CartItemRowViewModel] in

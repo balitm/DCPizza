@@ -40,7 +40,9 @@ struct MenuListView: View, Resolving {
             .navigationBarTitle("NENNO'S PIZZA")
             .navigationBarItems(
                 leading: NavigationLink(destination:
-                    resolver.resolve(CartListView.self)
+                    CartListView()
+                        .environmentObject(resolver.resolve(CartViewModel.self))
+                        .environmentObject(resolver.resolve(DrinksViewModel.self))
                 ) {
                     Image("ic_cart_navbar")
                 },

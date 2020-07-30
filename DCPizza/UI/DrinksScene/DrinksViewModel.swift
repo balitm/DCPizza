@@ -9,35 +9,40 @@
 import SwiftUI
 import Domain
 import Combine
+import Resolver
 
 final class DrinksViewModel: ObservableObject {
     typealias Item = DrinkRowViewModel
-
-    // Input
-    @Published var selected = -1
 
     // Output
     @Published var listData = [DrinkRowViewModel]()
     @Published var showAdded = false
 
+    @Injected private var _service: DrinksUseCase
     private var _bag = Set<AnyCancellable>()
 
     deinit {
         DLog(">>> deinit: ", type(of: self))
     }
 
-    init(service: DrinksUseCase) {
-        service.drinks()
+    init() {
+        DLog(">>> init: ", type(of: self))
+
+        _service.drinks()
             .map({
-                $0.enumerated().map { DrinkRowViewModel(name: $0.element.name,
-                                                        priceText: format(price: $0.element.price),
-                                                        index: $0.offset) }
+                $0.enumerated().map {
+                    DrinkRowViewModel(name: $0.element.name,
+                                      priceText: format(price: $0.element.price),
+                                      index: $0.offset)
+                }
             })
             .assign(to: \.listData, on: self)
             .store(in: &_bag)
+    }
 
-        $selected
-            .flatMap({
+    func select(index: Int) {
+        Just(index)
+            .flatMap({ [service = _service] in
                 service.addToCart(drinkIndex: $0)
                     .catch({ _ in Empty<Void, Never>() })
             })
