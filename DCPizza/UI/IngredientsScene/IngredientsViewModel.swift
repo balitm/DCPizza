@@ -11,59 +11,70 @@ import Domain
 import Combine
 import class UIKit.UIImage
 
-final class IngredientsViewModel: ViewModelType {
+final class IngredientsViewModel: ObservableObject {
     /// Event to drive the buy footer of the controller.
     enum FooterEvent {
         case show, hide
     }
 
-    struct Input {
-        let selected: AnyPublisher<Int, Never>
-        let addEvent: AnyPublisher<Void, Never>
-    }
+    // Input
+    @Published var selected = -1
+    @Published var isAppeared: Void = ()
 
-    struct Output {
-        let title: AnyPublisher<String?, Never>
-        let tableData: AnyPublisher<[Item], Never>
-        let cartText: AnyPublisher<String?, Never>
-        let showAdded: AnyPublisher<Void, Never>
-        let footerEvent: Publishers.MakeConnectable<AnyPublisher<FooterEvent, Never>>
-    }
+    // Output
+    @Published var headerData = IngredientsHeaderRowViewModel(image: nil)
+    @Published var listData = [IngredientsItemRowViewModel]()
+    @Published var title = ""
+    @Published var cartText = ""
+    @Published var showAdded = false
+    var footerEvent: AnyPublisher<FooterEvent, Never> { _footerEvent.eraseToAnyPublisher() }
 
+    private let _footerEvent = PassthroughRelay<FooterEvent>()
     private let _service: IngredientsUseCase
     private var _bag = Set<AnyCancellable>()
     private var _timerCancellable: AnyCancellable?
-
-    init(service: IngredientsUseCase) {
-        _service = service
-    }
 
     deinit {
         DLog(">>> deinit: ", type(of: self))
     }
 
-    func transform(input: Input) -> Output {
+    init(service: IngredientsUseCase) {
+        _service = service
+
+        // Title.
+        service.name()
+            .assign(to: \.title, on: self)
+            .store(in: &_bag)
+
+        // Header row.
+        service.pizza()
+            .map({
+                IngredientsHeaderRowViewModel(image: $0.image)
+            })
+            .assign(to: \.headerData, on: self)
+            .store(in: &_bag)
+
         // Selections publisher.
-        let selecteds = _service.ingredients(selected:
-            input.selected
-                .compactMap({ $0 >= 1 ? $0 - 1 : nil })
+        let selecteds = service.ingredients(selected:
+            $selected
+                .compactMap({
+                    $0 >= 0 ? $0 : nil
+                })
                 .eraseToAnyPublisher()
         )
 
-        // Table data source.
-        let tableData = selecteds.combineLatest(_service.pizza())
-            .map({ (pair: (sels: [IngredientSelection], pizza: Pizza)) -> [Item] in
-                let items = pair.sels.map { elem -> Item in
-                    Item.ingredient(
-                        viewModel: IngredientsItemCellViewModel(name: elem.ingredient.name,
-                                                                priceText: format(price: elem.ingredient.price),
-                                                                isContained: elem.isOn)
-                    )
-                }
-
-                let header = [Item.header(viewModel: IngredientsHeaderCellViewModel(image: pair.pizza.image))]
-                return header + items
+        // Items.
+        selecteds
+            .map({
+                $0.enumerated().map({
+                    IngredientsItemRowViewModel(name: $0.element.ingredient.name,
+                                                priceText: format(price: $0.element.ingredient.price),
+                                                isContained: $0.element.isOn,
+                                                index: $0.offset)
+                })
             })
+            .assign(to: \.listData, on: self)
+            .store(in: &_bag)
 
         // Selected ingredients.
         let selectedIngredients = CurrentValueSubject<[Ingredient], Never>([])
@@ -74,46 +85,43 @@ final class IngredientsViewModel: ViewModelType {
             .subscribe(selectedIngredients)
             .store(in: &_bag)
 
-        // Add pizza to cart.
-        input.addEvent
-            .flatMap({ [service = _service] in
-                service.addToCart()
-                    .catch({ error -> Empty<Void, Never> in
-                        DLog("recved error: ", error)
-                        return Empty<Void, Never>()
-                    })
-            })
-            .sink {}
-            .store(in: &_bag)
-
-        let cartText = selectedIngredients
-            .map({ ings -> String? in
+        // Cart text on the footer.
+        selectedIngredients
+            .map({ ings -> String in
                 // TODO: sketch suggest to show only ingredient prices
                 //       but + cart.basePrice would be better IMHO.
                 let sum = ings.reduce(0.0, { $0 + $1.price })
                 return "ADD TO CART (\(format(price: sum)))"
             })
+            .assign(to: \.cartText, on: self)
+            .store(in: &_bag)
 
-        let footerEvent = _makeFooterPublisher(selectedIngredients.eraseToAnyPublisher())
-            .makeConnectable()
+        // Footer event publisher.
+        let showReason = selectedIngredients
+            .combineLatest($isAppeared.dropFirst())
+            .map({ !$0.0.isEmpty })
+            .eraseToAnyPublisher()
+        _makeFooterPublisher(showReason)
+    }
 
-        return Output(title: _service.name().map({ $0 as String? }).eraseToAnyPublisher(),
-                      tableData: tableData.eraseToAnyPublisher(),
-                      cartText: cartText.eraseToAnyPublisher(),
-                      showAdded: input.addEvent,
-                      footerEvent: footerEvent
-        )
+    func addToCart() {
+        _service.addToCart()
+            .catch({ error -> Empty<Void, Never> in
+                DLog("recved error: ", error)
+                return Empty<Void, Never>()
+            })
+            .map({ true })
+            .assign(to: \.showAdded, on: self)
+            .store(in: &_bag)
     }
 }
 
 private extension IngredientsViewModel {
     /// Create footer event publisher.
-    func _makeFooterPublisher(_ publisher: AnyPublisher<[Ingredient], Never>) -> AnyPublisher<FooterEvent, Never> {
-        let footerEvent = CurrentValueRelay(FooterEvent.hide)
-
+    func _makeFooterPublisher(_ publisher: AnyPublisher<Bool, Never>) {
         publisher
-            .compactMap({ $0.isEmpty ? nil : FooterEvent.show })
-            .subscribe(footerEvent)
+            .compactMap({ !$0 ? nil : FooterEvent.show })
+            .subscribe(_footerEvent)
             .store(in: &_bag)
 
         publisher
@@ -122,20 +130,11 @@ private extension IngredientsViewModel {
                 self._timerCancellable = Timer.publish(every: 3.0, on: .main, in: .default)
                     .autoconnect()
                     .first()
-                    .map({ _ in FooterEvent.hide })
-                    .subscribe(footerEvent)
+                    .map({ _ in
+                        FooterEvent.hide
+                    })
+                    .subscribe(self._footerEvent)
             })
             .store(in: &_bag)
-
-        return footerEvent.eraseToAnyPublisher()
-    }
-}
-
-// MARK: - Table item types
-
-extension IngredientsViewModel {
-    enum Item: Hashable {
-        case header(viewModel: IngredientsHeaderCellViewModel)
-        case ingredient(viewModel: IngredientsItemCellViewModel)
     }
 }

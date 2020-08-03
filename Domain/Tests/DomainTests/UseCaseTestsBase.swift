@@ -1,6 +1,6 @@
 //
 //  UseCaseTestsBase.swift
-//
+//  Domain
 //
 //  Created by Balázs Kilvády on 5/15/20.
 //
@@ -11,8 +11,6 @@ import Combine
 @testable import Domain
 
 class UseCaseTestsBase: XCTestCase {
-    var data: Initializer!
-    var component: Initializer.Components!
     static var realm: Realm!
     var container: DS.Container!
 
@@ -44,33 +42,11 @@ class UseCaseTestsBase: XCTestCase {
         super.setUp()
 
         container = DS.Container(realm: UseCaseTestsBase.realm)
-        let network: NetworkProtocol = TestNetUseCase()
-        data = Initializer(container: container, network: network)
-        component = try! data.component.get()
     }
 
-    func expectation(test: (XCTestExpectation) -> Void) {
+    func expectation(timeout: Double = 30.0, test: (XCTestExpectation) -> Void) {
         let expectation = XCTestExpectation(description: "combine")
         test(expectation)
-        wait(for: [expectation], timeout: 30.0)
-    }
-
-    func addItemTest(addItem: () -> AnyPublisher<Void, Error>,
-                     test: (Cart) -> Void = { XCTAssertEqual($0.pizzas.count, 1) }) {
-        data.cart.empty()
-        XCTAssert(data.cart.pizzas.isEmpty)
-        XCTAssert(data.cart.drinks.isEmpty)
-        expectation { expectation in
-            _ = addItem()
-                .sink(receiveCompletion: {
-                    if case let Subscribers.Completion.failure(error) = $0 {
-                        XCTAssert(false, "failed with: \(error)")
-                    }
-                    expectation.fulfill()
-                }, receiveValue: {
-                    XCTAssert(true)
-                })
-        }
-        test(data.cart)
+        wait(for: [expectation], timeout: timeout)
     }
 }

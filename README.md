@@ -1,4 +1,4 @@
-## Clean architecture with Combine
+## Clean architecture with SwiftUI and Combine
 
 A sample home run pizza client using Reactive Domain/repository. Combine is used for reactive programming. A back-port to RxSwift is in progress.   
 

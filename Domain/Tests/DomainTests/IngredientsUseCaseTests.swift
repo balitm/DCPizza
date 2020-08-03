@@ -9,7 +9,7 @@ import XCTest
 import Combine
 @testable import Domain
 
-class IngredientsUseCaseTests: UseCaseTestsBase {
+class IngredientsUseCaseTests: NetworklessUseCaseTestsBase {
     var service: IngredientsRepository!
 
     override func setUp() {
