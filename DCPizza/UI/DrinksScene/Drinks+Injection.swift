@@ -18,5 +18,8 @@ extension Resolver {
         register {
             DrinksViewModel()
         }
+        register {
+            DrinksListView()
+        }
     }
 }

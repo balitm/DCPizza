@@ -17,5 +17,8 @@ extension Resolver {
         register {
             CartViewModel()
         }
+        register {
+            CartListView()
+        }
     }
 }

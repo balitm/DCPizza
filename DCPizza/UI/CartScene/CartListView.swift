@@ -30,13 +30,12 @@ struct CartListView: View, Resolving {
                         }
                     }
 
-                    Section(header: _ListHeader(), footer: _ListHeader()) {
+                    Section(header: _ListHeader()) {
                         CartTotalRow(viewModel: self._viewModel.totalData)
                             .listRowInsets(EdgeInsets())
                     }
                 }
                 .listStyle(GroupedListStyle())
-                .environment(\.defaultMinListRowHeight, 12)
                 .environment(\.defaultMinListHeaderHeight, 12)
                 .introspectTableView {
                     $0.separatorStyle = .none
@@ -51,7 +50,7 @@ struct CartListView: View, Resolving {
         .navigationBarTitle(Text("CART"), displayMode: .inline)
         .backNavigationBarItems(_mode, trailing:
             NavigationLink(
-                destination: DrinksListView(),
+                destination: resolver.resolve(DrinksListView.self),
                 label: {
                     Image("ic_drinks")
                 })
@@ -105,5 +104,7 @@ struct CartListView_Previews: PreviewProvider {
     static var previews: some View {
         Resolver.switchToNetworkless()
         return Resolver.resolve(CartListView.self)
+            .environmentObject(Resolver.resolve(CartViewModel.self))
+            .environmentObject(Resolver.resolve(DrinksViewModel.self))
     }
 }

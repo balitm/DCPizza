@@ -42,5 +42,6 @@ struct DrinksListView_Previews: PreviewProvider {
     static var previews: some View {
         Resolver.switchToNetworkless()
         return Resolver.resolve(DrinksListView.self)
+            .environmentObject(Resolver.resolve(DrinksViewModel.self))
     }
 }
