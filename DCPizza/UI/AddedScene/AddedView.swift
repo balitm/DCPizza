@@ -12,20 +12,20 @@ struct AddedView: View {
     @Environment(\.presentationMode) private var _mode: Binding<PresentationMode>
 
     var body: some View {
-        GeometryReader { proxy in
-            VStack {
-                Text("ADDED TO CART")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundColor(.white)
-                    .frame(width: proxy.size.width - 32, height: 20)
-                    .background(KColors.cTint)
-                Spacer()
-            }
-            .edgesIgnoringSafeArea([.leading, .trailing, .bottom])
-            .contentShape(Rectangle())
-            .onTapGesture {
-                self._mode.wrappedValue.dismiss()
-            }
+        VStack {
+            Text("ADDED TO CART")
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity,
+                       minHeight: 20, idealHeight: 20, maxHeight: 20)
+                .background(KColors.cTint)
+
+            Spacer()
+        }
+        .edgesIgnoringSafeArea([.leading, .trailing, .bottom])
+        .contentShape(Rectangle())
+        .onTapGesture {
+            self._mode.wrappedValue.dismiss()
         }
     }
 }

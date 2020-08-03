@@ -38,11 +38,13 @@ struct MenuRow: View {
                             Text(viewModel.nameText)
                                 .font(.system(size: 24, weight: .bold))
                                 .foregroundColor(KColors.textColor)
+                                .environment(\.colorScheme, .light)
                             Spacer()
                         }
                         Text(viewModel.ingredientsText)
                             .font(.system(size: 14))
                             .foregroundColor(KColors.textColor)
+                            .environment(\.colorScheme, .light)
                     }
                     Spacer()
                         .frame(width: 30)

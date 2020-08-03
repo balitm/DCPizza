@@ -19,16 +19,14 @@ struct SuccessView: View {
                     self._text("Thank you")
                     self._text("for your order!")
                     Spacer()
-
-                    // _FooterView(geometry: proxy)
                 }
-                .background(Color.white)
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    self._mode.wrappedValue.dismiss()
-                }
+                .background(Color(UIColor.systemBackground))
 
                 _FooterView(geometry: proxy)
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                self._mode.wrappedValue.dismiss()
             }
         }
     }

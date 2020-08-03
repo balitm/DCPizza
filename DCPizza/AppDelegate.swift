@@ -18,11 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Set navigation bar appearance.
         UINavigationBar.appearance().largeTitleTextAttributes = [
-            .foregroundColor: KColors.tint,
+            .foregroundColor: KColors.tint!,
         ]
 
         UINavigationBar.appearance().titleTextAttributes = [
-            .foregroundColor: KColors.tint,
+            .foregroundColor: KColors.tint!,
             .font: UIFont.systemFont(ofSize: 17, weight: .heavy),
         ]
 

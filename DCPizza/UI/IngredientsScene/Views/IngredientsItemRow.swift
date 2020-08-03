@@ -20,8 +20,10 @@ struct IngredientsItemRow: View {
                 .frame(width: 54)
                 .opacity(viewModel.isContained ? 1.0 : 0.0)
             Text(viewModel.name)
+                .foregroundColor(KColors.textColor)
             Spacer()
             Text(viewModel.priceText)
+                .foregroundColor(KColors.textColor)
             Spacer()
                 .frame(width: 12)
         }

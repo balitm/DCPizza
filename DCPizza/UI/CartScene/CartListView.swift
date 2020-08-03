@@ -69,7 +69,7 @@ private struct _ListHeader: View {
     var body: some View {
         Rectangle()
             .frame(maxWidth: .infinity, maxHeight: 12)
-            .foregroundColor(.white)
+            .foregroundColor(Color(UIColor.systemBackground))
             .listRowInsets(EdgeInsets())
     }
 }
