@@ -12,9 +12,6 @@ import Combine
 import Resolver
 
 final class CartViewModel: ObservableObject {
-    // Input
-    @Published var selected = -1
-
     // Output
     @Published var listData = [CartItemRowViewModel]()
     @Published var totalData = CartTotalRowViewModel(price: 0)
@@ -44,17 +41,6 @@ final class CartViewModel: ObservableObject {
             .assign(to: \.totalData, on: self)
             .store(in: &_bag)
 
-        // Remove item on tap/selected.
-        $selected
-            .filter({ $0 >= 0 })
-            .flatMap({ [service = _service] idx -> AnyPublisher<Void, Never> in
-                service.remove(at: idx)
-                    .catch({ _ in Empty<Void, Never>() })
-                    .eraseToAnyPublisher()
-            })
-            .sink {}
-            .store(in: &_bag)
-
         // Can checkout (cart is not empty).
         _service.items()
             .map({ !$0.isEmpty })
@@ -62,6 +48,7 @@ final class CartViewModel: ObservableObject {
             .store(in: &_bag)
     }
 
+    /// Buy content of the cart.
     func checkout() {
         _service.checkout()
             .catch({ error -> Empty<Void, Never> in
@@ -70,6 +57,17 @@ final class CartViewModel: ObservableObject {
             })
             .map({ true })
             .assign(to: \.showSuccess, on: self)
+            .store(in: &_bag)
+    }
+
+    /// Remove item on tap/selected.
+    func select(index: Int) {
+        Just(index)
+            .flatMap({ [service = _service] in
+                service.remove(at: $0)
+                    .catch({ _ in Empty<Void, Never>() })
+            })
+            .sink {}
             .store(in: &_bag)
     }
 }

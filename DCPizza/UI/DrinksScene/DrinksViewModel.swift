@@ -40,7 +40,9 @@ final class DrinksViewModel: ObservableObject {
             .store(in: &_bag)
     }
 
-    func select(index: Int) {
+    /// Remove the indexed item.
+    /// - Parameter index: index of the item to remove.
+    func removeFromCart(index: Int) {
         Just(index)
             .flatMap({ [service = _service] in
                 service.addToCart(drinkIndex: $0)

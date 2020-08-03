@@ -25,8 +25,12 @@ struct CartListView: View, Resolving {
                 List {
                     Section(header: _ListHeader(), footer: _ListHeader()) {
                         ForEach(self._viewModel.listData) { item in
-                            CartItemRow(viewModel: item)
-                                .listRowInsets(EdgeInsets())
+                            Button(action: {
+                                self._viewModel.select(index: item.index)
+                            }) {
+                                CartItemRow(viewModel: item)
+                                    .listRowInsets(EdgeInsets())
+                            }
                         }
                     }
 
