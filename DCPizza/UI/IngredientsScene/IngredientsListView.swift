@@ -54,7 +54,6 @@ struct IngredientsListView: View {
         })
         .edgesIgnoringSafeArea(.bottom)
         .navigationBarTitle(Text(_viewModel.title), displayMode: .inline)
-        .navigationBarBackButtonHidden(true)
         .backNavigationBarItems(_mode)
         .sheet(isPresented: $_viewModel.showAdded) {
             AddedView()

@@ -26,6 +26,7 @@ extension View {
             Image(systemName: "chevron.left")
                 .font(.system(size: 20, weight: .semibold))
         }
-        return navigationBarItems(leading: backButton)
+        return navigationBarBackButtonHidden(true)
+            .navigationBarItems(leading: backButton)
     }
 }

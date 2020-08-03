@@ -31,7 +31,6 @@ struct DrinksListView: View {
             $0.tableFooterView = UIView()
         })
         .navigationBarTitle(Text("DRINKS"), displayMode: .inline)
-        .navigationBarBackButtonHidden(true)
         .backNavigationBarItems(_mode)
         .sheet(isPresented: $_viewModel.showAdded, content: {
             AddedView()

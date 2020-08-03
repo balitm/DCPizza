@@ -49,7 +49,6 @@ struct CartListView: View, Resolving {
         }
         .edgesIgnoringSafeArea(.bottom)
         .navigationBarTitle(Text("CART"), displayMode: .inline)
-        .navigationBarBackButtonHidden(true)
         .backNavigationBarItems(_mode, trailing:
             NavigationLink(
                 destination: DrinksListView(),
