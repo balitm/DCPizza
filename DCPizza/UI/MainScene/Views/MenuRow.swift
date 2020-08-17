@@ -38,13 +38,11 @@ struct MenuRow: View {
                             Text(viewModel.nameText)
                                 .font(.system(size: 24, weight: .bold))
                                 .foregroundColor(KColors.textColor)
-                                .environment(\.colorScheme, .light)
                             Spacer()
                         }
                         Text(viewModel.ingredientsText)
                             .font(.system(size: 14))
                             .foregroundColor(KColors.textColor)
-                            .environment(\.colorScheme, .light)
                     }
                     Spacer()
                         .frame(width: 30)
@@ -54,23 +52,24 @@ struct MenuRow: View {
                         HStack {
                             Image("ic_cart_button")
                                 .resizable()
-                                .foregroundColor(.white)
+                                .foregroundColor(KColors.price)
                                 .frame(width: 14, height: 14)
                                 .scaledToFit()
                             Spacer()
                                 .frame(width: 4)
                             Text(viewModel.priceText)
-                                .foregroundColor(.white)
+                                .foregroundColor(KColors.price)
                                 .font(.system(size: 16, weight: .bold))
                         }
                         .frame(width: 64, height: 28)
                         .background(RoundedRectangle(cornerRadius: 8)
-                            .fill(Color(hex: 0xFFCD2B)))
+                            .fill(KColors.yellow)
+                        )
                     }
                     .buttonStyle(BorderlessButtonStyle())
                 }
                 .padding()
-                .background(Blur(style: .systemMaterialLight))
+                .background(Blur(style: .systemThinMaterial))
             }
         }
     }
@@ -80,8 +79,13 @@ struct MenuRow_Previews: PreviewProvider {
     static var previews: some View {
         let pizzas = PizzaData.pizzas
         return Group {
-            MenuRow(viewModel: MenuRowViewModel(index: 0, basePrice: pizzas.basePrice, pizza: pizzas.pizzas[0]))
-            MenuRow(viewModel: MenuRowViewModel(index: 1, basePrice: pizzas.basePrice, pizza: pizzas.pizzas[1]))
+            MenuRow(viewModel: MenuRowViewModel(index: 0,
+                                                basePrice: pizzas.basePrice,
+                                                pizza: pizzas.pizzas[0]))
+            MenuRow(viewModel: MenuRowViewModel(index: 1,
+                                                basePrice: pizzas.basePrice,
+                                                pizza: pizzas.pizzas[1]))
+                .environment(\.colorScheme, .dark)
         }
         .previewLayout(.fixed(width: 300, height: 179))
     }
