@@ -75,7 +75,7 @@ private struct _FooterView: View {
             }) {
                 Text(_viewModel.cartText)
                     .frame(width: geometry.size.width, height: 50)
-                    .foregroundColor(.white)
+                    .foregroundColor(KColors.price)
             }
             if geometry.safeAreaInsets.bottom > 0 {
                 Spacer()
