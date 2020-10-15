@@ -34,6 +34,7 @@ struct MenuListView: View, Resolving {
                     .listRowInsets(EdgeInsets())
                 }
             }
+            .listStyle(PlainListStyle())
             .introspectTableView {
                 $0.separatorStyle = .none
             }

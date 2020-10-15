@@ -16,7 +16,8 @@ extension View {
             Image(systemName: "chevron.left")
                 .font(.system(size: 20, weight: .semibold))
         }
-        return navigationBarItems(leading: backButton, trailing: trailing)
+        return navigationBarBackButtonHidden(true)
+            .navigationBarItems(leading: backButton, trailing: trailing)
     }
 
     func backNavigationBarItems(_ mode: Binding<PresentationMode>) -> some View {

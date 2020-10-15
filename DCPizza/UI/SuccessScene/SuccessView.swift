@@ -28,6 +28,7 @@ struct SuccessView: View {
             .onTapGesture {
                 self._mode.wrappedValue.dismiss()
             }
+            .edgesIgnoringSafeArea(.bottom)
         }
     }
 
@@ -45,11 +46,7 @@ private struct _FooterView: View {
         VStack(spacing: 0) {
             Rectangle()
                 .foregroundColor(KColors.cTint)
-                .frame(width: geometry.size.width, height: 50)
-            if geometry.safeAreaInsets.bottom > 0 {
-                Spacer()
-                    .frame(height: geometry.safeAreaInsets.bottom)
-            }
+                .frame(width: geometry.size.width, height: 50 + geometry.safeAreaInsets.bottom)
         }
         .background(KColors.cTint)
     }

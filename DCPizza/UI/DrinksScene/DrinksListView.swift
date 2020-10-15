@@ -26,15 +26,16 @@ struct DrinksListView: View {
                 .listRowInsets(EdgeInsets())
             }
         }
+        .listStyle(PlainListStyle())
         .introspectTableView(customize: {
             $0.separatorStyle = .singleLine
             $0.tableFooterView = UIView()
         })
         .navigationBarTitle(Text("DRINKS"), displayMode: .inline)
         .backNavigationBarItems(_mode)
-        .sheet(isPresented: $_viewModel.showAdded, content: {
+        .sheet(isPresented: $_viewModel.showAdded) {
             AddedView()
-        })
+        }
     }
 }
 

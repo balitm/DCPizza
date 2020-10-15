@@ -14,6 +14,7 @@ import Introspect
 struct CartListView: View, Resolving {
     @Environment(\.presentationMode) private var _mode: Binding<PresentationMode>
     @EnvironmentObject private var _viewModel: CartViewModel
+    @EnvironmentObject private var _drinksViewModel: DrinksViewModel
 
     init() {
         DLog(">>> inited: ", type(of: self))
@@ -49,19 +50,22 @@ struct CartListView: View, Resolving {
 
                 _FooterView(geometry: geometry)
             }
-        }
-        .edgesIgnoringSafeArea(.bottom)
-        .navigationBarTitle(Text("CART"), displayMode: .inline)
-        .backNavigationBarItems(_mode, trailing:
-            NavigationLink(
-                destination: resolver.resolve(DrinksListView.self),
-                label: {
+            .edgesIgnoringSafeArea(.bottom)
+            .navigationBarTitle(Text("CART"), displayMode: .inline)
+            .backNavigationBarItems(
+                _mode,
+                trailing:
+                NavigationLink(destination: resolver.resolve(DrinksListView.self)
+                    .environmentObject(_drinksViewModel)
+                ) {
                     Image("ic_drinks")
-                })
-        )
-        .sheet(isPresented: $_viewModel.showSuccess, content: {
-            SuccessView()
-        })
+                }
+                .isDetailLink(false)
+            )
+            .sheet(isPresented: $_viewModel.showSuccess) {
+                SuccessView()
+            }
+        }
     }
 }
 
@@ -80,20 +84,15 @@ private struct _FooterView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ZStack {
-                Rectangle()
-                    .frame(width: geometry.size.width, height: 50)
-                    .foregroundColor(KColors.cTint)
-                Text("CHECKOUT")
-                    .font(.system(size: 16, weight: .bold))
-                    .frame(width: geometry.size.width - 32, height: 50)
-                    .foregroundColor(self._viewModel.canCheckout ? .white : .gray)
-                    .contentShape(Rectangle())
-                    .onTapGesture(perform: {
-                        self._viewModel.checkout()
-                    })
-                    .disabled(!self._viewModel.canCheckout)
-            }
+            Text("CHECKOUT")
+                .font(.system(size: 16, weight: .bold))
+                .frame(width: geometry.size.width, height: 50)
+                .foregroundColor(self._viewModel.canCheckout ? .white : .gray)
+                .contentShape(Rectangle())
+                .onTapGesture(perform: {
+                    self._viewModel.checkout()
+                })
+                .disabled(!self._viewModel.canCheckout)
 
             if geometry.safeAreaInsets.bottom > 0 {
                 Spacer()
