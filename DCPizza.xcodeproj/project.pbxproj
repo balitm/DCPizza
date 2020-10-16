@@ -15,6 +15,7 @@
 		2951270524AA70A900B8D657 /* AppDelegate+Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2951270424AA70A900B8D657 /* AppDelegate+Injection.swift */; };
 		2951270724AA747400B8D657 /* Menu+Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2951270624AA747400B8D657 /* Menu+Injection.swift */; };
 		2955F63424D0AC110073F09F /* Introspect in Frameworks */ = {isa = PBXBuildFile; productRef = 2955F63324D0AC110073F09F /* Introspect */; };
+		295658282539FBA2007412B9 /* Publishers+Assign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2993798A24D3447C00E215CC /* Publishers+Assign.swift */; };
 		295A7D7024B4F78300B6F7B3 /* SuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295A7D6F24B4F78300B6F7B3 /* SuccessView.swift */; };
 		295C184124B381DE00F345F0 /* Cart+Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C184024B381DE00F345F0 /* Cart+Injection.swift */; };
 		295DC86924910A5800E0591F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 295DC86724910A5800E0591F /* Main.storyboard */; };
@@ -36,7 +37,6 @@
 		295DC8CE24910EEF00E0591F /* AlamofireNetworkActivityIndicator in Frameworks */ = {isa = PBXBuildFile; productRef = 295DC8CD24910EEF00E0591F /* AlamofireNetworkActivityIndicator */; };
 		29607EA624C30BF90090082F /* BackModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29607EA524C30BF90090082F /* BackModifier.swift */; };
 		2962870C24AFB5AC00EA90AF /* Ingredients+Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2962870B24AFB5AC00EA90AF /* Ingredients+Injection.swift */; };
-		2993798B24D3447C00E215CC /* Publishers+Assign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2993798A24D3447C00E215CC /* Publishers+Assign.swift */; };
 		2994181724B331A90048DDD5 /* CartListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2994181624B331A90048DDD5 /* CartListView.swift */; };
 		2994181924B333350048DDD5 /* PaddingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2994181824B333350048DDD5 /* PaddingRow.swift */; };
 		2994181B24B336DD0048DDD5 /* CartItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2994181A24B336DD0048DDD5 /* CartItemRow.swift */; };
@@ -421,7 +421,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1150;
-				LastUpgradeCheck = 1150;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "kil-dev";
 				TargetAttributes = {
 					29B56A4C2490197F0070EBC8 = {
@@ -493,7 +493,6 @@
 				2994181B24B336DD0048DDD5 /* CartItemRow.swift in Sources */,
 				295DC8C424910C0C00E0591F /* MenuListViewModel.swift in Sources */,
 				29C3BE90249FB06800AE7F6F /* IngredientsItemRowViewModel.swift in Sources */,
-				2993798B24D3447C00E215CC /* Publishers+Assign.swift in Sources */,
 				295DC8B924910C0C00E0591F /* IngredientsViewModel.swift in Sources */,
 				29374E662494059E001D83AD /* AddedView.swift in Sources */,
 				295DC8AE24910C0C00E0591F /* CartTotalRowViewModel.swift in Sources */,
@@ -520,6 +519,7 @@
 				295DC8A524910C0C00E0591F /* PriceFormatter.swift in Sources */,
 				2994181724B331A90048DDD5 /* CartListView.swift in Sources */,
 				29B56A532490197F0070EBC8 /* SceneDelegate.swift in Sources */,
+				295658282539FBA2007412B9 /* Publishers+Assign.swift in Sources */,
 				29C3BE8E249FAE2900AE7F6F /* IngredientsItemRow.swift in Sources */,
 				295DC8BF24910C0C00E0591F /* Color+Extension.swift in Sources */,
 			);
@@ -589,6 +589,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -649,6 +650,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
