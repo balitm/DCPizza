@@ -38,21 +38,34 @@ struct MenuListView: View, Resolving {
             .introspectTableView {
                 $0.separatorStyle = .none
             }
-            .navigationBarTitle("NENNO'S PIZZA")
-            .navigationBarItems(
-                leading: NavigationLink(destination:
-                    resolver.resolve(CartListView.self)
-                        .environmentObject(resolver.resolve(CartViewModel.self))
-                        .environmentObject(resolver.resolve(DrinksViewModel.self))
-                ) {
-                    Image("ic_cart_navbar")
-                },
-                trailing: NavigationLink(destination:
-                    resolver.resolve(IngredientsListView.self,
-                                     args: Just(Pizza()).eraseToAnyPublisher())
-                ) {
-                    Image(systemName: "plus")
-                })
+            .navigationTitle(Text("NENNO'S PIZZA"))
+            // .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    HStack {
+                        Text("")
+                        NavigationLink(
+                            destination:
+                            resolver.resolve(CartListView.self)
+                                .environmentObject(resolver.resolve(CartViewModel.self))
+                                .environmentObject(resolver.resolve(DrinksViewModel.self))
+                        ) {
+                            Image("ic_cart_navbar")
+                        }
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    HStack {
+                        Text("")
+                        NavigationLink(destination:
+                            resolver.resolve(IngredientsListView.self,
+                                             args: Just(Pizza()).eraseToAnyPublisher())
+                        ) {
+                            Image(systemName: "plus")
+                        }
+                    }
+                }
+            }
             .sheet(isPresented: $_viewModel.showAdded) {
                 AddedView()
             }

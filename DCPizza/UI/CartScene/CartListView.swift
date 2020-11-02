@@ -51,7 +51,8 @@ struct CartListView: View, Resolving {
                 _FooterView(geometry: geometry)
             }
             .edgesIgnoringSafeArea(.bottom)
-            .navigationBarTitle(Text("CART"), displayMode: .inline)
+            .navigationTitle(Text("CART"))
+            .navigationBarTitleDisplayMode(.inline)
             .backNavigationBarItems(
                 _mode,
                 trailing:

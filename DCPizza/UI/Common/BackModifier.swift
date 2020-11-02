@@ -10,13 +10,21 @@ import SwiftUI
 
 extension View {
     func backNavigationBarItems<T>(_ mode: Binding<PresentationMode>, trailing: T) -> some View where T: View {
-        let backButton = Button(action: {
+        let backButton = Button {
             mode.wrappedValue.dismiss()
-        }) {
+        } label: {
             Image(systemName: "chevron.left")
                 .font(.system(size: 20, weight: .semibold))
         }
         return navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    backButton
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    trailing
+                }
+            }
             .navigationBarItems(leading: backButton, trailing: trailing)
     }
 

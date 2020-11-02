@@ -53,7 +53,8 @@ struct IngredientsListView: View {
             }
         })
         .edgesIgnoringSafeArea(.bottom)
-        .navigationBarTitle(Text(_viewModel.title), displayMode: .inline)
+        .navigationTitle(_viewModel.title)
+        .navigationBarTitleDisplayMode(.inline)
         .backNavigationBarItems(_mode)
         .sheet(isPresented: $_viewModel.showAdded) {
             AddedView()
