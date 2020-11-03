@@ -23,29 +23,24 @@ struct CartListView: View, Resolving {
     var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .center, spacing: 0) {
-                List {
-                    Section(header: _ListHeader(), footer: _ListHeader()) {
-                        ForEach(self._viewModel.listData) { item in
-                            Button(action: {
-                                self._viewModel.select(index: item.index)
-                            }) {
-                                CartItemRow(viewModel: item)
-                                    .listRowInsets(EdgeInsets())
+                ScrollView {
+                    LazyVStack(spacing: 0) {
+                        Section(header: _ListHeader(), footer: _ListHeader()) {
+                            ForEach(self._viewModel.listData) { item in
+                                Button {
+                                    self._viewModel.select(index: item.index)
+                                } label: {
+                                    CartItemRow(viewModel: item)
+                                        .listRowInsets(EdgeInsets())
+                                }
                             }
                         }
-                    }
 
-                    Section(header: _ListHeader()) {
-                        CartTotalRow(viewModel: self._viewModel.totalData)
-                            .listRowInsets(EdgeInsets())
+                        Section(header: _ListHeader()) {
+                            CartTotalRow(viewModel: self._viewModel.totalData)
+                                .listRowInsets(EdgeInsets())
+                        }
                     }
-                }
-                .listStyle(GroupedListStyle())
-                .environment(\.defaultMinListHeaderHeight, 12)
-                .introspectTableView {
-                    $0.separatorStyle = .none
-                    $0.backgroundColor = .clear
-                    $0.backgroundView = nil
                 }
 
                 _FooterView(geometry: geometry)
@@ -73,7 +68,7 @@ struct CartListView: View, Resolving {
 private struct _ListHeader: View {
     var body: some View {
         Rectangle()
-            .frame(maxWidth: .infinity, maxHeight: 12)
+            .frame(maxWidth: .infinity, minHeight: 12, maxHeight: 12)
             .foregroundColor(Color(UIColor.systemBackground))
             .listRowInsets(EdgeInsets())
     }
