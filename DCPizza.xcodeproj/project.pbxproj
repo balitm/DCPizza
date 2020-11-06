@@ -12,11 +12,13 @@
 		29015C4424B8FD7900F6761C /* Drinks+Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29015C4324B8FD7900F6761C /* Drinks+Injection.swift */; };
 		29374E662494059E001D83AD /* AddedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29374E652494059E001D83AD /* AddedView.swift */; };
 		2951270324AA6E2A00B8D657 /* Resolver in Frameworks */ = {isa = PBXBuildFile; productRef = 2951270224AA6E2A00B8D657 /* Resolver */; };
-		2951270524AA70A900B8D657 /* AppDelegate+Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2951270424AA70A900B8D657 /* AppDelegate+Injection.swift */; };
+		2951270524AA70A900B8D657 /* App+Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2951270424AA70A900B8D657 /* App+Injection.swift */; };
 		2951270724AA747400B8D657 /* Menu+Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2951270624AA747400B8D657 /* Menu+Injection.swift */; };
+		2955386B254C811C00D5A62D /* DCPizzaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2955386A254C811C00D5A62D /* DCPizzaApp.swift */; };
 		2955F63424D0AC110073F09F /* Introspect in Frameworks */ = {isa = PBXBuildFile; productRef = 2955F63324D0AC110073F09F /* Introspect */; };
 		295658282539FBA2007412B9 /* Publishers+Assign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2993798A24D3447C00E215CC /* Publishers+Assign.swift */; };
 		295A7D7024B4F78300B6F7B3 /* SuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295A7D6F24B4F78300B6F7B3 /* SuccessView.swift */; };
+		295A85FC255031B7005F1E8C /* DCPizzaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295A85FB255031B7005F1E8C /* DCPizzaViewModel.swift */; };
 		295C184124B381DE00F345F0 /* Cart+Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C184024B381DE00F345F0 /* Cart+Injection.swift */; };
 		295DC86924910A5800E0591F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 295DC86724910A5800E0591F /* Main.storyboard */; };
 		295DC8A524910C0C00E0591F /* PriceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC87024910C0C00E0591F /* PriceFormatter.swift */; };
@@ -42,7 +44,6 @@
 		2994181B24B336DD0048DDD5 /* CartItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2994181A24B336DD0048DDD5 /* CartItemRow.swift */; };
 		2994181D24B33A5D0048DDD5 /* CartTotalRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2994181C24B33A5D0048DDD5 /* CartTotalRow.swift */; };
 		2994181E24B3431D0048DDD5 /* CartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC87824910C0C00E0591F /* CartViewModel.swift */; };
-		29B56A512490197F0070EBC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B56A502490197F0070EBC8 /* AppDelegate.swift */; };
 		29B56A532490197F0070EBC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B56A522490197F0070EBC8 /* SceneDelegate.swift */; };
 		29B56A57249019800070EBC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29B56A56249019800070EBC8 /* Assets.xcassets */; };
 		29B56A5A249019800070EBC8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29B56A59249019800070EBC8 /* Preview Assets.xcassets */; };
@@ -72,9 +73,11 @@
 		29015C4124B8F94600F6761C /* DrinksListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrinksListView.swift; sourceTree = "<group>"; };
 		29015C4324B8FD7900F6761C /* Drinks+Injection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Drinks+Injection.swift"; sourceTree = "<group>"; };
 		29374E652494059E001D83AD /* AddedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddedView.swift; sourceTree = "<group>"; };
-		2951270424AA70A900B8D657 /* AppDelegate+Injection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+Injection.swift"; sourceTree = "<group>"; };
+		2951270424AA70A900B8D657 /* App+Injection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "App+Injection.swift"; sourceTree = "<group>"; };
 		2951270624AA747400B8D657 /* Menu+Injection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Menu+Injection.swift"; sourceTree = "<group>"; };
+		2955386A254C811C00D5A62D /* DCPizzaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCPizzaApp.swift; sourceTree = "<group>"; };
 		295A7D6F24B4F78300B6F7B3 /* SuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessView.swift; sourceTree = "<group>"; };
+		295A85FB255031B7005F1E8C /* DCPizzaViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCPizzaViewModel.swift; sourceTree = "<group>"; };
 		295C184024B381DE00F345F0 /* Cart+Injection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cart+Injection.swift"; sourceTree = "<group>"; };
 		295DC86824910A5800E0591F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		295DC87024910C0C00E0591F /* PriceFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PriceFormatter.swift; sourceTree = "<group>"; };
@@ -101,7 +104,6 @@
 		2994181A24B336DD0048DDD5 /* CartItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartItemRow.swift; sourceTree = "<group>"; };
 		2994181C24B33A5D0048DDD5 /* CartTotalRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartTotalRow.swift; sourceTree = "<group>"; };
 		29B56A4D2490197F0070EBC8 /* DCPizza.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DCPizza.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		29B56A502490197F0070EBC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		29B56A522490197F0070EBC8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		29B56A56249019800070EBC8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		29B56A59249019800070EBC8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -334,14 +336,15 @@
 			isa = PBXGroup;
 			children = (
 				295DC86A24910C0C00E0591F /* UI */,
-				29B56A502490197F0070EBC8 /* AppDelegate.swift */,
-				2951270424AA70A900B8D657 /* AppDelegate+Injection.swift */,
+				2955386A254C811C00D5A62D /* DCPizzaApp.swift */,
+				2951270424AA70A900B8D657 /* App+Injection.swift */,
 				29B56A522490197F0070EBC8 /* SceneDelegate.swift */,
 				295DC86724910A5800E0591F /* Main.storyboard */,
 				29B56A56249019800070EBC8 /* Assets.xcassets */,
 				29B56A5B249019800070EBC8 /* LaunchScreen.storyboard */,
 				29B56A5E249019800070EBC8 /* Info.plist */,
 				29B56A58249019800070EBC8 /* Preview Content */,
+				295A85FB255031B7005F1E8C /* DCPizzaViewModel.swift */,
 			);
 			path = DCPizza;
 			sourceTree = "<group>";
@@ -496,7 +499,6 @@
 				295DC8B924910C0C00E0591F /* IngredientsViewModel.swift in Sources */,
 				29374E662494059E001D83AD /* AddedView.swift in Sources */,
 				295DC8AE24910C0C00E0591F /* CartTotalRowViewModel.swift in Sources */,
-				29B56A512490197F0070EBC8 /* AppDelegate.swift in Sources */,
 				295DC8C724910C0C00E0591F /* DrinkRowViewModel.swift in Sources */,
 				295DC8C224910C0C00E0591F /* MenuListView.swift in Sources */,
 				295A7D7024B4F78300B6F7B3 /* SuccessView.swift in Sources */,
@@ -505,15 +507,17 @@
 				295DC8A624910C0C00E0591F /* Blur.swift in Sources */,
 				2951270724AA747400B8D657 /* Menu+Injection.swift in Sources */,
 				29015C4024B8F6BB00F6761C /* DrinkRow.swift in Sources */,
+				2955386B254C811C00D5A62D /* DCPizzaApp.swift in Sources */,
 				295DC8C024910C0C00E0591F /* UIColor+Extensions.swift in Sources */,
 				295DC8C624910C0C00E0591F /* DrinksViewModel.swift in Sources */,
+				295A85FC255031B7005F1E8C /* DCPizzaViewModel.swift in Sources */,
 				295DC8C124910C0C00E0591F /* MenuRowViewModel.swift in Sources */,
 				295DC8AC24910C0C00E0591F /* PaddingRowViewModel.swift in Sources */,
 				2994181D24B33A5D0048DDD5 /* CartTotalRow.swift in Sources */,
 				29015C4424B8FD7900F6761C /* Drinks+Injection.swift in Sources */,
 				29C3BE8A249FA40200AE7F6F /* IngredientsHeaderRow.swift in Sources */,
 				295DC8AD24910C0C00E0591F /* CartItemRowViewModel.swift in Sources */,
-				2951270524AA70A900B8D657 /* AppDelegate+Injection.swift in Sources */,
+				2951270524AA70A900B8D657 /* App+Injection.swift in Sources */,
 				2962870C24AFB5AC00EA90AF /* Ingredients+Injection.swift in Sources */,
 				2994181E24B3431D0048DDD5 /* CartViewModel.swift in Sources */,
 				295DC8A524910C0C00E0591F /* PriceFormatter.swift in Sources */,
@@ -614,7 +618,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -669,7 +673,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

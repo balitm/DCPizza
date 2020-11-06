@@ -31,7 +31,8 @@ struct DrinksListView: View {
             $0.separatorStyle = .singleLine
             $0.tableFooterView = UIView()
         })
-        .navigationBarTitle(Text("DRINKS"), displayMode: .inline)
+        .navigationTitle(Text("DRINKS"))
+        .navigationBarTitleDisplayMode(.inline)
         .backNavigationBarItems(_mode)
         .sheet(isPresented: $_viewModel.showAdded) {
             AddedView()

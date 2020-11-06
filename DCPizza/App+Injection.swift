@@ -1,5 +1,5 @@
 //
-//  AppDelegate+Injection.swift
+//  App+Injection.swift
 //  DCPizza
 //
 //  Created by Balázs Kilvády on 6/29/20.
@@ -20,6 +20,9 @@ extension Resolver: ResolverRegistering {
         // Save service.
         register { resolve(UseCaseProvider.self).makeSaveService() }
             .scope(application)
+
+        // App view model.
+        register { DCPizzaViewModel() }
 
         registerMainServices()
         registerIngredients()
