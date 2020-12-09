@@ -39,7 +39,6 @@ struct MenuListView: View, Resolving {
                 $0.separatorStyle = .none
             }
             .navigationTitle(Text("NENNO'S PIZZA"))
-            // .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     HStack {
@@ -62,6 +61,7 @@ struct MenuListView: View, Resolving {
                                              args: Just(Pizza()).eraseToAnyPublisher())
                         ) {
                             Image(systemName: "plus")
+                                .accentColor(KColors.cTint)
                         }
                     }
                 }
