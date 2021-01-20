@@ -265,7 +265,7 @@ extension API {
 
             DLog("- Downloading: ", path, " - ", id)
 
-            let res = downloader.download(URLRequest(url: _url)) { [weak self] response in
+            let res = downloader.download(URLRequest(url: _url), completion: { [weak self] response in
                 guard let self = self else { return }
 
                 // print(response.request)
@@ -277,7 +277,7 @@ extension API {
                 case let .failure(error):
                     self.handleError(.netError(error: error))
                 }
-            }
+            })
 
             afRequest = res?.request
         }
@@ -305,7 +305,8 @@ extension CombinableType {
     }
 
     fileprivate func _perform(observer: CancelableObserver? = nil,
-                              onSuccess: @escaping SuccessBlock = { _ in }, onError: @escaping ErrorBlock = { _ in false }) {
+                              onSuccess: @escaping SuccessBlock = { _ in }, onError: @escaping ErrorBlock = { _ in false })
+    {
         let handlers = _HandlerBlocks<Target>(observer: observer, successBlock: onSuccess, errorBlock: onError)
         handlerKey = API._insert(handlers: handlers)
         _performIn()
