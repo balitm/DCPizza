@@ -805,7 +805,7 @@
 			repositoryURL = "https://github.com/hmlongco/Resolver.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.4;
+				minimumVersion = 1.4.0;
 			};
 		};
 		2955F63224D0AC110073F09F /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */ = {

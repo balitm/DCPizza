@@ -15,11 +15,11 @@ extension Resolver: ResolverRegistering {
     public static func registerAllServices() {
         // Provider.
         register { RepositoryUseCaseProvider() as UseCaseProvider }
-            .scope(application)
+            .scope(.application)
 
         // Save service.
         register { resolve(UseCaseProvider.self).makeSaveService() }
-            .scope(application)
+            .scope(.application)
 
         // App view model.
         register { DCPizzaViewModel() }

@@ -13,15 +13,14 @@ import Combine
 extension Resolver {
     static func registerIngredients() {
         // Ingredients.
-        register { (_, arg) -> IngredientsUseCase in
-            let pizza = _pizza(arg)
-            return resolve(UseCaseProvider.self).makeIngredientsService(pizza: pizza)
+        register { _, args -> IngredientsUseCase in
+            resolve(UseCaseProvider.self).makeIngredientsService(pizza: args())
         }
-        register { (_, arg) -> IngredientsViewModel in
-            IngredientsViewModel(service: resolve(args: arg))
+        register { _, args -> IngredientsViewModel in
+            IngredientsViewModel(service: resolve(args: args()))
         }
-        register { (_, arg) -> IngredientsListView in
-            IngredientsListView(viewModel: resolve(args: arg))
+        register { _, args -> IngredientsListView in
+            IngredientsListView(viewModel: resolve(args: args()))
         }
     }
 }
