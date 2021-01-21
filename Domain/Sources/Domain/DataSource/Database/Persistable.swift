@@ -54,7 +54,7 @@ extension DataSource {
             }
         }
 
-        func values<T: Persistable> (_ type: T.Type) -> [T] {
+        func values<T: Persistable>(_ type: T.Type) -> [T] {
             let results = _realm.objects(T.ManagedObject.self)
             return results.map { T(managedObject: $0) }
         }

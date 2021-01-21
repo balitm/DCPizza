@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-public struct API {
+public enum API {
     public enum ErrorType: Error {
         case invalidURL
         case disabled

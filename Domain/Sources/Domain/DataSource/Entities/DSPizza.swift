@@ -31,8 +31,8 @@ extension DataSource.Pizza: DomainConvertibleType {
 
 extension Domain.Pizza: DSRepresentable {
     func asDataSource() -> DataSource.Pizza {
-        return DS.Pizza(name: name,
-                        ingredients: ingredients.map { $0.id },
-                        imageUrl: imageUrl?.absoluteString)
+        DS.Pizza(name: name,
+                 ingredients: ingredients.map(\.id),
+                 imageUrl: imageUrl?.absoluteString)
     }
 }

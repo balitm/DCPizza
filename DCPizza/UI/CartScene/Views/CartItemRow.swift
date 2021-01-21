@@ -36,7 +36,7 @@ struct CartItemRow_Previews: PreviewProvider {
             viewModel: CartItemRowViewModel(
                 item: CartItem(name: "Name", price: 5.0, id: 0),
                 index: 0
-        ))
+            ))
             .previewLayout(.fixed(width: 375, height: 44))
     }
 }

@@ -23,7 +23,8 @@ class NetworklessUseCaseTestsBase: UseCaseTestsBase {
     }
 
     func addItemTest(addItem: () -> AnyPublisher<Void, Error>,
-                     test: (Cart) -> Void = { XCTAssertEqual($0.pizzas.count, 1) }) {
+                     test: (Cart) -> Void = { XCTAssertEqual($0.pizzas.count, 1) })
+    {
         data.cart.empty()
         XCTAssert(data.cart.pizzas.isEmpty)
         XCTAssert(data.cart.drinks.isEmpty)

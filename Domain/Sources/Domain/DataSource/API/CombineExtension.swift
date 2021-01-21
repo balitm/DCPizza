@@ -31,9 +31,9 @@ public protocol CombineCompatible {
     var cmb: Combinable<CombinableBase> { get set }
 }
 
-extension CombineCompatible {
+public extension CombineCompatible {
     /// Combinable extensions.
-    public static var cmb: Combinable<Self>.Type {
+    static var cmb: Combinable<Self>.Type {
         get {
             Combinable<Self>.self
         }
@@ -43,7 +43,7 @@ extension CombineCompatible {
     }
 
     /// Combinable extensions.
-    public var cmb: Combinable<Self> {
+    var cmb: Combinable<Self> {
         get {
             Combinable(self)
         }

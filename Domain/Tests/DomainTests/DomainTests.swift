@@ -92,7 +92,7 @@ class DomainTests: NetworklessUseCaseTestsBase {
         let cart = testCart!
 
         let converted = cart.asDataSource().asDomain(with: component.ingredients, drinks: component.drinks)
-        DLog("converted:\n", converted.drinks.map { $0.id }, "\norig:\n", cart.drinks.map { $0.id })
+        DLog("converted:\n", converted.drinks.map(\.id), "\norig:\n", cart.drinks.map(\.id))
         let isConverted = _isEqual(converted, rhs: cart)
         XCTAssertTrue(isConverted)
     }
@@ -153,7 +153,7 @@ class DomainTests: NetworklessUseCaseTestsBase {
     }
 
     private func _isEqual(_ lhs: Domain.Cart, rhs: Domain.Cart) -> Bool {
-        lhs.pizzas.map({ $0.name }) == rhs.pizzas.map({ $0.name })
-            && lhs.drinks.map { $0.id } == rhs.drinks.map { $0.id }
+        lhs.pizzas.map(\.name) == rhs.pizzas.map(\.name)
+            && lhs.drinks.map(\.id) == rhs.drinks.map(\.id)
     }
 }

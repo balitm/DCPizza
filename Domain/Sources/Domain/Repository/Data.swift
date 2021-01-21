@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct PizzaData {
+public enum PizzaData {
     public static let drinks: [Drink] = load(_kDrinks)
     public static let ingredients: [Ingredient] = load(_kIngredients)
     static let dsPizzas: DS.Pizzas = load(_kPizzas)
