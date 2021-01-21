@@ -1,9 +1,16 @@
-## Clean architecture with Combine
+## Clean architecture with SwiftUI and Combine
 
-A sample home run pizza client using Reactive Domain/repository. Combine is used for reactive programming. A back-port to RxSwift is in progress.   
+A sample home run pizza client using Reactive Domain/repository. Combine is used for reactive programming.
 
 ### Build
 Swift Package Manager is used for managing the distributions and dependencies. The Domain and its underlying  sub-modules are in a private Swift Package called Domain.
+
+### Branches/Tags
+
+- swiftUI: A Domain package for domain/repository based implementation of clean architecture using **Combine** + **SwiftUI**
+- combine+clean: Domain package for domain/repository based implementation of clean architecture using **Combine** + **UIKit**
+- rx+clean: Domain package for domain/repository based implementation of clean architecture using **RxSwift** + **UIKit**
+- combine: **Combine** + **UIKit** based version. The Domain package implementation does not contain all the business logic but in the ViewModels there are a nice FPR implementation of the cart handling.
 
 ### Details
 The **Domain layer** defines a communication interface between the UI and the Data layers. The communication interface consists of entity structures and use case protocols. Use cases define functions/operations on the entities.
