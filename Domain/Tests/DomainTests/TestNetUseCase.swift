@@ -1,12 +1,13 @@
 //
 //  TestNetUseCase.swift
-//
+//  Domain
 //
 //  Created by Balázs Kilvády on 4/24/20.
 //
 
 import Foundation
 import Combine
+import class AlamofireImage.Image
 @testable import Domain
 
 struct TestNetUseCase: NetworkProtocol {
@@ -214,6 +215,10 @@ struct TestNetUseCase: NetworkProtocol {
         }
         """
         return _decode(DS.Pizzas.self, jsonStr)
+    }
+
+    func getImage(url: URL) -> AnyPublisher<Image, API.ErrorType> {
+        Empty<Image, API.ErrorType>().eraseToAnyPublisher()
     }
 
     func checkout(cart: DS.Cart) -> AnyPublisher<Void, API.ErrorType> {

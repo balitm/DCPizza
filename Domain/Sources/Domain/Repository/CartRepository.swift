@@ -35,19 +35,19 @@ struct CartRepository: CartUseCase {
     func checkout() -> AnyPublisher<Void, API.ErrorType> {
         _data.$cart
             .first()
-            .mapError({ _ in
+            .mapError { _ in
                 API.ErrorType.processingFailed
-            })
-            .flatMap({ [unowned data = _data] in
+            }
+            .flatMap { [unowned data = _data] in
                 data.network.checkout(cart: $0.asDataSource())
                     .zip(
                         Publishers.CartActionPublisher(data: data, action: .empty)
-                            .mapError({
+                            .mapError {
                                 DLog("Error received emptying the cart: ", $0)
                                 return API.ErrorType.processingFailed
-                            })
+                            }
                     ) { _, _ in () }
-            })
+            }
             .eraseToAnyPublisher()
     }
 }

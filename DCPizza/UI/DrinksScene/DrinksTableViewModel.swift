@@ -30,16 +30,16 @@ struct DrinksTableViewModel: ViewModelType {
 
     func transform(input: Input) -> Output {
         let items = _service.drinks()
-            .map({
+            .map {
                 $0.map { DrinkCellViewModel(name: $0.name, priceText: format(price: $0.price)) }
-            })
+            }
 
         // Add drink to cart.
         let showAdded = input.selected
-            .flatMap({ [service = _service] in
+            .flatMap { [service = _service] in
                 service.addToCart(drinkIndex: $0)
-                    .catch({ _ in Empty<Void, Never>() })
-            })
+                    .catch { _ in Empty<Void, Never>() }
+            }
 
         return Output(tableData: items.eraseToAnyPublisher(),
                       showAdded: showAdded.eraseToAnyPublisher())

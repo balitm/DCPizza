@@ -38,7 +38,7 @@ final class CartViewModel: ViewModelType {
     func transform(input: Input) -> Output {
         let models = _service.items()
             .zip(_service.total())
-            .map({ (pair: (items: [CartItem], total: Double)) -> [Item] in
+            .map { (pair: (items: [CartItem], total: Double)) -> [Item] in
                 var items = [Item.padding(viewModel: PaddingCellViewModel(height: 12))]
                 items.append(contentsOf:
                     pair.items.map { Item.item(viewModel: CartItemCellViewModel(item: $0)) }
@@ -46,26 +46,26 @@ final class CartViewModel: ViewModelType {
                 items.append(.padding(viewModel: PaddingCellViewModel(height: 24)))
                 items.append(.total(viewModel: CartTotalCellViewModel(price: pair.total)))
                 return items
-            })
+            }
 
         input.selected
-            .flatMap({ [service = _service] idx -> AnyPublisher<Void, Never> in
+            .flatMap { [service = _service] idx -> AnyPublisher<Void, Never> in
                 assert(idx > 0)
                 return service.remove(at: idx - 1)
-                    .catch({ _ in Empty<Void, Never>() })
+                    .catch { _ in Empty<Void, Never>() }
                     .eraseToAnyPublisher()
-            })
+            }
             .sink {}
             .store(in: &_bag)
 
         let checkout = input.checkout
-            .flatMap({ [service = _service] in
+            .flatMap { [service = _service] in
                 service.checkout()
-                    .catch({ _ in Empty<Void, Never>() })
-            })
+                    .catch { _ in Empty<Void, Never>() }
+            }
 
         let canCheckout = _service.items()
-            .map({ !$0.isEmpty })
+            .map { !$0.isEmpty }
 
         return Output(
             tableData: models.eraseToAnyPublisher(),

@@ -56,9 +56,9 @@ struct Cart {
     func items() -> [CartItem] {
         var items = pizzas.map { pizza in
             CartItem(name: pizza.name,
-                     price: pizza.ingredients.reduce(basePrice, {
+                     price: pizza.ingredients.reduce(basePrice) {
                          $0 + $1.price
-                 })
+                     }
             )
         }
         items.append(contentsOf: drinks.map {

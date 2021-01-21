@@ -47,12 +47,12 @@ private func _rfind<C: Collection>(domain: C, value: C.Element) -> C.Index? wher
 
 extension String {
     var lastPathComponent: String {
-        return componentsSeparated(by: "/")
+        componentsSeparated(by: "/")
     }
 
     func componentsSeparated(by separator: String.Element) -> String {
         if let idx = _rfind(domain: self, value: separator) {
-            return String(self[self.index(after: idx)...])
+            return String(self[index(after: idx)...])
         }
         return self
     }

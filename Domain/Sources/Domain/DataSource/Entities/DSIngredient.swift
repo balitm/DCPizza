@@ -8,6 +8,7 @@
 
 import Foundation
 
+// swiftformat:disable extensionAccessControl
 extension DataSource {
     public typealias Ingredient = Domain.Ingredient
 }

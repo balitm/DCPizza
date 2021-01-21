@@ -47,10 +47,10 @@ private extension CartViewController {
     func _bind() {
         let rightPublisher = navigationItem.rightBarButtonItem!.cmb.publisher().map { _ in () }.eraseToAnyPublisher()
         let selected = tableView.cmb.itemSelected()
-            .compactMap({ [unowned self] ip -> Int? in
+            .compactMap { [unowned self] ip -> Int? in
                 guard self.tableView.cellForRow(at: ip) is CartItemTableViewCell else { return nil }
                 return ip.row
-            })
+            }
         let tap = checkoutTap.cmb.event()
         let input = CartViewModel.Input(selected: selected.eraseToAnyPublisher(),
                                         checkout: tap.eraseToAnyPublisher())

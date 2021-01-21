@@ -33,60 +33,60 @@ final class MenuTableViewModel: ViewModelType {
     func transform(input: Input) -> Output {
         let cachedPizzas = CurrentValueRelay(Pizzas.empty)
         _service.pizzas()
-            .compactMap({
+            .compactMap {
                 switch $0 {
                 case let .success(pizzas):
                     return pizzas as Pizzas?
                 case .failure:
                     return nil
                 }
-            })
+            }
             .subscribe(cachedPizzas)
             .store(in: &_bag)
 
         let viewModels = cachedPizzas
             .throttle(for: 0.4, scheduler: RunLoop.current, latest: true)
-            .map({ pizzas -> [MenuCellViewModel] in
+            .map { pizzas -> [MenuCellViewModel] in
                 let basePrice = pizzas.basePrice
                 let vms = pizzas.pizzas.map {
                     MenuCellViewModel(basePrice: basePrice, pizza: $0)
                 }
                 DLog("############## update pizza vms. #########")
                 return vms
-            })
+            }
             .share()
 
         let cartEvents = viewModels
-            .map({ vms in
-                vms.enumerated().map({ pair in
+            .map { vms in
+                vms.enumerated().map { pair in
                     pair.element.tap
-                        .map({ _ in
+                        .map { _ in
                             pair.offset
-                        })
-                })
-            })
-            .flatMap({
+                        }
+                }
+            }
+            .flatMap {
                 Publishers.MergeMany($0)
-            })
+            }
 
         // Update cart on add events.
         let showAdded = cartEvents.combineLatest(cachedPizzas)
-            .flatMap({ [service = _service] in
+            .flatMap { [service = _service] in
                 service.addToCart(pizza: $0.1.pizzas[$0.0])
-                    .catch({ _ in Empty<Void, Never>() })
-            })
+                    .catch { _ in Empty<Void, Never>() }
+            }
 
         // A pizza is selected.
         let selected = input.selected
-            .map({ index in
+            .map { index in
                 cachedPizzas
-                    .map({ $0.pizzas[index] })
+                    .map { $0.pizzas[index] }
                     .eraseToAnyPublisher()
-            })
+            }
 
         // Pizza from scratch is selected.
         let scratch = input.scratch
-            .map({ Just(Pizza()).eraseToAnyPublisher() })
+            .map { Just(Pizza()).eraseToAnyPublisher() }
 
         let selection = selected.merge(with: scratch)
 

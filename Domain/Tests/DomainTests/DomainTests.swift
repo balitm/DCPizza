@@ -46,7 +46,7 @@ class DomainTests: UseCaseTestsBase {
             XCTAssert(true)
             expectation.fulfill()
         }, receiveValue: { _ in
-            })
+        })
         .store(in: &_bag)
 
         wait(for: [expectation], timeout: 120.0)
@@ -79,11 +79,11 @@ class DomainTests: UseCaseTestsBase {
         let dsPizzas = pizzas.asDataSource()
         let isConverted =
             dsPizzas.pizzas.count == pizzas.pizzas.count
-                && dsPizzas.pizzas.reduce(true, { r0, pizza in
-                    r0 && pizza.ingredients.reduce(true, { r1, id in
+                && dsPizzas.pizzas.reduce(true) { r0, pizza in
+                    r0 && pizza.ingredients.reduce(true) { r1, id in
                         r1 && component.ingredients.contains { $0.id == id }
-                })
-            })
+                    }
+                }
 
         XCTAssertTrue(isConverted)
     }
@@ -137,10 +137,10 @@ class DomainTests: UseCaseTestsBase {
             }
 
             // Delete from DB.
-            try container.write({
+            try container.write {
                 $0.delete(DS.Cart.self)
                 $0.delete(DS.Pizza.self)
-            })
+            }
 
             // Compare.
             let converted = dCart.asDomain(with: component.ingredients, drinks: component.drinks)
@@ -153,7 +153,7 @@ class DomainTests: UseCaseTestsBase {
     }
 
     private func _isEqual(_ lhs: Domain.Cart, rhs: Domain.Cart) -> Bool {
-        lhs.pizzas.map({ $0.name }) == rhs.pizzas.map({ $0.name })
+        lhs.pizzas.map { $0.name } == rhs.pizzas.map { $0.name }
             && lhs.drinks.map { $0.id } == rhs.drinks.map { $0.id }
     }
 }

@@ -46,13 +46,13 @@ final class IngredientsViewModel: ViewModelType {
         // Selections publisher.
         let selecteds = _service.ingredients(selected:
             input.selected
-                .compactMap({ $0 >= 1 ? $0 - 1 : nil })
+                .compactMap { $0 >= 1 ? $0 - 1 : nil }
                 .eraseToAnyPublisher()
         )
 
         // Table data source.
         let tableData = selecteds.combineLatest(_service.pizza())
-            .map({ (pair: (sels: [IngredientSelection], pizza: Pizza)) -> [Item] in
+            .map { (pair: (sels: [IngredientSelection], pizza: Pizza)) -> [Item] in
                 let items = pair.sels.map { elem -> Item in
                     Item.ingredient(
                         viewModel: IngredientsItemCellViewModel(name: elem.ingredient.name,
@@ -63,41 +63,41 @@ final class IngredientsViewModel: ViewModelType {
 
                 let header = [Item.header(viewModel: IngredientsHeaderCellViewModel(image: pair.pizza.image))]
                 return header + items
-            })
+            }
 
         // Selected ingredients.
         let selectedIngredients = CurrentValueSubject<[Ingredient], Never>([])
         selecteds
-            .map({ sels -> [Ingredient] in
+            .map { sels -> [Ingredient] in
                 sels.compactMap { $0.isOn ? $0.ingredient : nil }
-            })
+            }
             .subscribe(selectedIngredients)
             .store(in: &_bag)
 
         // Add pizza to cart.
         input.addEvent
-            .flatMap({ [service = _service] in
+            .flatMap { [service = _service] in
                 service.addToCart()
-                    .catch({ error -> Empty<Void, Never> in
+                    .catch { error -> Empty<Void, Never> in
                         DLog("recved error: ", error)
                         return Empty<Void, Never>()
-                    })
-            })
+                    }
+            }
             .sink {}
             .store(in: &_bag)
 
         let cartText = selectedIngredients
-            .map({ ings -> String? in
+            .map { ings -> String? in
                 // TODO: sketch suggest to show only ingredient prices
                 //       but + cart.basePrice would be better IMHO.
-                let sum = ings.reduce(0.0, { $0 + $1.price })
+                let sum = ings.reduce(0.0) { $0 + $1.price }
                 return "ADD TO CART (\(format(price: sum)))"
-            })
+            }
 
         let footerEvent = _makeFooterPublisher(selectedIngredients.eraseToAnyPublisher())
             .makeConnectable()
 
-        return Output(title: _service.name().map({ $0 as String? }).eraseToAnyPublisher(),
+        return Output(title: _service.name().map { $0 as String? }.eraseToAnyPublisher(),
                       tableData: tableData.eraseToAnyPublisher(),
                       cartText: cartText.eraseToAnyPublisher(),
                       showAdded: input.addEvent,
@@ -112,7 +112,7 @@ private extension IngredientsViewModel {
         let footerEvent = CurrentValueRelay(FooterEvent.hide)
 
         publisher
-            .compactMap({ $0.isEmpty ? nil : FooterEvent.show })
+            .compactMap { $0.isEmpty ? nil : FooterEvent.show }
             .subscribe(footerEvent)
             .store(in: &_bag)
 
@@ -122,7 +122,7 @@ private extension IngredientsViewModel {
                 self._timerCancellable = Timer.publish(every: 3.0, on: .main, in: .default)
                     .autoconnect()
                     .first()
-                    .map({ _ in FooterEvent.hide })
+                    .map { _ in FooterEvent.hide }
                     .subscribe(footerEvent)
             })
             .store(in: &_bag)

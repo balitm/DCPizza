@@ -44,7 +44,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private func _saveCart() {
         _service.saveCart()
-            .catch({ _ in Empty<Void, Never>() })
+            .catch { _ in Empty<Void, Never>() }
             .sink {}
             .store(in: &_bag)
     }

@@ -33,5 +33,4 @@ extension DatabaseContainerProtocol {
             DLog("# DB operation failed.")
         }
     }
-
 }

@@ -40,7 +40,7 @@ class DrinksTableViewController: UITableViewController {
 
     private func _bind() {
         let selected = tableView.cmb.itemSelected()
-            .map({ $0.row })
+            .map { $0.row }
             .eraseToAnyPublisher()
         let input = DrinksTableViewModel.Input(selected: selected)
         let out = _viewModel.transform(input: input)

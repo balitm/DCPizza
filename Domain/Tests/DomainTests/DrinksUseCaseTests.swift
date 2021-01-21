@@ -1,6 +1,6 @@
 //
 //  DrinksUseCaseTests.swift
-//
+//  Domain
 //
 //  Created by Balázs Kilvády on 5/20/20.
 //
@@ -27,6 +27,7 @@ class DrinksUseCaseTests: UseCaseTestsBase {
                     }
                 }, receiveValue: {
                     XCTAssertGreaterThan($0.count, 0)
+                    expectation.fulfill()
                 })
         }
     }

@@ -44,13 +44,13 @@ final class MenuTableViewController: UITableViewController {
 
     private func _bind() {
         let leftPublisher = navigationItem.leftBarButtonItem!.cmb.publisher()
-            .map({ _ in () })
+            .map { _ in () }
             .eraseToAnyPublisher()
         let rightPublisher = navigationItem.rightBarButtonItem!.cmb.publisher()
-            .map({ _ in () })
+            .map { _ in () }
             .eraseToAnyPublisher()
         let selected = tableView.cmb.itemSelected()
-            .map({ $0.row })
+            .map { $0.row }
             .eraseToAnyPublisher()
 
         let out = _viewModel.transform(input: MenuTableViewModel.Input(
