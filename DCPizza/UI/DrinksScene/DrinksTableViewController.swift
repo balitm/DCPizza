@@ -10,19 +10,18 @@ import UIKit
 import Domain
 import RxSwift
 import RxCocoa
-import RxDataSources
+import Resolver
 
 class DrinksTableViewController: UITableViewController {
-    typealias SectionModel = DrinksTableViewModel.SectionModel
+    typealias Item = DrinksTableViewModel.Item
 
     private var _navigator: Navigator!
-    private var _viewModel: DrinksTableViewModel!
+    @LazyInjected private var _viewModel: DrinksTableViewModel
     private let _bag = DisposeBag()
 
-    class func create(with navigator: Navigator, viewModel: DrinksTableViewModel) -> DrinksTableViewController {
-        let vc = navigator.storyboard.load(type: DrinksTableViewController.self)
+    class func create(with navigator: Navigator) -> Self {
+        let vc = navigator.storyboard.load(type: Self.self)
         vc._navigator = navigator
-        vc._viewModel = viewModel
         return vc
     }
 
@@ -35,41 +34,33 @@ class DrinksTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationItem.largeTitleDisplayMode = .never
         tableView.tableFooterView = UIView()
-
-        rx.viewWillDisappear
-            .subscribe(onNext: { [unowned self] _ in
-                self._viewModel.cart.on(.completed)
-            })
-            .disposed(by: _bag)
+        tableView.delegate = nil
+        tableView.dataSource = nil
 
         _bind()
     }
 
     private func _bind() {
         let selected = tableView.rx.itemSelected
-            .map({ $0.row })
+            .map { $0.row }
         let input = DrinksTableViewModel.Input(selected: selected)
         let out = _viewModel.transform(input: input)
 
-        // Table view.
-        let dataSource = RxTableViewSectionedReloadDataSource<SectionModel>(
-            configureCell: { ds, tv, ip, _ in
-                tv.createCell(DrinkTableViewCell.self, ds[ip], ip)
-            }
-        )
-        out.tableData
-            // .debug(trimOutput: true)
-            .drive(tableView.rx.items(dataSource: dataSource))
-            .disposed(by: _bag)
+        _bag.insert([
+            // Table view.
+            out.tableData
+                // .debug(trimOutput: true)
+                .drive(tableView.rx.items) { tableView, row, viewModel in
+                    tableView.createCell(DrinkTableViewCell.self, viewModel, IndexPath(row: row, section: 0))
+                },
 
-        // Show addedd.
-        out.showAdded
-            .drive(onNext: { [weak self] _ in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            // Show addedd.
+            out.showAdded
+                .drive(onNext: { [weak self] _ in
                     self?._navigator.showAdded()
-                }
-            })
-            .disposed(by: _bag)
+                }),
+        ])
     }
 }

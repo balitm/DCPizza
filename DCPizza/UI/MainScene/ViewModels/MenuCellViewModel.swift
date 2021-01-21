@@ -16,7 +16,8 @@ struct MenuCellViewModel {
     let nameText: String
     let ingredientsText: String
     let priceText: String
-    let imageUrl: URL?
+    let image: UIImage?
+    let url: URL?
     let tap = PublishRelay<Void>()
 
     init(basePrice: Double, pizza: Pizza) {
@@ -24,6 +25,7 @@ struct MenuCellViewModel {
         let price = pizza.price(from: basePrice)
         priceText = format(price: price)
         ingredientsText = pizza.ingredientNames()
-        imageUrl = pizza.imageUrl
+        image = pizza.image
+        url = pizza.imageUrl
     }
 }

@@ -11,4 +11,6 @@ import Foundation
 public struct Pizzas {
     public let pizzas: [Pizza]
     public let basePrice: Double
+
+    public static let empty = Pizzas(pizzas: [], basePrice: 0)
 }

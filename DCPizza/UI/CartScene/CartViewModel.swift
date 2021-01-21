@@ -12,17 +12,16 @@ import RxSwift
 import RxSwiftExt
 import RxDataSources
 import struct RxCocoa.Driver
+import Resolver
 
 struct CartViewModel: ViewModelType {
-    typealias DrinksData = (cart: UI.Cart, drinks: [Drink])
-
     struct SectionModel {
-        var items: [SectionItem]
+        var items: [Item]
     }
 
-    enum SectionItem {
+    enum Item {
         case padding(viewModel: PaddingCellViewModel)
-        case item(viewModel: CartItemCellViewModel)
+        case item(id: Int, viewModel: CartItemCellViewModel)
         case total(viewModel: CartTotalCellViewModel)
     }
 
@@ -34,91 +33,49 @@ struct CartViewModel: ViewModelType {
     struct Output {
         let tableData: Driver<[SectionModel]>
         let showSuccess: Driver<Void>
-        let showDrinks: Driver<DrinksData>
         let canCheckout: Driver<Bool>
     }
 
-    var resultCart: Observable<UI.Cart> { cart.asObservable().skip(1) }
-    let cart: BehaviorSubject<UI.Cart>
-    private let _networkUseCase: NetworkUseCase
-    private let _drinks: [Drink]
+    @Injected private var _service: CartUseCase
     private let _bag = DisposeBag()
 
-    init(networkUseCase: NetworkUseCase, cart: UI.Cart, drinks: [Drink]) {
-        self.cart = BehaviorSubject(value: cart)
-        _networkUseCase = networkUseCase
-        _drinks = drinks
-    }
-
     func transform(input: Input) -> Output {
-        let models = cart
-            .map({ cart -> [SectionModel] in
-                var items = [SectionItem.padding(viewModel: PaddingCellViewModel(height: 12))]
-                let pizzas = cart.pizzas.enumerated().map {
-                    SectionItem.item(viewModel: CartItemCellViewModel(pizza: $0.element,
-                                                                      basePrice: cart.basePrice,
-                                                                      id: cart.pizzaIds[$0.offset])
-                    )
-                }
-                let drinks = cart.drinks.enumerated().map {
-                    SectionItem.item(viewModel: CartItemCellViewModel(drink: $0.element,
-                                                                      id: cart.drinkIds[$0.offset])
-                    )
-                }
-                items.append(contentsOf: pizzas)
-                items.append(contentsOf: drinks)
+        let models = Observable.zip(_service.items(), _service.total())
+            .map { (pair: (items: [CartItem], total: Double)) -> [SectionModel] in
+                var items = [Item.padding(viewModel: PaddingCellViewModel(height: 12))]
+                items.append(
+                    contentsOf: pair.items.map { Item.item(id: $0.id, viewModel: CartItemCellViewModel(item: $0)) }
+                )
                 items.append(.padding(viewModel: PaddingCellViewModel(height: 24)))
-                items.append(.total(viewModel: CartTotalCellViewModel(price: cart.totalPrice())))
+                items.append(.total(viewModel: CartTotalCellViewModel(price: pair.total)))
                 return [SectionModel(items: items)]
-            })
+            }
         // .debug(trimOutput: true)
 
         input.selected
-            .withLatestFrom(cart) { (index: $0, cart: $1) }
-            .filterMap({ pair -> FilterMap<UI.Cart> in
-                assert(pair.index >= 1)
-                let index = pair.index - 1
-
-                // DLog(">>> index: ", index)
-                var newCart = pair.cart
-                newCart.remove(at: index)
-                // DLog(">>> pizzas in cart: ", newCart.pizzas.count)
-                return .map(newCart)
-            })
-            .bind(to: cart)
+            .flatMap { [service = _service] idx -> Completable in
+                assert(idx > 0)
+                return service.remove(at: idx - 1)
+                    .catch { _ in Completable.empty() }
+            }
+            .subscribe()
             .disposed(by: _bag)
 
         let checkout = input.checkout
-            .withLatestFrom(cart)
-            .flatMap({ [useCase = _networkUseCase] cart -> Observable<UI.Cart> in
-                useCase.checkout(cart: cart.asDomain())
-                    .map { cart }
-            })
-            .share()
+            .flatMap { [service = _service] in
+                service.checkout()
+                    .catch { _ in Completable.empty() }
+                    .andThen(Observable.just(()))
+            }
 
-        checkout
-            .map({
-                var newCart = $0
-                newCart.empty()
-                return newCart
-            })
-            .bind(to: cart)
-            .disposed(by: _bag)
-
-        let showDrinks = cart
-            .map({ [drinks = _drinks] in ($0, drinks) })
-            .asDriver(onErrorDriveWith: Driver<DrinksData>.never())
-
-        let canCheckout = cart
-            .map({ !$0.isEmpty })
+        let canCheckout = _service.items()
+            .map { !$0.isEmpty }
             .asDriver(onErrorJustReturn: false)
 
         return Output(
             tableData: models.asDriver(onErrorJustReturn: []),
             showSuccess: checkout
-                .map({ _ in () })
                 .asDriver(onErrorJustReturn: ()),
-            showDrinks: showDrinks,
             canCheckout: canCheckout
         )
     }
@@ -127,19 +84,19 @@ struct CartViewModel: ViewModelType {
 extension CartViewModel.SectionModel: AnimatableSectionModelType {
     var identity: Int { 0 }
 
-    typealias Item = CartViewModel.SectionItem
+    typealias Item = CartViewModel.Item
 
-    init(original: CartViewModel.SectionModel, items: [CartViewModel.SectionItem]) {
+    init(original: CartViewModel.SectionModel, items: [Item]) {
         self = original
         self.items = items
     }
 }
 
-extension CartViewModel.SectionItem: IdentifiableType, Equatable {
+extension CartViewModel.Item: IdentifiableType, Equatable {
     var identity: Int {
         switch self {
         case let .padding(viewModel): return 1000 + Int(viewModel.height)
-        case let .item(viewModel): return viewModel.id
+        case let .item(id, _): return id
         case .total: return 2000
         }
     }
@@ -153,7 +110,7 @@ extension CartViewModel.SectionItem: IdentifiableType, Equatable {
         }
     }
 
-    static func ==(lhs: CartViewModel.SectionItem, rhs: CartViewModel.SectionItem) -> Bool {
+    static func ==(lhs: CartViewModel.Item, rhs: CartViewModel.Item) -> Bool {
         lhs.identity == rhs.identity && lhs.unique == rhs.unique
     }
 }

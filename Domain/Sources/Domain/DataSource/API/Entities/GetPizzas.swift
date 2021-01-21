@@ -8,12 +8,8 @@
 
 import Foundation
 
-extension DS.Pizzas: EntityModel {}
-
 extension API {
-    typealias PizzasModel = ModelBase<DS.Pizzas>
-
-    class GetPizzas: RequestBase<PizzasModel> {
+    class GetPizzas: RequestBase<DS.Pizzas> {
         required init() {
             super.init()
             mainPath = "https://api.jsonbin.io/b/5e91f1a0cc62be4369c2e408"

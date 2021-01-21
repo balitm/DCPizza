@@ -9,9 +9,7 @@
 import Foundation
 
 extension API {
-    typealias DrinksModel = ModelBase<[DS.Drink]>
-
-    class GetDrinks: RequestBase<DrinksModel> {
+    class GetDrinks: RequestBase<[DS.Drink]> {
         required init() {
             super.init()
             mainPath = "https://api.jsonbin.io/b/5e91ef298e85c84370147b21"

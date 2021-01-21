@@ -9,66 +9,38 @@
 import Foundation
 import Domain
 import RxSwift
-import RxDataSources
 import struct RxCocoa.Driver
+import Resolver
 
 struct DrinksTableViewModel: ViewModelType {
+    typealias Item = DrinkCellViewModel
+
     struct Input {
         let selected: Observable<Int>
     }
 
     struct Output {
-        let tableData: Driver<[SectionModel]>
+        let tableData: Driver<[Item]>
         let showAdded: Driver<Void>
     }
 
-    var resultCart: Observable<UI.Cart> { cart.asObservable().skip(1) }
-    let cart: BehaviorSubject<UI.Cart>
-    private let _drinks: [Drink]
-    private let _bag = DisposeBag()
-
-    init(drinks: [Drink], cart: UI.Cart) {
-        _drinks = drinks
-        self.cart = BehaviorSubject(value: cart)
-    }
+    @Injected private var _service: DrinksUseCase
 
     func transform(input: Input) -> Output {
-        let items = _drinks.map {
-            DrinkCellViewModel(name: $0.name, priceText: format(price: $0.price))
-        }
+        let items = _service.drinks()
+            .map {
+                $0.map { DrinkCellViewModel(name: $0.name, priceText: format(price: $0.price)) }
+            }
 
         // Add drink to cart.
-        input.selected
-            .withLatestFrom(cart) { (index: $0, cart: $1) }
-            .map({ [drinks = _drinks] in
-                var newCart = $0.cart
-                newCart.add(drink: drinks[$0.index])
-                return newCart
-            })
-            .bind(to: cart)
-            .disposed(by: _bag)
-
         let showAdded = input.selected
-            .map { _ in () }
-            .asDriver(onErrorJustReturn: ())
+            .flatMapLatest { [service = _service] in
+                service.addToCart(drinkIndex: $0)
+                    .catch { _ in Completable.never() }
+                    .andThen(Observable.just(()))
+            }
 
-        return Output(tableData: Driver.just([SectionModel(items: items)]),
-                      showAdded: showAdded)
-    }
-}
-
-extension DrinksTableViewModel {
-    typealias SectionItem = DrinkCellViewModel
-
-    struct SectionModel {
-        var items: [SectionItem]
-    }
-}
-
-extension DrinksTableViewModel.SectionModel: SectionModelType {
-    typealias Item = DrinksTableViewModel.SectionItem
-
-    init(original: DrinksTableViewModel.SectionModel, items: [Item]) {
-        self.items = items
+        return Output(tableData: items.asDriver(onErrorJustReturn: []),
+                      showAdded: showAdded.asDriver(onErrorJustReturn: ()))
     }
 }

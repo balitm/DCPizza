@@ -7,8 +7,12 @@
 //
 
 import Foundation
+import RxSwift
 
 public protocol UseCaseProvider {
-    func makeNetworkUseCase() -> NetworkUseCase
-    func makeDatabaseUseCase() -> DatabaseUseCase
+    func makeMenuService() -> MenuUseCase
+    func makeIngredientsService(pizza: Observable<Pizza>) -> IngredientsUseCase
+    func makeCartService() -> CartUseCase
+    func makeDrinksService() -> DrinksUseCase
+    func makeSaveService() -> SaveUseCase
 }

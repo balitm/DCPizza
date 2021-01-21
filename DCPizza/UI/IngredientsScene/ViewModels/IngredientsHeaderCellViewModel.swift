@@ -11,4 +11,8 @@ import class UIKit.UIImage
 
 struct IngredientsHeaderCellViewModel {
     let image: UIImage?
+
+    init(image: UIImage?) {
+        self.image = image
+    }
 }

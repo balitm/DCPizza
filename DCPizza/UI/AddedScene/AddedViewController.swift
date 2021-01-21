@@ -29,9 +29,9 @@ final class AddedViewController: UIViewController {
             .disposed(by: _bag)
 
         rx.viewDidAppear
-            .flatMap({ _ in
+            .flatMap { _ in
                 Observable<Int>.timer(.seconds(3), scheduler: MainScheduler.instance)
-            })
+            }
             .subscribe(onNext: { [unowned self] _ in
                 self.dismiss(animated: true)
             })

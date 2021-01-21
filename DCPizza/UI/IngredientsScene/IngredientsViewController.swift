@@ -43,20 +43,8 @@ final class IngredientsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationItem.largeTitleDisplayMode = .never
         tableView.tableFooterView = UIView()
-
-        rx.methodInvoked(#selector(willMove(toParent:)))
-            .filter({
-                if $0[0] is NSNull {
-                    return true
-                }
-                return false
-            })
-            .subscribe(onNext: { [unowned self] _ in
-                self._viewModel.cart.on(.completed)
-            })
-            .disposed(by: _bag)
-
         _bind()
     }
 }
@@ -70,10 +58,6 @@ private extension IngredientsViewController {
                                               addEvent: addTap.rx.event.map { _ in () })
         )
 
-        out.title
-            .drive(rx.title)
-            .dispose()
-
         let dataSource = RxTableViewSectionedAnimatedDataSource<SectionModel>(configureCell: { ds, tv, ip, _ in
             switch ds[ip] {
             case let .header(viewModel):
@@ -82,29 +66,32 @@ private extension IngredientsViewController {
                 return tv.createCell(IngredientsItemTableViewCell.self, viewModel, ip)
             }
         })
-        out.tableData
-            .drive(tableView.rx.items(dataSource: dataSource))
-            .disposed(by: _bag)
-
-        out.cartText
-            .drive(cartLabel.rx.text)
-            .disposed(by: _bag)
-
-        out.showAdded
-            .drive(onNext: { [unowned self] in
-                self._navigator.showAdded()
-            })
-            .disposed(by: _bag)
 
         // Pause footer events until view appeared.
         let pauser = rx.viewDidAppear
             .map { _ in true }
 
-        out.footerEvent.asObservable()
-            .distinctUntilChanged()
-            .pausableBuffered(pauser, limit: 1)
-            .bind(to: rx._footer)
-            .disposed(by: _bag)
+        out.title
+            .drive(rx.title)
+            .dispose()
+
+        _bag.insert([
+            out.tableData
+                .drive(tableView.rx.items(dataSource: dataSource)),
+
+            out.cartText
+                .drive(cartLabel.rx.text),
+
+            out.showAdded
+                .drive(onNext: { [unowned self] in
+                    self._navigator.showAdded()
+                }),
+
+            out.footerEvent.asObservable()
+                .distinctUntilChanged()
+                .pausableBuffered(pauser, limit: 1)
+                .bind(to: rx._footer),
+        ])
     }
 
     func _displayFooter(_ event: FooterEvent) {

@@ -8,138 +8,94 @@
 
 import Foundation
 import Domain
+import Resolver
 import RxSwift
-import RxDataSources
 import RxRelay
+import RxDataSources
 import struct RxCocoa.Driver
 import class UIKit.UIImage
 
-struct MenuTableViewModel: ViewModelType {
-    typealias DrinksData = (cart: UI.Cart, drinks: [Drink])
-    typealias Selected = (index: Int, image: UIImage?)
-    typealias Selection = (
-        pizza: Pizza,
-        image: UIImage?,
-        ingredients: [Ingredient],
-        cart: UI.Cart
-    )
-
+final class MenuTableViewModel: ViewModelType {
     struct Input {
-        let selected: Observable<Selected>
+        let selected: Observable<Int>
         let scratch: Observable<Void>
-        let cart: Observable<Void>
-        let saveCart: Observable<Void>
     }
 
     struct Output {
         let tableData: Driver<[SectionModel]>
-        let selection: Driver<Selection>
+        let selection: Driver<Observable<Pizza>>
         let showAdded: Driver<Void>
-        let showCart: Driver<DrinksData>
     }
 
-    let cart = PublishRelay<UI.Cart>()
-    private let _networkUseCase: NetworkUseCase
-    private let _databaseUseCase: DatabaseUseCase
+    @Injected private var _service: MenuUseCase
     private let _bag = DisposeBag()
 
-    init(networkUseCase: NetworkUseCase, databaseUseCase: DatabaseUseCase) {
-        _networkUseCase = networkUseCase
-        _databaseUseCase = databaseUseCase
-    }
-
     func transform(input: Input) -> Output {
-        let data = _networkUseCase
-            .getInitData()
-            .catchErrorJustComplete()
-            .share()
+        let cachedPizzas = BehaviorRelay(value: Pizzas.empty)
+        _service.pizzas()
+            .compactMap {
+                switch $0 {
+                case let .success(pizzas):
+                    return pizzas as Pizzas?
+                case .failure:
+                    return nil
+                }
+            }
+            .bind(to: cachedPizzas)
+            .disposed(by: _bag)
 
-        let viewModels = data
-            .map({ data -> [MenuCellViewModel] in
-                let basePrice = data.pizzas.basePrice
-                let vms = data.pizzas.pizzas.map {
+        let viewModels = cachedPizzas
+            .throttle(.milliseconds(400), latest: true, scheduler: MainScheduler.instance)
+            .map { pizzas -> [MenuCellViewModel] in
+                let basePrice = pizzas.basePrice
+                let vms = pizzas.pizzas.map {
                     MenuCellViewModel(basePrice: basePrice, pizza: $0)
                 }
+                DLog("############## update pizza vms. #########")
                 return vms
-            })
+            }
             .share()
 
-        // Init the cart.
-        data
-            .map({ $0.cart.asUI() })
-            .bind(to: cart)
-            .disposed(by: _bag)
+        let sectionModels = viewModels
+            .map { [SectionModel(items: $0)] }
 
         let cartEvents = viewModels
-            .map({ vm in
-                vm.enumerated().map({ pair in
+            .map { vms in
+                vms.enumerated().map { pair in
                     pair.element.tap
-                        .map({ _ in
+                        .map { _ in
                             pair.offset
-                        })
-                })
-            })
-            .flatMap({
+                        }
+                }
+            }
+            .flatMap {
                 Observable.merge($0)
-            })
+            }
 
-        // Update cart.
-        cartEvents
-            .withLatestFrom(Observable.combineLatest(data, cart)) { (cart: $1.1, data: $1.0, idx: $0) }
-            // .debug(trimOutput: true)
-            .map({
-                var newCart = $0.cart
-                newCart.add(pizza: $0.data.pizzas.pizzas[$0.idx])
-                return newCart
-            })
-            .bind(to: cart)
-            .disposed(by: _bag)
-
-        let sections = viewModels
-            .map({ [SectionModel(items: $0)] })
-            .asDriver(onErrorJustReturn: [])
+        // Update cart on add events.
+        let showAdded = Observable.combineLatest(cartEvents, cachedPizzas)
+            .flatMapLatest { [service = _service] in
+                service.addToCart(pizza: $0.1.pizzas[$0.0])
+                    .catch { _ in Completable.never() }
+                    .andThen(Observable.just(()))
+            }
 
         // A pizza is selected.
         let selected = input.selected
-            .withLatestFrom(Observable.combineLatest(data, cart)) { (data: $1.0, selected: $0, cart: $1.1) }
-            .map({ t -> Selection in
-                let pizza = t.data.pizzas.pizzas[t.selected.index]
-                let image = t.selected.image
-                let ingredients = t.data.ingredients
-                return (pizza, image, ingredients, t.cart)
-            })
+            .map { index in
+                cachedPizzas
+                    .map { $0.pizzas[index] }
+            }
 
         // Pizza from scratch is selected.
         let scratch = input.scratch
-            .withLatestFrom(Observable.combineLatest(data, cart)) { (data: $1.0, cart: $1.1) }
-            .map({ t -> Selection in
-                let pizza = Pizza()
-                let ingredients = t.data.ingredients
-                return (pizza, nil, ingredients, t.cart)
-            })
+            .map { Observable.just(Pizza()) }
 
         let selection = Observable.merge(selected, scratch)
-            .asDriver(onErrorDriveWith: Driver<Selection>.never())
 
-        let showCart = input.cart
-            .withLatestFrom(Observable.combineLatest(data, cart), resultSelector: { (data: $1.0, cart: $1.1) })
-            .map({ t -> DrinksData in
-                (t.cart, t.data.drinks)
-            })
-            .asDriver(onErrorDriveWith: Driver<DrinksData>.never())
-
-        input.saveCart
-            .withLatestFrom(cart)
-            .subscribe(onNext: { [dbUseCase = _databaseUseCase] in
-                // DLog("save cart, pizzas: ", $0.pizzas.count, ", drinks: ", $0.drinks.count)
-                dbUseCase.save(cart: $0.asDomain())
-            })
-            .disposed(by: _bag)
-
-        return Output(tableData: sections,
-                      selection: selection,
-                      showAdded: cartEvents.map { _ in () }.asDriver(onErrorJustReturn: ()),
-                      showCart: showCart
+        return Output(tableData: sectionModels.asDriver(onErrorJustReturn: []),
+                      selection: selection.asDriver(onErrorJustReturn: Observable<Pizza>.empty()),
+                      showAdded: showAdded.asDriver(onErrorDriveWith: Driver<Void>.never())
         )
     }
 }
@@ -150,10 +106,27 @@ extension MenuTableViewModel {
     }
 }
 
-extension MenuTableViewModel.SectionModel: SectionModelType {
+extension MenuTableViewModel.SectionModel: AnimatableSectionModelType {
     typealias Item = MenuCellViewModel
 
+    var identity: Int { 0 }
+
     init(original: MenuTableViewModel.SectionModel, items: [Item]) {
+        self = original
         self.items = items
+    }
+}
+
+extension MenuCellViewModel: IdentifiableType, Equatable {
+    var identity: Int {
+        nameText.hash
+    }
+
+    var unique: Int {
+        image != nil ? 1 : 0
+    }
+
+    static func ==(lhs: Self, rhs: Self) -> Bool {
+        lhs.identity == rhs.identity && lhs.unique == rhs.unique
     }
 }

@@ -12,17 +12,9 @@ import Domain
 struct CartItemCellViewModel {
     let name: String
     let priceText: String
-    let id: Int
 
-    init(pizza: Pizza, basePrice: Double, id: Int) {
-        name = pizza.name
-        priceText = format(price: pizza.price(from: basePrice))
-        self.id = id
-    }
-
-    init(drink: Drink, id: Int) {
-        name = drink.name
-        priceText = format(price: drink.price)
-        self.id = id
+    init(item: CartItem) {
+        name = item.name
+        priceText = format(price: item.price)
     }
 }

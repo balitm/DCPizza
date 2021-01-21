@@ -9,8 +9,8 @@
 import Foundation
 import Alamofire
 
-struct API {
-    enum ErrorType: Error {
+public enum API {
+    public enum ErrorType: Error {
         case invalidURL
         case disabled
         case invalidJSON
@@ -41,32 +41,30 @@ struct API {
     }
 
     struct TimeoutRetrier: RequestRetrier {
-        func should(_ manager: SessionManager, retry request: Request, with error: Error, completion: @escaping RequestRetryCompletion) {
+        func retry(_ request: Request, for session: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
             if let error = error as? URLError {
                 switch error {
                 case URLError.timedOut:
-                    completion(request.retryCount < 2, 0)
+                    completion(request.retryCount < 2 ? .retry : .doNotRetry)
                     return
                 default:
                     break
                 }
             }
             DLog("# ", request.request?.url?.absoluteURL ?? "nil", " no retry.")
-            completion(false, 0)
+            completion(.doNotRetryWithError(error))
         }
     }
 
-    static let sessionManager: Alamofire.SessionManager = {
+    static let sessionManager: Alamofire.Session = {
         // Get the default headers.
-        var headers = Alamofire.SessionManager.defaultHTTPHeaders
         let configuration = URLSessionConfiguration.default
         // Add the headers.
-        configuration.httpAdditionalHeaders = headers
+        configuration.httpAdditionalHeaders = HTTPHeaders.default.dictionary
 
         // Create a session manager with the configuration.
-        let manager = SessionManager(configuration: configuration)
-        guard manager.retrier == nil else { fatalError() }
-        manager.retrier = TimeoutRetrier()
+        let i = Interceptor(adapters: [], retriers: [TimeoutRetrier()])
+        let manager = Session(configuration: configuration, interceptor: i)
 
         return manager
     }()

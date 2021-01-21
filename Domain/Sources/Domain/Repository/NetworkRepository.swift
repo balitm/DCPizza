@@ -8,58 +8,39 @@
 
 import Foundation
 import RxSwift
+import class AlamofireImage.Image
 
-
-protocol RepositoryNetworkProtocol {
-    func getInitData() -> Observable<InitData>
-    func getIngredients() -> Observable<[Ingredient]>
-    func getDrinks() -> Observable<[Drink]>
-    func checkout(cart: DS.Cart) -> Observable<Void>
+protocol NetworkProtocol {
+    func getPizzas() -> Observable<DS.Pizzas>
+    func getIngredients() -> Observable<[DS.Ingredient]>
+    func getDrinks() -> Observable<[DS.Drink]>
+    func getImage(url: URL) -> Observable<Image>
+    func checkout(cart: DS.Cart) -> Completable
 }
 
-struct NetworkRepository: RepositoryNetworkProtocol, DatabaseContainerProtocol {
-    let container: DS.Container?
+extension API {
+    struct Network: NetworkProtocol {
+        func getPizzas() -> Observable<DS.Pizzas> {
+            GetPizzas().rx.perform()
+        }
 
-    init(container: DS.Container?) {
-        self.container = container
-    }
+        func getIngredients() -> Observable<[DS.Ingredient]> {
+            GetIngredients().rx.perform()
+        }
 
-    func getInitData() -> Observable<InitData> {
-        let netData = Observable.zip(API.GetPizzas().rx.perform(),
-                                     API.GetIngredients().rx.perform(),
-                                     API.GetDrinks().rx.perform(),
-                                     resultSelector: { (pizzas: $0, ingredients: $1, drinks: $2) })
-            .map({ [weak container] tuple -> InitData in
-                let ingredients = tuple.ingredients.sorted { $0.name < $1.name }
-                let dsCart = container?.values(DS.Cart.self).first ?? DS.Cart(pizzas: [], drinks: [])
-                var cart = dsCart.asDomain(with: ingredients, drinks: tuple.drinks)
-                cart.basePrice = tuple.pizzas.basePrice
+        func getDrinks() -> Observable<[DS.Drink]> {
+            GetDrinks().rx.perform()
+        }
 
-                return InitData(pizzas: tuple.pizzas.asDomain(with: ingredients, drinks: tuple.drinks),
-                                ingredients: ingredients,
-                                drinks: tuple.drinks,
-                                cart: cart)
-            })
-        return netData
-    }
+        func getImage(url: URL) -> Observable<Image> {
+            let downloader = API.ImageDownloader(path: url.absoluteString)
+            return downloader.rx.perform()
+        }
 
-    func getIngredients() -> Observable<[Ingredient]> {
-        API.GetIngredients().rx.perform()
-    }
-
-    func getDrinks() -> Observable<[Drink]> {
-        API.GetDrinks().rx.perform()
-    }
-
-    func checkout(cart: DS.Cart) -> Observable<Void> {
-        API.Checkout(pizzas: cart.pizzas, drinks: cart.drinks).rx.perform()
-            .do(onNext: {
-                self.execute {
-                    try $0.write {
-                        $0.delete(DS.Cart.self)
-                        $0.delete(DS.Pizza.self)
-                    }
-                }
-            })
+        func checkout(cart: DS.Cart) -> Completable {
+            Checkout(pizzas: cart.pizzas, drinks: cart.drinks).rx.perform()
+                .ignoreElements()
+                .asCompletable()
+        }
     }
 }

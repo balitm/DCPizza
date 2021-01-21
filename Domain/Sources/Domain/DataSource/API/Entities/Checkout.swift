@@ -9,17 +9,13 @@
 import Foundation
 
 extension API {
-    struct CheckoutModel: ModelProtocol {
-        typealias Result = Void
-
-        init() {}
-
-        func process(json: Data) throws -> Result {
-            // DLog("Recved json data:\n", String(data: json, encoding: .utf8) ?? "nil")
+    struct EmptyModel: Decodable {
+        init(from decoder: Decoder) throws {
+            DLog("decode checkout's response.")
         }
     }
 
-    class Checkout: RequestBase<CheckoutModel> {
+    class Checkout: RequestBase<EmptyModel> {
         private struct _Checkout: Encodable {
             let pizzas: [DS.Pizza]
             let drinks: [DS.Drink.ID]
@@ -28,7 +24,7 @@ extension API {
         private var _pizzas: [DS.Pizza] = []
         private var _drinks: [DS.Drink.ID] = []
 
-        override var httpParams: [String : Any]? {
+        override var httpParams: [String: Any]? {
             let encoder = JSONEncoder()
             let data = _Checkout(pizzas: _pizzas, drinks: _drinks)
 

@@ -7,25 +7,29 @@
 //
 
 import Foundation
-import class UIKit.UIImage
+import RxSwift
+import class AlamofireImage.Image
 
 public struct Pizza {
     public let name: String
     public let ingredients: [Ingredient]
     public let imageUrl: URL?
+    public let image: Image?
 
-    public init(copy other: Pizza, with ingredients: [Ingredient]) {
+    public init(copy other: Pizza, with ingredients: [Ingredient]? = nil, image: Image? = nil) {
         name = other.name
         imageUrl = other.imageUrl
-        self.ingredients = ingredients
+        self.ingredients = ingredients ?? other.ingredients
+        self.image = image ?? other.image
     }
 
     public init() {
         name = "Custom"
         imageUrl = nil
         ingredients = []
+        image = nil
     }
-    
+
     init(
         name: String,
         ingredients: [Ingredient],
@@ -34,6 +38,7 @@ public struct Pizza {
         self.name = name
         self.ingredients = ingredients
         self.imageUrl = imageUrl
+        image = nil
     }
 
     public func price(from basePrice: Double) -> Double {

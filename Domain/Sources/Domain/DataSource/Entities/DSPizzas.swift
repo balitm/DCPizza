@@ -36,7 +36,7 @@ extension DataSource.Pizzas: DomainConvertibleType {
 
 extension Domain.Pizzas: DSRepresentable {
     func asDataSource() -> DataSource.Pizzas {
-        return DS.Pizzas(pizzas: pizzas.map { $0.asDataSource() }
-            , basePrice: basePrice)
+        DS.Pizzas(pizzas: pizzas.map { $0.asDataSource() }
+                  , basePrice: basePrice)
     }
 }

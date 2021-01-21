@@ -9,25 +9,23 @@
 import UIKit
 import Domain
 import RxSwift
-import RxSwiftExt
 import RxDataSources
+import Resolver
 
 class CartViewController: UIViewController {
     typealias SectionModel = CartViewModel.SectionModel
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var checkoutTap: UITapGestureRecognizer!
-    @IBOutlet weak var drinksButton: UIBarButtonItem!
     @IBOutlet weak var checkoutLabel: UILabel!
 
     private var _navigator: Navigator!
-    private var _viewModel: CartViewModel!
+    @LazyInjected private var _viewModel: CartViewModel
     private let _bag = DisposeBag()
 
-    class func create(with navigator: Navigator, viewModel: CartViewModel) -> CartViewController {
+    class func create(with navigator: Navigator) -> CartViewController {
         let vc = navigator.storyboard.load(type: CartViewController.self)
         vc._navigator = navigator
-        vc._viewModel = viewModel
         return vc
     }
 
@@ -40,31 +38,20 @@ class CartViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationItem.largeTitleDisplayMode = .never
         tableView.tableFooterView = UIView()
-
-        rx.methodInvoked(#selector(willMove(toParent:)))
-            .filter({
-                if $0[0] is NSNull {
-                    return true
-                }
-                return false
-            })
-            .subscribe(onNext: { [unowned self] _ in
-                self._viewModel.cart.on(.completed)
-            })
-            .disposed(by: _bag)
-
         _bind()
     }
 }
 
 private extension CartViewController {
     func _bind() {
+        let rightTap = navigationItem.rightBarButtonItem!.rx.tap.map { _ in () }
         let selected = tableView.rx.itemSelected
-            .filterMap({ [unowned self] ip -> FilterMap<Int> in
-                guard self.tableView.cellForRow(at: ip) is CartItemTableViewCell else { return .ignore }
-                return .map(ip.row)
-            })
+            .compactMap { [unowned self] ip -> Int? in
+                guard self.tableView.cellForRow(at: ip) is CartItemTableViewCell else { return nil }
+                return Optional(ip.row)
+            }
 
         let input = CartViewModel.Input(selected: selected,
                                         checkout: checkoutTap.rx.event.map { _ in () })
@@ -72,46 +59,44 @@ private extension CartViewController {
 
         // Table view.
         let dataSource = RxTableViewSectionedAnimatedDataSource<SectionModel>(
-            decideViewTransition: { ds, tv, changes in
-                .animated
-            },
+            // decideViewTransition: { ds, tv, changes in
+            //     .animated
+            // },
             configureCell: { ds, tv, ip, _ in
                 switch ds[ip] {
                 case let .padding(viewModel):
                     return tv.createCell(PaddingTableViewCell.self, viewModel, ip)
-                case let .item(viewModel):
+                case let .item(_, viewModel):
                     return tv.createCell(CartItemTableViewCell.self, viewModel, ip)
                 case let .total(viewModel):
                     return tv.createCell(CartTotalTableViewCell.self, viewModel, ip)
                 }
-        })
-        out.tableData
-            // .debug(trimOutput: true)
-            .drive(tableView.rx.items(dataSource: dataSource))
-            .disposed(by: _bag)
+            }
+        )
 
-        // Add drinks.
-        drinksButton.rx.tap
-            .withLatestFrom(out.showDrinks)
-            .flatMap({ [unowned self] in
-                self._navigator.showDrinks(cart: $0.cart, drinks: $0.drinks)
-            })
-            .bind(to: _viewModel.cart)
-            .disposed(by: _bag)
+        _bag.insert([
+            out.tableData
+                // .debug(trimOutput: true)
+                .drive(tableView.rx.items(dataSource: dataSource)),
 
-        // On checkout success.
-        out.showSuccess
-            .drive(onNext: { [unowned self] _ in
-                self._navigator.showSuccess()
-            })
-            .disposed(by: _bag)
+            // Add drinks.
+            rightTap
+                .subscribe(onNext: { [unowned self] in
+                    self._navigator.showDrinks()
+                }),
 
-        // Enable checkout.
-        out.canCheckout
-            .drive(onNext: { [unowned self] in
-                self.checkoutTap.isEnabled = $0
-                self.checkoutLabel.alpha = $0 ? 1.0 : 0.5
-            })
-            .disposed(by: _bag)
+            // On checkout success.
+            out.showSuccess
+                .drive(onNext: { [unowned self] _ in
+                    self._navigator.showSuccess()
+                }),
+
+            // Enable checkout.
+            out.canCheckout
+                .drive(onNext: { [unowned self] in
+                    self.checkoutTap.isEnabled = $0
+                    self.checkoutLabel.alpha = $0 ? 1.0 : 0.5
+                }),
+        ])
     }
 }

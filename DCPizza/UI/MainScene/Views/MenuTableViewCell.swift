@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import AlamofireImage
 
 final class MenuTableViewCell: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
@@ -32,12 +31,13 @@ extension MenuTableViewCell: CellViewModelProtocol {
         nameLabel.text = viewModel.nameText
         ingredientsLabel.text = viewModel.ingredientsText
         priceLabel.text = viewModel.priceText
-        if let url = viewModel.imageUrl {
-            pizzaView.af_setImage(withURL: url)
-        }
 
+        // Image updater.
+        pizzaView.image = viewModel.image
+
+        // Tap event.
         _tap.rx.event
-            .map({ _ in () })
+            .map { _ in () }
             .bind(to: viewModel.tap)
             .disposed(by: rx.reuseBag)
     }

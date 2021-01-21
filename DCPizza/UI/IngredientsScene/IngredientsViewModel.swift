@@ -9,16 +9,12 @@
 import Foundation
 import Domain
 import RxSwift
-import RxSwiftExt
 import RxRelay
 import RxDataSources
 import struct RxCocoa.Driver
 import class UIKit.UIImage
 
 struct IngredientsViewModel: ViewModelType {
-    /// Ingredient with selectcion flag.
-    typealias Selected = (isOn: Bool, ingredient: Ingredient)
-
     /// Event to drive the buy footer of the controller.
     enum FooterEvent {
         case show, hide
@@ -37,82 +33,73 @@ struct IngredientsViewModel: ViewModelType {
         let footerEvent: Driver<FooterEvent>
     }
 
-    var resultCart: Observable<UI.Cart> { cart.asObservable().skip(1) }
-    let cart: BehaviorSubject<UI.Cart>
-    private let _pizza: Pizza
-    private let _image: UIImage?
-    private let _ingredients: [Ingredient]
+    private let _service: IngredientsUseCase
     private let _bag = DisposeBag()
+    private var _timerCancellable: Disposable?
 
-    init(pizza: Pizza, image: UIImage?, ingredients: [Ingredient], cart: UI.Cart) {
-        _pizza = pizza
-        _image = image
-        _ingredients = ingredients
-        self.cart = BehaviorSubject(value: cart)
+    init(service: IngredientsUseCase) {
+        _service = service
     }
 
     func transform(input: Input) -> Output {
-        // Create selections observable.
-        let selecteds = _makeSelectionObservable(
+        // Selections publisher.
+        let selecteds = _service.ingredients(selected:
             input.selected
-                .filterMap({ $0 >= 1 ? .map($0 - 1) : .ignore })
+                .compactMap { $0 >= 1 ? $0 - 1 : nil }
         )
         .share(replay: 1)
 
-        // Table data.
-        let tableData = selecteds
-            .map({ sels -> [SectionModel] in
-                let items = sels.enumerated().map { pair -> SectionItem in
-                    let offset = pair.offset
-                    let elem = pair.element
-                    return SectionItem.ingredient(
-                        row: 1 + offset,
-                        viewModel: IngredientsItemCellViewModel(name: elem.ingredient.name,
-                                                                priceText: format(price: elem.ingredient.price),
-                                                                isContained: elem.isOn)
+        // Table data source.
+        let tableData = Observable.combineLatest(selecteds, _service.pizza())
+            .map { (pair: (sels: [IngredientSelection], pizza: Pizza)) -> [SectionModel] in
+                let items = pair.sels.enumerated().map {
+                    Item.ingredient(
+                        row: $0.offset + 1,
+                        viewModel: IngredientsItemCellViewModel(name: $0.element.ingredient.name,
+                                                                priceText: format(price: $0.element.ingredient.price),
+                                                                isContained: $0.element.isOn)
                     )
                 }
-                let header = [SectionItem.header(viewModel: IngredientsHeaderCellViewModel(image: self._image))]
+
+                let header = [Item.header(viewModel: IngredientsHeaderCellViewModel(image: pair.pizza.image))]
                 return [SectionModel(items: header + items)]
-            })
+            }
             .asDriver(onErrorJustReturn: [])
 
         // Selected ingredients.
-        let selectedIngredients = selecteds
-            .map { $0.compactMap { $0.isOn ? $0.ingredient : nil } }
-            .skipWhile({ $0.isEmpty })
-            .share(replay: 1)
+        let selectedIngredients = BehaviorSubject<[Ingredient]>(value: [])
+        selecteds
+            .map { sels -> [Ingredient] in
+                sels.compactMap { $0.isOn ? $0.ingredient : nil }
+            }
+            .bind(to: selectedIngredients)
+            .disposed(by: _bag)
 
         // Add pizza to cart.
         input.addEvent
-            .withLatestFrom(Observable.combineLatest(cart, selectedIngredients)) { (cart: $1.0, ingredients: $1.1) }
-            .map({
-                var newCart = $0.cart
-                let pizza = Pizza(copy: self._pizza, with: $0.ingredients)
-                newCart.add(pizza: pizza)
-                return newCart
-            })
-            .bind(to: cart)
+            .flatMap { [service = _service] in
+                service.addToCart()
+                    .catch { error in
+                        DLog("recved error: ", error)
+                        return Completable.empty()
+                    }
+            }
+            .subscribe()
             .disposed(by: _bag)
 
-        // Title for the scene.
-        let title = Driver.just(_pizza)
-            .map({ $0.ingredients.isEmpty ? "CREATE A PIZZA" : $0.name.uppercased() })
-            .asDriver(onErrorJustReturn: "")
-
         let cartText = selectedIngredients
-            .map({ ings -> String in
+            .map { ings -> String in
                 // TODO: sketch suggest to show only ingredient prices
                 //       but + cart.basePrice would be better IMHO.
-                let sum = ings.reduce(0.0, { $0 + $1.price })
+                let sum = ings.reduce(0.0) { $0 + $1.price }
                 return "ADD TO CART (\(format(price: sum)))"
-            })
+            }
             .asDriver(onErrorJustReturn: "")
 
         let footerEvent = _makeFooterObservable(selectedIngredients.map { _ in () })
             .asDriver(onErrorJustReturn: .hide)
 
-        return Output(title: title,
+        return Output(title: _service.name().asDriver(onErrorJustReturn: ""),
                       tableData: tableData,
                       cartText: cartText,
                       showAdded: input.addEvent.asDriver(onErrorJustReturn: ()),
@@ -122,39 +109,6 @@ struct IngredientsViewModel: ViewModelType {
 }
 
 private extension IngredientsViewModel {
-    /// Create array of Ingredients with selectcion flag.
-    func _createSelecteds() -> [Selected] {
-        func isContained(_ ingredient: Domain.Ingredient) -> Bool {
-            _pizza.ingredients.contains { $0.id == ingredient.id }
-        }
-
-        let sels = _ingredients.map { ing -> Selected in
-            (isContained(ing), ing)
-        }
-        return sels
-    }
-
-    /// Create selections observable.
-    func _makeSelectionObservable(_ selected: Observable<Int>) -> Observable<[Selected]> {
-        let items = _createSelecteds()
-
-        return Observable<[Selected]>.create { observer in
-            observer.onNext(items)
-            var ings = items
-
-            let disposable = selected
-                .map({ idx -> [Selected] in
-                    let item = ings[idx]
-                    ings[idx] = (!item.isOn, item.ingredient)
-                    return ings
-                })
-                .do(onNext: { observer.onNext($0) })
-                .subscribe()
-
-            return disposable
-        }
-    }
-
     /// Create footer event observable.
     func _makeFooterObservable(_ observable: Observable<Void>) -> Observable<FooterEvent> {
         Observable<FooterEvent>.create { [unowned bag = _bag] observer in
@@ -181,31 +135,31 @@ private extension IngredientsViewModel {
     }
 }
 
-// MARK: - Table model types
+// MARK: - Table item types
 
 extension IngredientsViewModel {
     struct SectionModel {
         var items: [Item]
     }
 
-    enum SectionItem {
+    enum Item {
         case header(viewModel: IngredientsHeaderCellViewModel)
         case ingredient(row: Int, viewModel: IngredientsItemCellViewModel)
     }
 }
 
 extension IngredientsViewModel.SectionModel: AnimatableSectionModelType {
-    typealias Item = IngredientsViewModel.SectionItem
+    typealias Item = IngredientsViewModel.Item
 
     var identity: Int { 0 }
 
-    init(original: IngredientsViewModel.SectionModel, items: [IngredientsViewModel.SectionItem]) {
+    init(original: IngredientsViewModel.SectionModel, items: [Item]) {
         self = original
         self.items = items
     }
 }
 
-extension IngredientsViewModel.SectionItem: IdentifiableType, Equatable {
+extension IngredientsViewModel.Item: IdentifiableType, Equatable {
     var identity: Int {
         switch self {
         case .header:
@@ -217,14 +171,17 @@ extension IngredientsViewModel.SectionItem: IdentifiableType, Equatable {
 
     var unique: Bool {
         switch self {
-        case .header:
-            return false
+        case let .header(viewModel):
+            return viewModel.image == nil
         case let .ingredient(_, viewModel):
             return viewModel.isContained
         }
     }
 
-    static func ==(lhs: IngredientsViewModel.SectionItem, rhs: IngredientsViewModel.SectionItem) -> Bool {
+    static func ==(lhs: IngredientsViewModel.Item, rhs: IngredientsViewModel.Item) -> Bool {
+        // if (lhs == .header) {
+        //     DLog(lhs)
+        // }
         lhs.identity == rhs.identity && lhs.unique == rhs.unique
     }
 }

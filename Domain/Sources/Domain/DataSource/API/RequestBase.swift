@@ -1,5 +1,6 @@
 //
 //  RequestProtocols.swift
+//  Domain
 //
 //  Created by Balázs Kilvády on 7/29/17.
 //  Copyright © 2017 Balázs Kilvády. All rights reserved.
@@ -7,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import AlamofireImage
 import RxSwift
 
 protocol RequestReportCallback {
@@ -15,7 +17,6 @@ protocol RequestReportCallback {
 }
 
 protocol RequestBaseProtocol: AnyObject {
-    var id: Int { get set }
     var path: String { get }
     var httpParams: [String: Any]? { get }
     var timeout: TimeInterval { get }
@@ -39,15 +40,6 @@ protocol HandlerBlockProtocol: HandlerBlockTypesProtocol {
     var errorBlock: ErrorBlock { get set }
 }
 
-protocol ModelProtocol {
-    associatedtype Result
-
-    init()
-
-    /// Creates model object from JSON responses.
-    func process(json: Data) throws -> Result
-}
-
 protocol PerformProtocol: AnyObject {
     func _performIn()
 }
@@ -59,7 +51,7 @@ extension API {
     class _BaseRequest<Model>: RequestBaseProtocol {
         typealias ErrorModel = Error
 
-        var httpParams: [String: Any]? { return nil }
+        var httpParams: [String: Any]? { nil }
         var method: Alamofire.HTTPMethod = .get
         var headers: [String: String]?
 
@@ -70,20 +62,18 @@ extension API {
         var handlerKey = 0
         var isRenewable = true
         var timeout = KNetwork.defaultTimeout
-        var isDirect = false
-        var isSync = false
-        var isShowError = true
         var afRequest: Request?
 
         var encoding: ParameterEncoding
 
         required init() {
             encoding = URLEncoding.default
-            _instanceNum += 1; DLog(">>>> Instance num: ", _instanceNum)
+            _instanceNum += 1
+            // DLog(">>>> Instance num: ", _instanceNum)
         }
 
         deinit {
-            DLog(">>>> deinit #", _instanceNum, " - ", path)
+            // DLog(">>>> deinit #" _instanceNum, " - ", path)
             _instanceNum -= 1
         }
 
@@ -198,26 +188,19 @@ extension API {
         _obsGuard.lock(); defer { _obsGuard.unlock() }
 
         let blocks = _handlers.removeValue(forKey: key)
-//        if let _ = blocks {
-//            DLog("### removed handler: ", key)
-//        }
+        // if let _ = blocks {
+        //     DLog("### removed handler: ", key)
+        // }
         return blocks as? _HandlerBlocks<E>
     }
 
     // MARK: - Request base class
 
-    class RequestBase<M: ModelProtocol>: _BaseRequest<M.Result>, RxAbleType {
-        typealias Target = M.Result
-        typealias Model = M
-        typealias ResponseParser = (_ request: URLRequest?, _ response: HTTPURLResponse?, _ data: Data?, _ error: Error?) -> Alamofire.Result<Target>
+    class RequestBase<M: Decodable>: _BaseRequest<M>, RxAbleType {
+        typealias Target = M
 
         var mainPath = ""
         var fallbackPath = ""
-
-        /// Serializes received response into Result<Model>.
-        var responseParser: ResponseParser = { request, response, data, error in
-            .failure(error!)
-        }
 
         required init() {
             super.init()
@@ -229,10 +212,6 @@ extension API {
             method = httpParams == nil ? .get : .post
         }
 
-        func createModel() -> Model {
-            return Model()
-        }
-
         override func _perform() {
             if path.isEmpty { path = mainPath }
 
@@ -241,57 +220,71 @@ extension API {
                          method: method,
                          parameters: httpParams,
                          encoding: TimeoutParameterEncoding(encoding: encoding, timeout: timeout),
-                         headers: headers)
+                         headers: HTTPHeaders(headers ?? [:]))
 
-            DLog("Requesting: ", path, " - ", id)
-            responseParser = _responeParser()
+            // DLog("Requesting: ", path)
 
             afRequest = request
             // debugPrint(request)
-            request.validate().response(responseSerializer: _dataResponseSerializer) { response in
-                // debugPrint(response)
-                switch response.result {
-                case let .success(result):
-                    self.handleSuccess(result)
-                case let .failure(error):
-                    if self.path != self.fallbackPath {
-                        self.path = self.fallbackPath
-                        self._perform()
-                    } else {
-                        self.handleError(error)
+            request
+                .validate()
+                .responseDecodable(completionHandler: { (ds: DataResponse<Target, AFError>) in
+                    switch ds.result {
+                    case let .success(model):
+                        self.handleSuccess(model)
+                    case let .failure(error):
+                        if self.path != self.fallbackPath {
+                            self.path = self.fallbackPath
+                            self._perform()
+                        } else {
+                            self.handleError(error)
+                        }
                     }
-                }
-            }
-        }
-
-        private func _responeParser() -> ResponseParser {
-            return { [unowned self] request, response, data, error in
-                if let error = error { return .failure(error) }
-                let data = data ?? Data()
-
-                do {
-                    let model = self.createModel()
-                    let result = try model.process(json: data)
-                    return .success(result)
-                } catch {
-                    return .failure(error)
-                }
-            }
-        }
-
-        private lazy var _dataResponseSerializer = DataResponseSerializer<Target> { [unowned self] urlRequest, response, data, error in
-            var result: Alamofire.Result<Target>
-
-            if let error = error {
-                result = .failure(error)
-            } else {
-                result = self.responseParser(urlRequest, response, data, error)
-            }
-
-            return result
+                })
         }
     }
 }
+
+// MARK: - Image downloader
+
+extension API {
+    class ImageDownloader: _BaseRequest<Image>, RxAbleType {
+        typealias Target = Image
+
+        init(path: String) {
+            super.init()
+            self.path = path
+        }
+
+        required init() {
+            super.init()
+        }
+
+        override func _perform() {
+            let downloader = AlamofireImage.ImageDownloader()
+
+            // DLog("- Downloading: ", path, " - ", id)
+
+            let res = downloader.download(URLRequest(url: _url), completion: { [weak self] response in
+                guard let self = self else { return }
+
+                // print(response.request)
+                // print(response.response)
+
+                switch response.result {
+                case let .success(image):
+                    self.handleSuccess(image)
+                case let .failure(error):
+                    self.handleError(error)
+                }
+
+            })
+            afRequest = res?.request
+        }
+    }
+}
+
+// MARK: - Rx
 
 extension API._BaseRequest: ReactiveCompatible {}
 
@@ -304,7 +297,7 @@ protocol RxAbleType: HandlerBlockTypesProtocol, RequestBaseProtocol, PerformProt
 
 extension Reactive where Base: RxAbleType {
     func perform() -> Observable<Base.Target> {
-        return base.rxPerform()
+        base.rxPerform()
     }
 }
 
@@ -320,14 +313,15 @@ extension RxAbleType {
     }
 
     fileprivate func _perform(observer: CancelableObserver? = nil,
-                              onSuccess: @escaping SuccessBlock = { _ in }, onError: @escaping ErrorBlock = { _ in false }) {
+                              onSuccess: @escaping SuccessBlock = { _ in }, onError: @escaping ErrorBlock = { _ in false })
+    {
         let handlers = _HandlerBlocks<Target>(observer: observer, successBlock: onSuccess, errorBlock: onError)
         handlerKey = API._insert(handlers: handlers)
         _performIn()
     }
 
     func rxPerform() -> Observable<Target> {
-        return Observable.create { observer in
+        Observable.create { observer in
             self._perform(observer: observer, onSuccess: { result in
                 observer.onNext(result)
                 observer.onCompleted()
