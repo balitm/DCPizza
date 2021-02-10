@@ -13,7 +13,7 @@ namespace cpplib {
 Drink::Drink(ID id,
              const string& name,
              double price)
-: id(id), name(name), price(price)
+: id(id), name(name.c_str()), price(price)
 {}
 
 }

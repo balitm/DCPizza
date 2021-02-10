@@ -8,10 +8,11 @@
 
 #include <numeric>
 #include "Pizza.hpp"
+#include "Ingredient.hpp"
 
 namespace cpplib {
 
-Pizza::Pizza(const Pizza& other, const vector<Ingredient> * ingredients)
+Pizza::Pizza(const Pizza& other, const vector<Ingredient>* ingredients)
 : name(other.name), url_string(other.url_string)
 {
     this->ingredients = ingredients ? *ingredients : other.ingredients;
@@ -23,7 +24,7 @@ Pizza::Pizza()
 
 Pizza::Pizza(const string& name,
              const vector<Ingredient>& ingredients,
-             const string * url_string)
+             const string& url_string)
 : name(name), ingredients(ingredients), url_string(url_string)
 {}
 

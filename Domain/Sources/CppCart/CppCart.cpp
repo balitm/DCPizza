@@ -9,6 +9,7 @@
 #include "CppCart.hpp"
 #include "Pizza.hpp"
 #include "Drink.hpp"
+#include "Ingredient.hpp"
 
 namespace cpplib {
 // Initialize static member of class.
@@ -30,8 +31,6 @@ void Cart::add(const Pizza& pizza)
     _ids.insert(pos, _additionNumber);
     _pizzas.push_back(pizza);
     _additionNumber++;
-    // assert(_drinkIds.count == drinks.count)
-    // assert(_pizzaIds.count == pizzas.count)
 }
 
 void Cart::add(const Drink& drink)
@@ -39,8 +38,6 @@ void Cart::add(const Drink& drink)
     _ids.push_back(_additionNumber);
     _drinks.push_back(drink);
     ++_additionNumber;
-    // assert(_drinkIds.count == drinks.count)
-    // assert(_pizzaIds.count == pizzas.count)
 }
 
 void Cart::remove(int index)
@@ -52,8 +49,6 @@ void Cart::remove(int index)
     } else {
         _drinks.erase(_drinks.begin() + index - count);
     }
-    // assert(_drinkIds.count == drinks.count)
-    // assert(_pizzaIds.count == pizzas.count)
 }
 
 void Cart::empty()
@@ -85,7 +80,7 @@ vector<CartItem> Cart::items() const
 {
     auto pizza_count = _pizzas.size();
     auto drink_count = _drinks.size();
-    auto items = vector<CartItem>();
+    vector<CartItem> items;
     int id = 0;
     assert(_ids.size() == pizza_count + drink_count);
     items.reserve(pizza_count + drink_count);

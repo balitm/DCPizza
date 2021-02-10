@@ -62,36 +62,36 @@ final class Initializer {
             Publishers.Zip3(network.getPizzas(),
                             network.getIngredients(),
                             network.getDrinks())
-                .map({ (tuple: (pizzas: DS.Pizzas, ingredients: [DS.Ingredient], drinks: [DS.Drink])) -> ComponentsResult in
+                .map { (tuple: (pizzas: DS.Pizzas, ingredients: [DS.Ingredient], drinks: [DS.Drink])) -> ComponentsResult in
                     let ingredients = tuple.ingredients.sorted { $0.name < $1.name }
 
                     let components = Components(pizzas: tuple.pizzas.asDomain(with: ingredients, drinks: tuple.drinks),
                                                 ingredients: ingredients,
                                                 drinks: tuple.drinks)
                     return .success(components)
-                })
-                .catch({
+                }
+                .catch {
                     Just(ComponentsResult.failure($0))
-                })
+                }
                 .assign(to: \.component, on: self),
 
             // Download pizza images.
             $component
-                .compactMap({ try? $0.get() })
+                .compactMap { try? $0.get() }
                 .first()
                 .sink(receiveValue: { component in
                     component.pizzas.pizzas.enumerated().forEach { item in
                         guard let imageUrl = item.element.imageUrl else { return }
                         network.getImage(url: imageUrl)
-                            .map({ $0 as Image? })
-                            .catch({ error -> Just<Image?> in
+                            .map { $0 as Image? }
+                            .catch { error -> Just<Image?> in
                                 DLog("Error during image receiving: ", error)
                                 return Just<Image?>(nil)
-                            })
+                            }
                             // .handleEvents(receiveOutput: {
                             //     DLog("Inserting ", $0 == nil ? "nil" : "not nil")
                             // })
-                            .map({ ($0, item.offset) })
+                            .map { ($0, item.offset) }
                             .subscribe(subscriber)
                     }
                 }),
