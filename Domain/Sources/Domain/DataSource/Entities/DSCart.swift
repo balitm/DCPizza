@@ -18,7 +18,7 @@ extension DataSource {
 extension DataSource.Cart: DomainConvertibleType {
     func asDomain(with ingredients: [DS.Ingredient], drinks: [DS.Drink]) -> Domain.Cart {
         let related = self.drinks.compactMap { id in
-            drinks.first(where: { $0.id == id })
+            drinks.first { $0.id == id }
         }
         return Domain.Cart(
             pizzas: pizzas.map { $0.asDomain(with: ingredients, drinks: drinks) },

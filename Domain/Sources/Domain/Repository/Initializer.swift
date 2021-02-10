@@ -98,15 +98,15 @@ final class Initializer {
 
             // Init card.
             $component
-                .compactMap({ try? $0.get() })
+                .compactMap { try? $0.get() }
                 .first()
-                .map({ [weak container] c -> Cart in
+                .map { [weak container] c -> Cart in
                     // DLog("###### init cart. #########")
                     let dsCart = container?.values(DS.Cart.self).first ?? DS.Cart(pizzas: [], drinks: [])
                     var cart = dsCart.asDomain(with: c.ingredients, drinks: c.drinks)
                     cart.basePrice = c.pizzas.basePrice
                     return cart
-                })
+                }
                 .assign(to: \.cart, on: self),
         ]
     }
