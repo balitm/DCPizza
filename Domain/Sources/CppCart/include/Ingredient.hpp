@@ -10,7 +10,7 @@
 #define Ingredient_hpp
 
 #include <string>
-#include "ID.h"
+#include "ID.hpp"
 using std::string;
 
 namespace cpplib {

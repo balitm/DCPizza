@@ -9,6 +9,9 @@ let package = Package(
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
+            name: "CWrapper",
+            targets: ["CWrapper"]),
+        .library(
             name: "Domain",
             type: .static,
             targets: ["Domain"]),
@@ -28,7 +31,8 @@ let package = Package(
         ),
         .target(
             name: "CWrapper",
-            dependencies: ["CppCart"]
+            dependencies: ["CppCart"],
+            path: "Sources/CWrapper"
         ),
         .target(
             name: "Domain",

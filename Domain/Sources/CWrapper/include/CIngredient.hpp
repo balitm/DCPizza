@@ -9,7 +9,7 @@
 #ifndef Ingredient_h
 #define Ingredient_h
 
-#include "ID.h"
+#include "CID.hpp"
 
 #ifdef __cplusplus
 extern "C"  {

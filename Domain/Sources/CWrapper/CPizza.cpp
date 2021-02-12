@@ -6,7 +6,7 @@
 //  Copyright © 2021. kil-dev. All rights reserved.
 //
 
-#include "Pizza.h"
+#include "CPizza.hpp"
 #include "Pizza.hpp"
 #include "Ingredient.hpp"
 #include <string.h>

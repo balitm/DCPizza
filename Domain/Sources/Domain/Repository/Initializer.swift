@@ -8,6 +8,7 @@
 import Foundation
 import class AlamofireImage.Image
 import Combine
+import CWrapper
 
 final class Initializer {
     struct Components {
@@ -64,10 +65,16 @@ final class Initializer {
                             network.getDrinks())
                 .map { (tuple: (pizzas: DS.Pizzas, ingredients: [DS.Ingredient], drinks: [DS.Drink])) -> ComponentsResult in
                     let ingredients = tuple.ingredients.sorted { $0.name < $1.name }
-
                     let components = Components(pizzas: tuple.pizzas.asDomain(with: ingredients, drinks: tuple.drinks),
                                                 ingredients: ingredients,
                                                 drinks: tuple.drinks)
+
+                    // let cppObject = UnsafeMutableRawPointer(mutating: CWrapper.initializeListWrapper())
+                    // let isEmpty = CWrapper.empty(cppObject)
+                    // DLog("Isempty: ", isEmpty)
+                    let cppDrink = drink_create(1, "soda", 2)!
+                    drink_destroy(cppDrink)
+
                     return .success(components)
                 }
                 .catch {

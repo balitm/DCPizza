@@ -10,19 +10,21 @@
 #define Drink_hpp
 
 #include <string>
-#include "ID.h"
+#include "ID.hpp"
 using std::string;
 
 namespace cpplib {
 
 struct Drink {
     ID id;
-    const char* name;
+    string name;
     double price;
 
     Drink(ID id,
           const string& name,
           double price);
+
+    ~Drink();
 };
 
 }

@@ -6,7 +6,7 @@
 //  Copyright © 2021. kil-dev. All rights reserved.
 //
 
-#include "Ingredient.h"
+#include "CIngredient.hpp"
 #include "Ingredient.hpp"
 
 #ifdef __cplusplus

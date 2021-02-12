@@ -7,13 +7,27 @@
 //
 
 #include "Drink.hpp"
+#include <iostream>
 
 namespace cpplib {
 
 Drink::Drink(ID id,
              const string& name,
              double price)
-: id(id), name(name.c_str()), price(price)
-{}
+: id(id), name(name), price(price)
+{
+    std::cout << "Drink created with: ("
+    << id << ", "
+    << name << ", "
+    << price << ")\n";
+}
+
+Drink::~Drink()
+{
+    std::cout << "Drink destroyed with: ("
+    << id << ", "
+    << name << ", "
+    << price << ")\n";
+}
 
 }

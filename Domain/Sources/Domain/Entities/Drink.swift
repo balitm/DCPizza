@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_exported import CWrapper
+// @_exported import CWrapper
 
 public struct Drink: Codable {
     public typealias ID = Int64
@@ -20,5 +20,9 @@ public struct Drink: Codable {
         id: ID,
         name: String,
         price: Double
-    ) {}
+    ) {
+        self.id = id
+        self.name = name
+        self.price = price
+    }
 }
