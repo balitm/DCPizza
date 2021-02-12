@@ -17,7 +17,7 @@ extension DataSource {
 }
 
 extension DataSource.Pizza: DomainConvertibleType {
-    func asDomain(with ingredients: [DS.Ingredient], drinks: [DS.Drink]) -> Domain.Pizza {
+    func asDomain(with ingredients: [Ingredient], drinks: [Drink]) -> Domain.Pizza {
         let related = self.ingredients.compactMap { id in
             ingredients.first(where: { $0.id == id })
         }

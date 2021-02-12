@@ -7,14 +7,16 @@
 //
 
 import Foundation
-// @_exported import CWrapper
+import CWrapper
 
-public struct Drink: Codable {
+public class Drink {
     public typealias ID = Int64
 
     public let id: ID
     public let name: String
     public let price: Double
+
+    private let _cppObject: OpaquePointer
 
     init(
         id: ID,
@@ -24,5 +26,10 @@ public struct Drink: Codable {
         self.id = id
         self.name = name
         self.price = price
+        _cppObject = drink_create(1, "soda", 2)!
+    }
+
+    deinit {
+        drink_destroy(_cppObject)
     }
 }

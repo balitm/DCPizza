@@ -15,11 +15,11 @@ struct TestNetUseCase: NetworkProtocol {
     }
 
     func getIngredients() -> AnyPublisher<[Ingredient], API.ErrorType> {
-        _publish(PizzaData.ingredients)
+        _publish(PizzaData.dsIngredients)
     }
 
     func getDrinks() -> AnyPublisher<[DS.Drink], API.ErrorType> {
-        _publish(PizzaData.drinks)
+        _publish(PizzaData.dsDrinks)
     }
 
     func getPizzas() -> AnyPublisher<DS.Pizzas, API.ErrorType> {

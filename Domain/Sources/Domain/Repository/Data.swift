@@ -8,9 +8,17 @@
 import Foundation
 
 public enum PizzaData {
-    public static let drinks: [Drink] = load(_kDrinks)
-    public static let ingredients: [Ingredient] = load(_kIngredients)
+    static let dsDrinks: [DS.Drink] = load(_kDrinks)
+    static let dsIngredients: [DS.Ingredient] = load(_kIngredients)
     static let dsPizzas: DS.Pizzas = load(_kPizzas)
+    public static let drinks: [Drink] = {
+        dsDrinks.map { $0.asDomain() }
+    }()
+
+    public static let ingredients: [Ingredient] = {
+        dsIngredients
+    }()
+
     public static var pizzas: Pizzas {
         dsPizzas.asDomain(with: ingredients, drinks: drinks)
     }
