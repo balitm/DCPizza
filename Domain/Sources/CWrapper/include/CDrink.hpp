@@ -23,6 +23,13 @@ Drink *drink_create(ID id,
                     double price);
 void drink_destroy(Drink *drink);
 
+// MARK: - Accessors
+
+ID drink_id(Drink *);
+void drink_set_id(Drink *, ID);
+const char *drink_name(Drink *);
+double drink_price(Drink *);
+
 #ifdef __cplusplus
 }
 #endif

@@ -8,8 +8,8 @@
 #ifndef ID_h
 #define ID_h
 
-#include <stddef.h>
+#include <sys/types.h>
 
-typedef size_t ID;
+typedef int64_t ID;
 
 #endif /* ID_h */

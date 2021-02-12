@@ -12,9 +12,9 @@ import CWrapper
 public class Drink {
     public typealias ID = Int64
 
-    public let id: ID
-    public let name: String
-    public let price: Double
+    public var id: ID { drink_id(_cppObject) }
+    public var name: String { String(cString: drink_name(_cppObject)) }
+    public var price: Double { drink_price(_cppObject) }
 
     private let _cppObject: OpaquePointer
 
@@ -23,10 +23,7 @@ public class Drink {
         name: String,
         price: Double
     ) {
-        self.id = id
-        self.name = name
-        self.price = price
-        _cppObject = drink_create(1, "soda", 2)!
+        _cppObject = drink_create(id, name, price)!
     }
 
     deinit {
