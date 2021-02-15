@@ -63,7 +63,9 @@ final class Initializer {
                             network.getIngredients(),
                             network.getDrinks())
                 .map { (tuple: (pizzas: DS.Pizzas, ingredients: [DS.Ingredient], drinks: [DS.Drink])) -> ComponentsResult in
-                    let ingredients = tuple.ingredients.sorted { $0.name < $1.name }
+                    let ingredients = tuple.ingredients
+                        .sorted { $0.name < $1.name }
+                        .map { $0.asDomain() }
                     let drinks = tuple.drinks.map { $0.asDomain() }
                     let components = Components(pizzas: tuple.pizzas.asDomain(with: ingredients, drinks: drinks),
                                                 ingredients: ingredients,

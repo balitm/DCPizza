@@ -7,11 +7,25 @@
 //
 
 import Foundation
+import CWrapper
 
-public struct Ingredient: Codable {
+public class Ingredient: CppConvertibleType {
     public typealias ID = Int64
 
-    public let id: ID
-    public let name: String
-    public let price: Double
+    public var id: ID { ingredient_id(_cppObject) }
+    public var name: String { String(cString: ingredient_name(_cppObject)) }
+    public var price: Double { ingredient_price(_cppObject) }
+
+    let _cppObject: OpaquePointer
+
+    init(id: ID,
+         name: String,
+         price: Double)
+    {
+        _cppObject = ingredient_create(id, name, price)!
+    }
+
+    deinit {
+        ingredient_destroy(_cppObject)
+    }
 }

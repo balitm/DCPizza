@@ -11,7 +11,7 @@ import Foundation
 extension DataSource {
     struct Pizza: Codable {
         let name: String
-        let ingredients: [Ingredient.ID]
+        let ingredients: [DataSource.Ingredient.ID]
         let imageUrl: String?
     }
 }

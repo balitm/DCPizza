@@ -23,6 +23,12 @@ Ingredient *ingredient_create(ID id,
                               double price);
 void ingredient_destroy(Ingredient *ingredient);
 
+// MARK: - Accessors
+
+ID ingredient_id(Ingredient *);
+const char *ingredient_name(Ingredient *);
+double ingredient_price(Ingredient *);
+
 #ifdef __cplusplus
 }
 #endif

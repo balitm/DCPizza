@@ -25,6 +25,26 @@ void ingredient_destroy(Ingredient *ingredient)
     delete reinterpret_cast<cpplib::Ingredient *>(ingredient);
 }
 
+ID ingredient_id(Ingredient *ingredient)
+{
+    return reinterpret_cast<cpplib::Ingredient *>(ingredient)->id;
+}
+
+void ingredient_set_id(Ingredient *ingredient, ID id)
+{
+    reinterpret_cast<cpplib::Ingredient *>(ingredient)->id = id;
+}
+
+const char *ingredient_name(Ingredient *ingredient)
+{
+    return reinterpret_cast<cpplib::Ingredient *>(ingredient)->name.c_str();
+}
+
+double ingredient_price(Ingredient *ingredient)
+{
+    return reinterpret_cast<cpplib::Ingredient *>(ingredient)->price;
+}
+
 #ifdef __cplusplus
 }
 #endif

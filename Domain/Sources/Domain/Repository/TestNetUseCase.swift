@@ -14,7 +14,7 @@ struct TestNetUseCase: NetworkProtocol {
         Result.Publisher(data).eraseToAnyPublisher()
     }
 
-    func getIngredients() -> AnyPublisher<[Ingredient], API.ErrorType> {
+    func getIngredients() -> AnyPublisher<[DS.Ingredient], API.ErrorType> {
         _publish(PizzaData.dsIngredients)
     }
 

@@ -16,7 +16,7 @@ public enum PizzaData {
     }()
 
     public static let ingredients: [Ingredient] = {
-        dsIngredients
+        dsIngredients.map { $0.asDomain() }
     }()
 
     public static var pizzas: Pizzas {
