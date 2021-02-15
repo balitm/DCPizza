@@ -7,6 +7,7 @@ Swift Package Manager is used for managing the distributions and dependencies. T
 
 ### Branches/Tags
 
+- swiftUI-c++: A Domain package with some C++ code/class entities for domain/repository based implementation of clean architecture using **C++** + **Combine** + **SwiftUI**
 - swiftUI: A Domain package for domain/repository based implementation of clean architecture using **Combine** + **SwiftUI**
 - combine+clean: Domain package for domain/repository based implementation of clean architecture using **Combine** + **UIKit**
 - rx+clean: Domain package for domain/repository based implementation of clean architecture using **RxSwift** + **UIKit**
