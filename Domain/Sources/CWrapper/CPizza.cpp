@@ -82,6 +82,30 @@ const char *pizza_ingredient_names(const Pizza *pizza)
     return str;
 }
 
+const char *pizza_name(const Pizza *pizza)
+{
+    return reinterpret_cast<const cpplib::Pizza *>(pizza)->name.c_str();
+}
+
+const char *pizza_url_string(const Pizza *pizza)
+{
+    return reinterpret_cast<const cpplib::Pizza *>(pizza)->url_string.c_str();
+}
+
+// size_t pizza_ingredients(const Pizza *pizza, Ingredient const *result[])
+// {
+//     const vector<cpplib::Ingredient> &ingredients = reinterpret_cast<const cpplib::Pizza *>(pizza)->ingredients;
+//     *result = reinterpret_cast<const Ingredient *>(ingredients.data());
+//     return ingredients.size();
+// }
+
+const Ingredient *pizza_ingredients(const Pizza *pizza, size_t *p_size)
+{
+    const vector<cpplib::Ingredient> &ingredients = reinterpret_cast<const cpplib::Pizza *>(pizza)->ingredients;
+    *p_size = ingredients.size();
+    return reinterpret_cast<const Ingredient *>(ingredients.data());
+}
+
 #ifdef __cplusplus
 }
 #endif

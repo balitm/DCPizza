@@ -21,6 +21,14 @@ typedef struct Ingredient Ingredient;
 struct Pizza;
 typedef struct Pizza Pizza;
 
+// MARK: - Struct for returning an array
+
+typedef struct {
+    const Ingredient *data;
+    size_t size;
+} IngredientsArray;
+
+
 Pizza *pizza_create_empty();
 Pizza *pizza_create_copy(const Pizza *other,
                          const Ingredient *ingredients[],
@@ -33,6 +41,13 @@ void pizza_destroy(Pizza *pizza);
 
 double pizza_price(const Pizza *pizza, double basePrice);
 const char *pizza_ingredient_names(const Pizza *pizza);
+
+// MARK: - Accessors
+
+const char *pizza_name(const Pizza *);
+const char *pizza_url_string(const Pizza *);
+// size_t pizza_ingredients(const Pizza *pizza, Ingredient const *result[]);
+const Ingredient *pizza_ingredients(const Pizza *pizza, size_t *);
 
 #ifdef __cplusplus
 }
