@@ -11,15 +11,24 @@ import Combine
 import class AlamofireImage.Image
 import CWrapper
 
-public struct Pizza: CppConvertibleType {
+public class Pizza: CppConvertibleType {
     public var name: String { String(cString: pizza_name(_cppObject)) }
     public var ingredients: [Ingredient] {
-        // let cppArray = Array(start: pizza_ingredients(_cppObject)!, count: 5)
-        // var array: UnsafeMutablePointer<OpaquePointer?>()
         var size = -1
         let carray = pizza_ingredients(_cppObject, &size)
-        var ptr = UnsafeMutablePointer(carray)
-        ptr.
+        assert(size >= 0)
+
+        // Get size in bytes.
+        size *= MemoryLayout<OpaquePointer>.size
+
+        // Create an array.
+        let rawBufferPtr = UnsafeRawBufferPointer(start: UnsafeRawPointer(carray), count: size)
+        let ptrBuffer = rawBufferPtr.bindMemory(to: OpaquePointer.self)
+        let ingredients = ptrBuffer.map { ptr -> Ingredient in
+            let copy = ingredient_create_copy(ptr)!
+            return Ingredient(cppObject: copy)
+        }
+        return ingredients
     }
 
     public var imageUrl: URL? {
@@ -51,12 +60,16 @@ public struct Pizza: CppConvertibleType {
         ingredients: [Ingredient],
         imageUrl: URL?
     ) {
-        _cppObject = _cppArray(from: [Ingredient]()) {
+        _cppObject = _cppArray(from: ingredients) {
             pizza_create(name,
                          $0, $1,
                          imageUrl?.absoluteString)
         }
         image = nil
+    }
+
+    deinit {
+        pizza_destroy(_cppObject)
     }
 
     public func price(from basePrice: Double) -> Double {
@@ -72,7 +85,7 @@ public struct Pizza: CppConvertibleType {
 }
 
 private func _cppArray<T, R>(from array: [T]?,
-                             setup: (UnsafeMutablePointer<OpaquePointer?>, Int) -> R) -> R where T: CppConvertibleType
+                             setup: (UnsafeMutablePointer<OpaquePointer?>?, Int) -> R) -> R where T: CppConvertibleType
 {
     if let array = array {
         return array
@@ -82,6 +95,6 @@ private func _cppArray<T, R>(from array: [T]?,
                 return setup(ptr, array.count)
             }
     } else {
-        return setup(UnsafeMutablePointer<OpaquePointer?>(nil)!, 0)
+        return setup(nil, 0)
     }
 }

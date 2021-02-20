@@ -19,15 +19,15 @@ const cpplib::Pizza& convert(const Pizza* pizza) {
     return *reinterpret_cast<const cpplib::Pizza*>(pizza);
 }
 
-unique_ptr<vector<cpplib::Ingredient>> convert(const Ingredient* ingredients[],
-                                               size_t ingredient_count) {
-    auto ingredient_vector = new vector<cpplib::Ingredient>;
-    std::transform(ingredients, ingredients + ingredient_count, ingredient_vector->begin(),
-                   [](const Ingredient* ingredient) -> const cpplib::Ingredient& {
+unique_ptr<vector<const cpplib::Ingredient*>> convert(const Ingredient* ingredients[],
+                                                      size_t ingredient_count) {
+    auto ingredient_vector = new vector<const cpplib::Ingredient*>;
+    std::transform(ingredients, ingredients + ingredient_count, std::back_inserter(*ingredient_vector),
+                   [](const Ingredient* ingredient) -> const cpplib::Ingredient* {
         auto ptr = reinterpret_cast<const cpplib::Ingredient*>(ingredient);
-        return *ptr;
+        return ptr;
     });
-    return unique_ptr<vector<cpplib::Ingredient>>(ingredient_vector);
+    return unique_ptr<vector<const cpplib::Ingredient*>>(ingredient_vector);
 }
 
 #ifdef __cplusplus
@@ -59,9 +59,11 @@ Pizza *pizza_create(const char *name,
                     size_t ingredient_count,
                     const char *url_string)
 {
-    return reinterpret_cast<Pizza *>(new cpplib::Pizza(name,
-                                                       *convert(ingredients, ingredient_count),
-                                                       url_string));
+    auto urlstr = url_string ? url_string : "";
+    const auto pizza = new cpplib::Pizza(name,
+                                         *convert(ingredients, ingredient_count),
+                                         urlstr);
+    return reinterpret_cast<Pizza *>(pizza);
 }
 
 void pizza_destroy(Pizza *pizza)
@@ -92,18 +94,18 @@ const char *pizza_url_string(const Pizza *pizza)
     return reinterpret_cast<const cpplib::Pizza *>(pizza)->url_string.c_str();
 }
 
-// size_t pizza_ingredients(const Pizza *pizza, Ingredient const *result[])
-// {
-//     const vector<cpplib::Ingredient> &ingredients = reinterpret_cast<const cpplib::Pizza *>(pizza)->ingredients;
-//     *result = reinterpret_cast<const Ingredient *>(ingredients.data());
-//     return ingredients.size();
-// }
-
-const Ingredient *pizza_ingredients(const Pizza *pizza, size_t *p_size)
+const Ingredient * const *pizza_ingredients(const Pizza *pizza, size_t *p_size)
 {
-    const vector<cpplib::Ingredient> &ingredients = reinterpret_cast<const cpplib::Pizza *>(pizza)->ingredients;
+    const auto &ingredients = reinterpret_cast<const cpplib::Pizza *>(pizza)->ingredients;
     *p_size = ingredients.size();
-    return reinterpret_cast<const Ingredient *>(ingredients.data());
+    auto carray = reinterpret_cast<const Ingredient * const *>(ingredients.data());
+    return carray;
+    // vector<const Ingredient *> result;
+    // std::transform(ingredients.cbegin(), ingredients.cend(), result.begin(),
+    //                [](const cpplib::Ingredient &ingredient) -> const Ingredient * {
+    //     return reinterpret_cast<const Ingredient *>(&ingredient);
+    // });
+    // return reinterpret_cast<const Ingredient *>(ingredients.data());
 }
 
 #ifdef __cplusplus

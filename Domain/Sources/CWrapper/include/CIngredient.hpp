@@ -21,7 +21,8 @@ typedef struct Ingredient Ingredient;
 Ingredient *ingredient_create(ID id,
                               const char *name,
                               double price);
-void ingredient_destroy(Ingredient *ingredient);
+Ingredient *ingredient_create_copy(const Ingredient *);
+void ingredient_destroy(Ingredient *);
 
 // MARK: - Accessors
 

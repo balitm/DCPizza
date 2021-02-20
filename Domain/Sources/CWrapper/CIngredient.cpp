@@ -20,6 +20,12 @@ Ingredient *ingredient_create(ID id,
     return reinterpret_cast<Ingredient *>(new cpplib::Ingredient(id, name, price));
 }
 
+Ingredient *ingredient_create_copy(const Ingredient *other)
+{
+    auto src = reinterpret_cast<const cpplib::Ingredient*>(other);
+    return reinterpret_cast<Ingredient *>(new cpplib::Ingredient(*src));
+}
+
 void ingredient_destroy(Ingredient *ingredient)
 {
     delete reinterpret_cast<cpplib::Ingredient *>(ingredient);

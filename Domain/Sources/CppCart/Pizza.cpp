@@ -12,7 +12,7 @@
 
 namespace cpplib {
 
-Pizza::Pizza(const Pizza& other, const vector<Ingredient>* ingredients)
+Pizza::Pizza(const Pizza& other, const vector<const Ingredient*>* ingredients)
 : name(other.name), url_string(other.url_string)
 {
     this->ingredients = ingredients ? *ingredients : other.ingredients;
@@ -23,7 +23,7 @@ Pizza::Pizza()
 {}
 
 Pizza::Pizza(const string& name,
-             const vector<Ingredient>& ingredients,
+             const vector<const Ingredient*>& ingredients,
              const string& url_string)
 : name(name), ingredients(ingredients), url_string(url_string)
 {}
@@ -31,7 +31,7 @@ Pizza::Pizza(const string& name,
 double Pizza::price(double basePrice) const {
     double price = 0;
     for (auto &i : ingredients) {
-        price += i.price;
+        price += i->price;
     }
     return price;
 }
@@ -42,10 +42,10 @@ string Pizza::ingredient_names() const {
     if (it == ingredients.cend()) {
         return string();
     }
-    string i_names(it->name);
+    string i_names((*it)->name);
     ++it;
     for (; it != ingredients.cend(); ++it) {
-        i_names += ", " + it->name;
+        i_names += ", " + (*it)->name;
     }
     i_names += ".";
 

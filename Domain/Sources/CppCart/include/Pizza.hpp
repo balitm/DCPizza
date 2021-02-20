@@ -20,25 +20,20 @@ namespace cpplib {
 struct Ingredient;
 
 struct Pizza {
-public:
     string name;
-    vector<Ingredient> ingredients;
+    vector<const Ingredient*> ingredients;
     string url_string;
 
-    Pizza(const Pizza& other, const vector<Ingredient> * ingredients);
-
+    Pizza(const Pizza& other, const vector<const Ingredient *> * ingredients);
     Pizza();
-    
     Pizza(const string& name,
-          const vector<Ingredient>& ingredients,
+          const vector<const Ingredient *>& ingredients,
           const string& url_string);
 
     double price(double basePrice) const;
-
     string ingredient_names() const;
-
     Pizza(const Pizza& other) = default;
-    // Pizza& operator=(const Pizza&) = default;
+    Pizza& operator=(const Pizza&) = default;
 };
 
 }
