@@ -25,6 +25,10 @@ public class Drink: CppConvertibleType {
         _cppObject = drink_create(id, name, price)!
     }
 
+    required init(cppObject: OpaquePointer) {
+        _cppObject = cppObject
+    }
+
     deinit {
         drink_destroy(_cppObject)
     }
