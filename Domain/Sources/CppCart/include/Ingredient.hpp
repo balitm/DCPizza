@@ -16,7 +16,6 @@ using std::string;
 namespace cpplib {
 
 struct Ingredient {
-public:
     ID id;
     string name;
     double price;
@@ -24,6 +23,8 @@ public:
     Ingredient(ID id,
                const string& name,
                double price);
+
+    Ingredient(const Ingredient&) = default;
 };
 
 }
