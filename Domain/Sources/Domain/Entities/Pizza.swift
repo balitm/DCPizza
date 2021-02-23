@@ -24,10 +24,10 @@ public class Pizza: CppConvertibleType {
         // Create an array.
         let rawBufferPtr = UnsafeRawBufferPointer(start: UnsafeRawPointer(carray), count: size)
         let ptrBuffer = rawBufferPtr.bindMemory(to: OpaquePointer.self)
-        let ingredients = ptrBuffer.map { ptr -> Ingredient in
-            let copy = ingredient_create_copy(ptr)!
-            return Ingredient(cppObject: copy)
+        let ingredients = ptrBuffer.map {
+            Ingredient(cppObject: $0)
         }
+        ptrBuffer.deallocate()
         return ingredients
     }
 

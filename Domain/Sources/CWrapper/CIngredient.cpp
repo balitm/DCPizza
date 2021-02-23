@@ -8,47 +8,62 @@
 
 #include "CIngredient.hpp"
 #include "Ingredient.hpp"
+#include "Utility.hpp"
 
 #ifdef __cplusplus
 extern "C"  {
 #endif
 
+// MARK: - Helpers
+
+inline const cpplib::Ingredient *_cpp_pointer(const Ingredient *ingredient)
+ {
+    return _cpp_pointer<cpplib::Ingredient>(ingredient);
+ }
+
+inline const cpplib::Ingredient &_cpp_reference(const Ingredient *ingredient)
+ {
+    return _cpp_reference<cpplib::Ingredient>(ingredient);
+ }
+
+inline Ingredient *_create_obj(cpplib::Ingredient *ptr)
+ {
+    return _create_obj<cpplib::Ingredient, Ingredient>(ptr);
+ }
+
+// MARK: - Implementations
+
 Ingredient *ingredient_create(ID id,
                               const char *name,
                               double price)
 {
-    return reinterpret_cast<Ingredient *>(new cpplib::Ingredient(id, name, price));
+    return _create_obj(new cpplib::Ingredient(id, name, price));
 }
 
 Ingredient *ingredient_create_copy(const Ingredient *other)
 {
-    auto src = reinterpret_cast<const cpplib::Ingredient*>(other);
-    return reinterpret_cast<Ingredient *>(new cpplib::Ingredient(*src));
+    auto src = _cpp_pointer(other);
+    return _create_obj(new cpplib::Ingredient(*src));
 }
 
 void ingredient_destroy(Ingredient *ingredient)
 {
-    delete reinterpret_cast<cpplib::Ingredient *>(ingredient);
+    delete _cpp_pointer(ingredient);
 }
 
 ID ingredient_id(Ingredient *ingredient)
 {
-    return reinterpret_cast<cpplib::Ingredient *>(ingredient)->id;
-}
-
-void ingredient_set_id(Ingredient *ingredient, ID id)
-{
-    reinterpret_cast<cpplib::Ingredient *>(ingredient)->id = id;
+    return _cpp_pointer(ingredient)->id;
 }
 
 const char *ingredient_name(Ingredient *ingredient)
 {
-    return reinterpret_cast<cpplib::Ingredient *>(ingredient)->name.c_str();
+    return _cpp_pointer(ingredient)->name.c_str();
 }
 
 double ingredient_price(Ingredient *ingredient)
 {
-    return reinterpret_cast<cpplib::Ingredient *>(ingredient)->price;
+    return _cpp_pointer(ingredient)->price;
 }
 
 #ifdef __cplusplus
