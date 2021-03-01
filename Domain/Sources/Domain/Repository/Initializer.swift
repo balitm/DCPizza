@@ -106,7 +106,7 @@ final class Initializer {
                 .map { [weak container] c -> Cart in
                     // DLog("###### init cart. #########")
                     let dsCart = container?.values(DS.Cart.self).first ?? DS.Cart(pizzas: [], drinks: [])
-                    var cart = dsCart.asDomain(with: c.ingredients, drinks: c.drinks)
+                    let cart = dsCart.asDomain(with: c.ingredients, drinks: c.drinks)
                     cart.basePrice = c.pizzas.basePrice
                     return cart
                 }

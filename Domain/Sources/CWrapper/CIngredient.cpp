@@ -18,12 +18,12 @@ extern "C"  {
 
 inline const cpplib::Ingredient *_cpp_pointer(const Ingredient *ingredient)
  {
-    return _cpp_pointer<cpplib::Ingredient>(ingredient);
+    return _cpp_cpointer<cpplib::Ingredient>(ingredient);
  }
 
 inline const cpplib::Ingredient &_cpp_reference(const Ingredient *ingredient)
  {
-    return _cpp_reference<cpplib::Ingredient>(ingredient);
+    return _cpp_creference<cpplib::Ingredient>(ingredient);
  }
 
 inline Ingredient *_create_obj(cpplib::Ingredient *ptr)

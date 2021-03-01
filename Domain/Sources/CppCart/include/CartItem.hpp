@@ -8,18 +8,21 @@
 #ifndef CartItem_hpp
 #define CartItem_hpp
 
+#include <string.h>
 #include <string>
 using std::string;
 
 namespace cpplib {
 
 struct CartItem {
-    string name;
+    const char* name;
     double price;
     int id;
 
-    CartItem(const string& name, double price, int id)
-    : name(name), price(price), id(id) {};
+    CartItem(const string& name, double price, int id);
+    CartItem(const CartItem& other);
+    CartItem(CartItem&& other);
+    ~CartItem();
 };
 
 }

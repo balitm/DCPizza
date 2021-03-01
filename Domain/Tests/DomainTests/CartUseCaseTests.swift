@@ -30,7 +30,7 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
             component.drinks[0],
             component.drinks[1],
         ]
-        data.cart = Cart.empty
+        // data.cart = Cart.empty
         pizzas.forEach {
             data.cart.add(pizza: $0)
         }

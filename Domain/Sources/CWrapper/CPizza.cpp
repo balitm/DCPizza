@@ -29,12 +29,12 @@ unique_ptr<vector<const cpplib::Ingredient*>> convert(const Ingredient* ingredie
 
 inline const cpplib::Pizza *_cpp_pointer(const Pizza *pizza)
 {
-    return _cpp_pointer<cpplib::Pizza>(pizza);
+    return _cpp_cpointer<cpplib::Pizza>(pizza);
 }
 
 inline const cpplib::Pizza &_cpp_reference(const Pizza *pizza)
 {
-    return _cpp_reference<cpplib::Pizza>(pizza);
+    return _cpp_creference<cpplib::Pizza>(pizza);
 }
 
 inline Pizza *_create_obj(cpplib::Pizza *ptr)
@@ -116,7 +116,7 @@ Ingredient const **pizza_ingredients(const Pizza *pizza, size_t *p_size)
                    [](const cpplib::Ingredient *ptr) -> Ingredient * {
         return reinterpret_cast<Ingredient *>(new cpplib::Ingredient(*ptr));
     });
-    return static_cast<Ingredient const **>(buffer);
+    return buffer;
 }
 
 #ifdef __cplusplus

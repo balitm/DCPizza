@@ -46,5 +46,6 @@ let package = Package(
             name: "DomainTests",
             dependencies: ["Domain"]),
     ],
+    swiftLanguageVersions: [.version("5.3")],
     cxxLanguageStandard: .gnucxx14
 )

@@ -40,7 +40,6 @@ const char *pizza_ingredient_names(const Pizza *pizza);
 
 const char *pizza_name(const Pizza *);
 const char *pizza_url_string(const Pizza *);
-// size_t pizza_ingredients(const Pizza *pizza, Ingredient const *result[]);
 Ingredient const **pizza_ingredients(const Pizza *pizza, size_t *);
 
 #ifdef __cplusplus
