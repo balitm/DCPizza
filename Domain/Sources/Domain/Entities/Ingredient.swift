@@ -23,16 +23,16 @@ public class Ingredient: CppConvertibleType {
          price: Double)
     {
         _cppObject = ingredient_create(id, name, price)!
-        DLog("### 1. Creating ingredient: ", _baseAddress, "->", _cppObject)
+        // DLog("### 1. Creating ingredient: ", _baseAddress, "->", _cppObject)
     }
 
     required init(cppObject: OpaquePointer) {
         _cppObject = cppObject
-        DLog("### 2. Creating ingredient: ", _baseAddress, "->", _cppObject)
+        // DLog("### 2. Creating ingredient: ", _baseAddress, "->", _cppObject)
     }
 
     deinit {
-        DLog("### Destroying ingredient: ", _baseAddress, "->", _cppObject)
+        // DLog("### Destroying ingredient: ", _baseAddress, "->", _cppObject)
         ingredient_destroy(_cppObject)
     }
 }

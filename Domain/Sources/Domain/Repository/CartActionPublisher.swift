@@ -63,6 +63,7 @@ private extension Publishers.CartActionPublisher {
 
             func complete(_ completion: Subscribers.Completion<Error>) {
                 if case Subscribers.Completion<Error>.finished = completion {
+                    _data.cart = _data.cart
                     _ = subscriber.receive(())
                 }
                 subscriber.receive(completion: completion)
@@ -92,11 +93,11 @@ private extension Publishers.CartActionPublisher {
 
         func _dbAction(_ operation: (DS.WriteTransaction) -> Void = { _ in }) -> Subscribers.Completion<Error> {
             do {
-                try _data.container?.write({
+                try _data.container?.write {
                     $0.delete(DS.Pizza.self)
                     $0.delete(DS.Cart.self)
                     operation($0)
-                })
+                }
                 return .finished
             } catch {
                 return .failure(error)

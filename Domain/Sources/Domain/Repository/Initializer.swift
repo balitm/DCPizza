@@ -37,9 +37,9 @@ final class Initializer {
             // DLog("Recived subscription: ", type(of: $0))
         }, receiveValue: { [unowned self] value in
             self.$component
-                .compactMap({ try? $0.get() })
+                .compactMap { try? $0.get() }
                 .first()
-                .map({ component in
+                .map { component in
                     // DLog("insert image to: ", value.index)
                     let pizza = component.pizzas.pizzas[value.index]
                     var pizzas = component.pizzas.pizzas
@@ -48,7 +48,7 @@ final class Initializer {
                     return ComponentsResult.success(
                         Components(pizzas: all, ingredients: component.ingredients, drinks: component.drinks)
                     )
-                })
+                }
                 .assign(to: \.component, on: self)
                 .store(in: &self._bag)
 

@@ -137,12 +137,12 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
 
         expectation { expectation in
             cancellable = data.$component
-                .filter({
+                .filter {
                     if let c = try? $0.get() {
                         return !c.pizzas.pizzas.isEmpty
                     }
                     return false
-                })
+                }
                 .sink(receiveValue: { _ in
                     expectation.fulfill()
                 })
