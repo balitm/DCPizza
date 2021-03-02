@@ -24,10 +24,10 @@ public class Pizza: CppConvertibleType {
         // Create an array.
         let rawBufferPtr = UnsafeRawBufferPointer(start: UnsafeRawPointer(carray), count: size)
         let ptrBuffer = rawBufferPtr.bindMemory(to: OpaquePointer.self)
-        let ingredients = ptrBuffer.map { ptr -> Ingredient in
-            let copy = ingredient_create_copy(ptr)!
-            return Ingredient(cppObject: copy)
+        let ingredients = ptrBuffer.map {
+            Ingredient(cppObject: $0)
         }
+        ptrBuffer.deallocate()
         return ingredients
     }
 
@@ -68,6 +68,11 @@ public class Pizza: CppConvertibleType {
         image = nil
     }
 
+    required init(cppObject: OpaquePointer) {
+        _cppObject = cppObject
+        image = nil
+    }
+
     deinit {
         pizza_destroy(_cppObject)
     }
@@ -85,7 +90,7 @@ public class Pizza: CppConvertibleType {
 }
 
 private func _cppArray<T, R>(from array: [T]?,
-                             setup: (UnsafeMutablePointer<OpaquePointer?>?, Int) -> R) -> R where T: CppConvertibleType
+                             setup: (UnsafeMutablePointer<OpaquePointer?>?, Int) -> R) -> R where T: CppConvertibleType, T.CppPointer == OpaquePointer
 {
     if let array = array {
         return array

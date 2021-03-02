@@ -8,10 +8,13 @@
 import Foundation
 
 protocol CppConvertibleType: AnyObject {
-    var _cppObject: OpaquePointer { get }
+    associatedtype CppPointer
+    var _cppObject: CppPointer { get }
     #if DEBUG
         var _baseAddress: UnsafeMutableRawPointer { get }
     #endif
+
+    init(cppObject: CppPointer)
 }
 
 extension CppConvertibleType {

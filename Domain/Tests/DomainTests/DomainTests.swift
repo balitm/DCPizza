@@ -79,11 +79,11 @@ class DomainTests: NetworklessUseCaseTestsBase {
         let dsPizzas = pizzas.asDataSource()
         let isConverted =
             dsPizzas.pizzas.count == pizzas.pizzas.count
-                && dsPizzas.pizzas.reduce(true, { r0, pizza in
-                    r0 && pizza.ingredients.reduce(true, { r1, id in
+                && dsPizzas.pizzas.reduce(true) { r0, pizza in
+                    r0 && pizza.ingredients.reduce(true) { r1, id in
                         r1 && component.ingredients.contains { $0.id == id }
-                    })
-                })
+                    }
+                }
 
         XCTAssertTrue(isConverted)
     }
@@ -137,10 +137,10 @@ class DomainTests: NetworklessUseCaseTestsBase {
             }
 
             // Delete from DB.
-            try container.write({
+            try container.write {
                 $0.delete(DS.Cart.self)
                 $0.delete(DS.Pizza.self)
-            })
+            }
 
             // Compare.
             let converted = dCart.asDomain(with: component.ingredients, drinks: component.drinks)

@@ -9,15 +9,12 @@
 #include "CPizza.hpp"
 #include "Pizza.hpp"
 #include "Ingredient.hpp"
+#include "Utility.hpp"
 #include <string.h>
 
 using std::unique_ptr;
 
 // MARK: - Private helpers
-
-const cpplib::Pizza& convert(const Pizza* pizza) {
-    return *reinterpret_cast<const cpplib::Pizza*>(pizza);
-}
 
 unique_ptr<vector<const cpplib::Ingredient*>> convert(const Ingredient* ingredients[],
                                                       size_t ingredient_count) {
@@ -30,6 +27,21 @@ unique_ptr<vector<const cpplib::Ingredient*>> convert(const Ingredient* ingredie
     return unique_ptr<vector<const cpplib::Ingredient*>>(ingredient_vector);
 }
 
+inline const cpplib::Pizza *_cpp_pointer(const Pizza *pizza)
+{
+    return _cpp_cpointer<cpplib::Pizza>(pizza);
+}
+
+inline const cpplib::Pizza &_cpp_reference(const Pizza *pizza)
+{
+    return _cpp_creference<cpplib::Pizza>(pizza);
+}
+
+inline Pizza *_create_obj(cpplib::Pizza *ptr)
+{
+    return _create_obj<cpplib::Pizza, Pizza>(ptr);
+}
+
 #ifdef __cplusplus
 extern "C"  {
 #endif
@@ -38,20 +50,20 @@ extern "C"  {
 
 Pizza *pizza_create_empty()
 {
-    return reinterpret_cast<Pizza *>(new cpplib::Pizza());
+    return _create_obj(new cpplib::Pizza());
 }
 
 Pizza *pizza_create_copy(const Pizza *other,
                          const Ingredient *ingredients[],
                          size_t ingredient_count)
 {
-    const cpplib::Pizza& other_pizza = convert(other);
+    const cpplib::Pizza& other_pizza = _cpp_reference(other);
     if (ingredient_count > 0) {
         assert(ingredients != nullptr);
         auto unique_ptr = convert(ingredients, ingredient_count);
         return reinterpret_cast<Pizza *>(new cpplib::Pizza(other_pizza, unique_ptr.get()));
     }
-    return reinterpret_cast<Pizza *>(new cpplib::Pizza(other_pizza, nullptr));
+    return _create_obj(new cpplib::Pizza(other_pizza, nullptr));
 }
 
 Pizza *pizza_create(const char *name,
@@ -63,7 +75,7 @@ Pizza *pizza_create(const char *name,
     const auto pizza = new cpplib::Pizza(name,
                                          *convert(ingredients, ingredient_count),
                                          urlstr);
-    return reinterpret_cast<Pizza *>(pizza);
+    return _create_obj(pizza);
 }
 
 void pizza_destroy(Pizza *pizza)
@@ -73,39 +85,38 @@ void pizza_destroy(Pizza *pizza)
 
 double pizza_price(const Pizza *pizza, double basePrice)
 {
-    return reinterpret_cast<const cpplib::Pizza *>(pizza)->price(basePrice);
+    return _cpp_pointer(pizza)->price(basePrice);
 }
 
 // Note: Caller must free the memory of the string.
 const char *pizza_ingredient_names(const Pizza *pizza)
 {
-    const string& ingredients = reinterpret_cast<const cpplib::Pizza *>(pizza)->ingredient_names();
+    const string& ingredients = _cpp_pointer(pizza)->ingredient_names();
     const char *str = strdup(ingredients.c_str());
     return str;
 }
 
 const char *pizza_name(const Pizza *pizza)
 {
-    return reinterpret_cast<const cpplib::Pizza *>(pizza)->name.c_str();
+    return _cpp_pointer(pizza)->name.c_str();
 }
 
 const char *pizza_url_string(const Pizza *pizza)
 {
-    return reinterpret_cast<const cpplib::Pizza *>(pizza)->url_string.c_str();
+    return _cpp_pointer(pizza)->url_string.c_str();
 }
 
-const Ingredient * const *pizza_ingredients(const Pizza *pizza, size_t *p_size)
+// Note: Caller must free the memory of the string.
+Ingredient const **pizza_ingredients(const Pizza *pizza, size_t *p_size)
 {
-    const auto &ingredients = reinterpret_cast<const cpplib::Pizza *>(pizza)->ingredients;
+    const auto &ingredients = _cpp_pointer(pizza)->ingredients;
     *p_size = ingredients.size();
-    auto carray = reinterpret_cast<const Ingredient * const *>(ingredients.data());
-    return carray;
-    // vector<const Ingredient *> result;
-    // std::transform(ingredients.cbegin(), ingredients.cend(), result.begin(),
-    //                [](const cpplib::Ingredient &ingredient) -> const Ingredient * {
-    //     return reinterpret_cast<const Ingredient *>(&ingredient);
-    // });
-    // return reinterpret_cast<const Ingredient *>(ingredients.data());
+    Ingredient const **buffer = (Ingredient const **)malloc(ingredients.size() * sizeof(Ingredient *));
+    std::transform(ingredients.cbegin(), ingredients.cend(), buffer,
+                   [](const cpplib::Ingredient *ptr) -> Ingredient * {
+        return reinterpret_cast<Ingredient *>(new cpplib::Ingredient(*ptr));
+    });
+    return buffer;
 }
 
 #ifdef __cplusplus

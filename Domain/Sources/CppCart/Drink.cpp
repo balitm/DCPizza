@@ -7,7 +7,7 @@
 //
 
 #include "Drink.hpp"
-#include <iostream>
+// #include <iostream>
 
 namespace cpplib {
 
@@ -16,18 +16,18 @@ Drink::Drink(ID id,
              double price)
 : id(id), name(name), price(price)
 {
-    std::cout << "Drink created with: ("
-    << id << ", "
-    << name << ", "
-    << price << ")\n";
+    // std::cout << "Drink created with: ("
+    // << id << ", "
+    // << name << ", "
+    // << price << ")\n";
 }
 
 Drink::~Drink()
 {
-    std::cout << "Drink destroyed with: ("
-    << id << ", "
-    << name << ", "
-    << price << ")\n";
+    // std::cout << "Drink destroyed with: ("
+    // << id << ", "
+    // << name << ", "
+    // << price << ")\n";
 }
 
 }
