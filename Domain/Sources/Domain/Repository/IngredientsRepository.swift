@@ -62,7 +62,7 @@ struct IngredientsRepository: IngredientsUseCase {
             })
             .mapError({ _ in API.ErrorType.disabled })
             .flatMap({ [unowned data = _data] in
-                Publishers.CartActionPublisher(data: data, action: .pizza(pizza: $0))
+                data.cartHandler.trigger(action: .pizza(pizza: $0))
             })
             .first()
             .eraseToAnyPublisher()

@@ -16,36 +16,36 @@ struct CartRepository: CartUseCase {
     }
 
     func items() -> AnyPublisher<[CartItem], Never> {
-        _data.$cart
-            .map { $0.items() }
+        _data.cartHandler.cart
+            .filter { $0.error == nil }
+            .map { $0.cart.items() }
             .eraseToAnyPublisher()
     }
 
     func total() -> AnyPublisher<Double, Never> {
-        _data.$cart
-            .map { $0.totalPrice() }
+        _data.cartHandler.cart
+            .map { $0.cart.totalPrice() }
             .eraseToAnyPublisher()
     }
 
     func remove(at index: Int) -> AnyPublisher<Void, Error> {
-        Publishers.CartActionPublisher(data: _data, action: .remove(index: index))
-            .eraseToAnyPublisher()
+        _data.cartHandler.trigger(action: .remove(index: index))
     }
 
     func checkout() -> AnyPublisher<Void, API.ErrorType> {
-        _data.$cart
+        _data.cartHandler.cart
             .first()
+            .map(\.cart)
             .mapError({ _ in
                 API.ErrorType.processingFailed
             })
             .flatMap({ [unowned data = _data] in
                 data.network.checkout(cart: $0.asDataSource())
-                    .zip(
-                        Publishers.CartActionPublisher(data: data, action: .empty)
-                            .mapError({
-                                DLog("Error received emptying the cart: ", $0)
-                                return API.ErrorType.processingFailed
-                            })
+                    .zip(data.cartHandler.trigger(action: .empty)
+                        .mapError({
+                            DLog("Error received emptying the cart: ", $0)
+                            return API.ErrorType.processingFailed
+                        })
                     ) { _, _ in () }
             })
             .eraseToAnyPublisher()

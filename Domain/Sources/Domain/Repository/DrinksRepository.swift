@@ -33,7 +33,7 @@ struct DrinksRepository: DrinksUseCase {
                 try $0.get().drinks.element(at: drinkIndex)
             })
             .flatMap({ [unowned data = _data] in
-                Publishers.CartActionPublisher(data: data, action: .drink(drink: $0))
+                data.cartHandler.trigger(action: .drink(drink: $0))
             })
             .first()
             .eraseToAnyPublisher()

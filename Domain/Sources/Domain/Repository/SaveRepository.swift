@@ -16,6 +16,6 @@ struct SaveRepository: SaveUseCase {
     }
 
     func saveCart() -> AnyPublisher<Void, Error> {
-        Publishers.CartActionPublisher(data: _data, action: .save).eraseToAnyPublisher()
+        _data.cartHandler.trigger(action: .save)
     }
 }
