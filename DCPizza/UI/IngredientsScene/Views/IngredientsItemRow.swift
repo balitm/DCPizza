@@ -32,24 +32,24 @@ struct IngredientsItemRow: View {
 }
 
 #if DEBUG
-    struct IngredientsItemRow_Previews: PreviewProvider {
-        static var previews: some View {
-            let pizzas = PizzaData.pizzas
-            return Group {
-                IngredientsItemRow(viewModel: IngredientsItemRowViewModel(
-                    name: pizzas.pizzas[0].ingredients[0].name,
-                    priceText: "$" + String(pizzas.pizzas[0].ingredients[0].price),
-                    isContained: true,
-                    index: 0)
-                )
-                IngredientsItemRow(viewModel: IngredientsItemRowViewModel(
-                    name: pizzas.pizzas[0].ingredients[1].name,
-                    priceText: "$" + String(pizzas.pizzas[0].ingredients[1].price),
-                    isContained: false,
-                    index: 1)
-                )
-            }
-            .previewLayout(.fixed(width: 375, height: 44))
+struct IngredientsItemRow_Previews: PreviewProvider {
+    static var previews: some View {
+        let pizzas = PizzaData.pizzas
+        return Group {
+            IngredientsItemRow(viewModel: IngredientsItemRowViewModel(
+                name: pizzas.pizzas[0].ingredients[0].name,
+                priceText: "$" + String(pizzas.pizzas[0].ingredients[0].price),
+                isContained: true,
+                index: 0)
+            )
+            IngredientsItemRow(viewModel: IngredientsItemRowViewModel(
+                name: pizzas.pizzas[0].ingredients[1].name,
+                priceText: "$" + String(pizzas.pizzas[0].ingredients[1].price),
+                isContained: false,
+                index: 1)
+            )
         }
+        .previewLayout(.fixed(width: 375, height: 44))
     }
+}
 #endif

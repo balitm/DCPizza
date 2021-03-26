@@ -82,9 +82,9 @@ struct Cart {
     func items() -> [CartItem] {
         var items = pizzas.enumerated().map { pizza in
             CartItem(name: pizza.element.name,
-                     price: pizza.element.ingredients.reduce(basePrice, {
+                     price: pizza.element.ingredients.reduce(basePrice) {
                          $0 + $1.price
-                     }),
+                     },
                      id: _pizzaIds[pizza.offset])
         }
         items.append(contentsOf: drinks.enumerated().map {

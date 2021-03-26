@@ -38,9 +38,9 @@ final class Initializer {
             // DLog("Recived subscription: ", type(of: $0))
         }, receiveValue: { [unowned self] value in
             self.$component
-                .compactMap({ try? $0.get() })
+                .compactMap { try? $0.get() }
                 .first()
-                .map({ component in
+                .map { component in
                     // DLog("insert image to: ", value.index)
                     let pizza = component.pizzas.pizzas[value.index]
                     var pizzas = component.pizzas.pizzas
@@ -49,7 +49,7 @@ final class Initializer {
                     return ComponentsResult.success(
                         Components(pizzas: all, ingredients: component.ingredients, drinks: component.drinks)
                     )
-                })
+                }
                 .assign(to: \.component, on: self)
                 .store(in: &self._bag)
 
@@ -63,36 +63,36 @@ final class Initializer {
             Publishers.Zip3(network.getPizzas(),
                             network.getIngredients(),
                             network.getDrinks())
-                .map({ (tuple: (pizzas: DS.Pizzas, ingredients: [DS.Ingredient], drinks: [DS.Drink])) -> ComponentsResult in
+                .map { (tuple: (pizzas: DS.Pizzas, ingredients: [DS.Ingredient], drinks: [DS.Drink])) -> ComponentsResult in
                     let ingredients = tuple.ingredients.sorted { $0.name < $1.name }
 
                     let components = Components(pizzas: tuple.pizzas.asDomain(with: ingredients, drinks: tuple.drinks),
                                                 ingredients: ingredients,
                                                 drinks: tuple.drinks)
                     return .success(components)
-                })
-                .catch({
+                }
+                .catch {
                     Just(ComponentsResult.failure($0))
-                })
+                }
                 .assign(to: \.component, on: self),
 
             // Download pizza images.
             $component
-                .compactMap({ try? $0.get() })
+                .compactMap { try? $0.get() }
                 .first()
                 .sink(receiveValue: { component in
                     component.pizzas.pizzas.enumerated().forEach { item in
                         guard let imageUrl = item.element.imageUrl else { return }
                         network.getImage(url: imageUrl)
-                            .map({ $0 as Image? })
-                            .catch({ error -> Just<Image?> in
+                            .map { $0 as Image? }
+                            .catch { error -> Just<Image?> in
                                 DLog("Error during image receiving: ", error)
                                 return Just<Image?>(nil)
-                            })
+                            }
                             // .handleEvents(receiveOutput: {
                             //     DLog("Inserting ", $0 == nil ? "nil" : "not nil")
                             // })
-                            .map({ ($0, item.offset) })
+                            .map { ($0, item.offset) }
                             .subscribe(subscriber)
                     }
                 }),
@@ -100,15 +100,15 @@ final class Initializer {
 
         // Init card.
         $component
-            .compactMap({ try? $0.get() })
+            .compactMap { try? $0.get() }
             .first()
-            .map({ [weak container] c -> CartAction in
+            .map { [weak container] c -> CartAction in
                 // DLog("###### init cart. #########")
                 let dsCart = container?.values(DS.Cart.self).first ?? DS.Cart(pizzas: [], drinks: [])
                 var cart = dsCart.asDomain(with: c.ingredients, drinks: c.drinks)
                 cart.basePrice = c.pizzas.basePrice
                 return CartAction.start(with: cart)
-            })
+            }
             .subscribe(cartHandler.input)
     }
 }

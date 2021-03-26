@@ -58,10 +58,10 @@ class SaveUseCaseTests: NetworklessUseCaseTestsBase {
             cart.pizzas.enumerated().forEach {
                 XCTAssertEqual($0.element.name, component.pizzas.pizzas[$0.offset].name)
             }
-            try container.write({
+            try container.write {
                 $0.delete(DS.Pizza.self)
                 $0.delete(DS.Cart.self)
-            })
+            }
         } catch {
             XCTAssert(false, "Database threw \(error)")
         }

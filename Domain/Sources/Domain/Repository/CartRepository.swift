@@ -36,18 +36,18 @@ struct CartRepository: CartUseCase {
         _data.cartHandler.cart
             .first()
             .map(\.cart)
-            .mapError({ _ in
+            .mapError { _ in
                 API.ErrorType.processingFailed
-            })
-            .flatMap({ [unowned data = _data] in
+            }
+            .flatMap { [unowned data = _data] in
                 data.network.checkout(cart: $0.asDataSource())
                     .zip(data.cartHandler.trigger(action: .empty)
-                        .mapError({
+                        .mapError {
                             DLog("Error received emptying the cart: ", $0)
                             return API.ErrorType.processingFailed
-                        })
+                        }
                     ) { _, _ in () }
-            })
+            }
             .eraseToAnyPublisher()
     }
 }

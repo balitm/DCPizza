@@ -26,24 +26,24 @@ final class CartViewModel: ObservableObject {
 
         // List data.
         _service.items()
-            .map({ (items: [CartItem]) -> [CartItemRowViewModel] in
-                items.enumerated().map({
+            .map { (items: [CartItem]) -> [CartItemRowViewModel] in
+                items.enumerated().map {
                     CartItemRowViewModel(item: $0.element, index: $0.offset)
-                })
-            })
+                }
+            }
             .assign(to: \.listData, on: self)
             .store(in: &_bag)
 
         _service.total()
-            .map({
+            .map {
                 CartTotalRowViewModel(price: $0)
-            })
+            }
             .assign(to: \.totalData, on: self)
             .store(in: &_bag)
 
         // Can checkout (cart is not empty).
         _service.items()
-            .map({ !$0.isEmpty })
+            .map { !$0.isEmpty }
             .assign(to: \.canCheckout, on: self)
             .store(in: &_bag)
     }
@@ -51,11 +51,11 @@ final class CartViewModel: ObservableObject {
     /// Buy content of the cart.
     func checkout() {
         _service.checkout()
-            .catch({ error -> Empty<Void, Never> in
+            .catch { error -> Empty<Void, Never> in
                 DLog("recved error: ", error)
                 return Empty<Void, Never>()
-            })
-            .map({ true })
+            }
+            .map { true }
             .assign(to: \.showSuccess, on: self)
             .store(in: &_bag)
     }
@@ -63,10 +63,10 @@ final class CartViewModel: ObservableObject {
     /// Remove item on tap/selected.
     func select(index: Int) {
         Just(index)
-            .flatMap({ [service = _service] in
+            .flatMap { [service = _service] in
                 service.remove(at: $0)
-                    .catch({ _ in Empty<Void, Never>() })
-            })
+                    .catch { _ in Empty<Void, Never>() }
+            }
             .sink {}
             .store(in: &_bag)
     }

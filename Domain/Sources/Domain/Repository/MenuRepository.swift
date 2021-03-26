@@ -17,11 +17,11 @@ struct MenuRepository: MenuUseCase {
 
     func pizzas() -> AnyPublisher<PizzasResult, Never> {
         _data.$component
-            .map({
+            .map {
                 $0.flatMap { components in
                     PizzasResult.success(components.pizzas)
                 }
-            })
+            }
             .eraseToAnyPublisher()
     }
 
