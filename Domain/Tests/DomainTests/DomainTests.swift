@@ -27,7 +27,7 @@ class DomainTests: NetworklessUseCaseTestsBase {
             component.drinks[0],
             component.drinks[1],
         ]
-        testCart = Cart(pizzas: pizzas, drinks: drinks, basePrice: data.cart.basePrice)
+        testCart = Cart(pizzas: pizzas, drinks: drinks, basePrice: 4.0)
     }
 
     override func tearDown() {

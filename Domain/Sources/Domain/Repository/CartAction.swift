@@ -20,31 +20,51 @@ enum CartAction {
 final class CartHandler {
     typealias CartResult = (cart: Cart, error: Error?)
 
-    let cart: AnyPublisher<CartResult, Never>
+    let cartResult: AnyPublisher<CartResult, Never>
     let input: AnySubscriber<CartAction, Never>
+    private let _cancellable: AnyCancellable
 
     init(container: DS.Container?) {
-        let actionInput = PassthroughSubject<CartAction, Never>()
+        let actionInput = CurrentValueRelay<CartAction>(.start(with: Cart.empty))
+        let cartResult = CurrentValueRelay<CartResult>((Cart.empty, nil))
 
-        cart = actionInput
+        _cancellable = actionInput
+            // .debug()
             .scan((Cart.empty, nil)) { currentCart, action -> CartResult in
                 _perform(container, currentCart.cart, action)
             }
+            .subscribe(cartResult)
+
+        self.cartResult = cartResult
             .eraseToAnyPublisher()
 
-        input = AnySubscriber(actionInput)
+        input = AnySubscriber<CartAction, Never> {
+            $0.request(.unlimited)
+        } receiveValue: {
+            actionInput.send($0)
+            return .unlimited
+        } receiveCompletion: {
+            DLog("swallowing completion: ", $0)
+        }
+    }
+
+    deinit {
+        _cancellable.cancel()
     }
 
     func trigger(action: CartAction) -> AnyPublisher<Void, Error> {
-        let publisher = cart
+        let publisher = cartResult
+            .first()
             .tryMap { cartResult -> Void in
+                // DLog("trigger recved:\n", cartResult.cart)
                 if let error = cartResult.error {
                     throw error
                 }
                 return ()
             }
 
-        Just(CartAction.save)
+        DLog("sent value: ", action)
+        Just(action)
             .subscribe(input)
 
         return publisher.eraseToAnyPublisher()

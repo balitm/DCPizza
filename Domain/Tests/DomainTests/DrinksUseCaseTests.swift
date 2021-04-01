@@ -33,10 +33,11 @@ class DrinksUseCaseTests: NetworklessUseCaseTestsBase {
     }
 
     func testAddDrink() {
-        addItemTest(addItem: { [service = service!] in
+        addItemTest { [service = service!] in
             service.addToCart(drinkIndex: 0)
-        }, test: {
+        } test: { [unowned data = data!] in
             XCTAssertEqual($0.drinks.count, 1)
-        })
+            XCTAssertEqual($0.drinks[0].id, try? data.component.get().drinks[0].id)
+        }
     }
 }

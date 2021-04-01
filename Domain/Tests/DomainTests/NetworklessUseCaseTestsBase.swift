@@ -22,23 +22,50 @@ class NetworklessUseCaseTestsBase: UseCaseTestsBase {
         component = try! data.component.get()
     }
 
-    func addItemTest(addItem: () -> AnyPublisher<Void, Error>,
-                     test: (Cart) -> Void = { XCTAssertEqual($0.pizzas.count, 1) })
-    {
-        data.cart.empty()
-        XCTAssert(data.cart.pizzas.isEmpty)
-        XCTAssert(data.cart.drinks.isEmpty)
-        expectation { expectation in
-            _ = addItem()
-                .sink(receiveCompletion: {
+    func addItemTest(addItem: @escaping () -> AnyPublisher<Void, Error>,
+                     test: @escaping (Cart) -> Void = { XCTAssertEqual($0.pizzas.count, 1) }) {
+        expectation { [unowned data = data!] expectation in
+            // Empty the cart.
+            _ = data.cartHandler.trigger(action: .empty)
+                .handleEvents(receiveCompletion: {
                     if case let Subscribers.Completion.failure(error) = $0 {
-                        XCTAssert(false, "failed with: \(error)")
+                        XCTAssert(false, "\(error)")
                     }
-                    expectation.fulfill()
-                }, receiveValue: {
-                    XCTAssert(true)
+                }, receiveCancel: {
+                    XCTAssert(false, "cancelled")
                 })
+                .catch { _ in Empty<Void, Never>() }
+                .flatMap { _ in
+                    // Check if cart is empty.
+                    data.cartHandler.cartResult
+                        .first()
+                        .map(\.cart)
+                        .handleEvents(receiveOutput: {
+                            XCTAssert($0.pizzas.isEmpty)
+                            XCTAssert($0.drinks.isEmpty)
+                        })
+                }
+                .flatMap { _ in
+                    // Add item.
+                    addItem()
+                        .handleEvents(receiveOutput: {
+                            XCTAssert(true)
+                        }, receiveCompletion: {
+                            if case let Subscribers.Completion.failure(error) = $0 {
+                                XCTAssert(false, "failed with: \(error)")
+                            }
+                        })
+                        .catch { _ in Empty<Void, Never>() }
+                }
+                .flatMap {
+                    data.cartHandler.cartResult
+                        .first()
+                        .map(\.cart)
+                }
+                .sink {
+                    test($0)
+                    expectation.fulfill()
+                }
         }
-        test(data.cart)
     }
 }

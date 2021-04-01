@@ -30,12 +30,16 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
             component.drinks[0],
             component.drinks[1],
         ]
-        data.cart = Cart.empty
-        pizzas.forEach {
-            data.cart.add(pizza: $0)
-        }
-        drinks.forEach {
-            data.cart.add(drink: $0)
+        let cart = Cart(pizzas: pizzas, drinks: drinks, basePrice: 4.0)
+
+        expectation { [unowned data = data!] expectation in
+            _ = data.cartHandler.trigger(action: .start(with: cart))
+                .sink {
+                    if case let Subscribers.Completion.failure(error) = $0 {
+                        XCTAssert(false, "\(error)")
+                    }
+                    expectation.fulfill()
+                } receiveValue: {}
         }
     }
 
@@ -57,45 +61,54 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
         expectation { expectation in
             // Remove the 1st pizza.
             _ = service.remove(at: 0)
-                .sink(receiveCompletion: {
+                ._cart(from: data.cartHandler)
+                .sink {
                     switch $0 {
                     case .finished:
                         DLog("finished.")
-                        XCTAssertEqual(self.data.cart.pizzas.count, 1)
-                        XCTAssertEqual(self.data.cart.drinks.count, 2)
-                        XCTAssertEqual(self.data.cart.pizzas[0].name, self.component.pizzas.pizzas[1].name)
                         expectation.fulfill()
                     case let .failure(error):
                         XCTAssert(false, "\(error)")
                     }
-                }, receiveValue: {})
+                } receiveValue: {
+                    XCTAssertEqual($0.cart.pizzas.count, 1)
+                    XCTAssertEqual($0.cart.drinks.count, 2)
+                    XCTAssertEqual($0.cart.pizzas[0].name, self.component.pizzas.pizzas[1].name)
+                }
         }
 
         expectation { expectation in
             // Remove the 1st drink.
             _ = service.remove(at: 1)
-                .sink(receiveCompletion: {
+                ._cart(from: data.cartHandler)
+                .sink {
                     switch $0 {
                     case .finished:
                         DLog("finished.")
-                        XCTAssertEqual(self.data.cart.pizzas.count, 1)
-                        XCTAssertEqual(self.data.cart.drinks.count, 1)
-                        XCTAssertEqual(self.data.cart.drinks[0].name, self.component.drinks[1].name)
                         expectation.fulfill()
                     case let .failure(error):
                         XCTAssert(false, "\(error)")
                     }
-                }, receiveValue: {})
+                } receiveValue: {
+                    XCTAssertEqual($0.cart.pizzas.count, 1)
+                    XCTAssertEqual($0.cart.drinks.count, 1)
+                    XCTAssertEqual($0.cart.drinks[0].name, self.component.drinks[1].name)
+                }
         }
     }
 
     func testTotoal() {
         var total = 0.0
 
-        expectation { expectation in
+        expectation { [unowned data = data!] expectation in
             _ = service.total()
                 .first()
-                .sink(receiveCompletion: {
+                .flatMap { total in
+                    data.cartHandler.cartResult
+                        .first()
+                        .map { (cart: $0.cart, total: total) }
+                }
+                .sink {
                     switch $0 {
                     case .finished:
                         DLog("finished.")
@@ -103,37 +116,53 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
                     case let .failure(error):
                         XCTAssert(false, "\(error)")
                     }
-                }, receiveValue: {
-                    let pp = self.data.cart.pizzas.reduce(0.0) {
-                        $0 + $1.ingredients.reduce(self.data.cart.basePrice) {
+                } receiveValue: { cart, price in
+                    let pp = cart.pizzas.reduce(0.0) {
+                        $0 + $1.ingredients.reduce(cart.basePrice) {
                             $0 + $1.price
                         }
                     }
-                    let dp = self.data.cart.drinks.reduce(0.0) {
+                    let dp = cart.drinks.reduce(0.0) {
                         $0 + $1.price
                     }
 
-                    XCTAssertEqual($0, pp + dp)
-                    total = $0
-                })
+                    XCTAssertEqual(price, pp + dp)
+                    total = price
+                }
         }
 
         expectation { expectation in
             _ = service.items()
                 .first()
-                .sink(receiveValue: {
+                .sink {
                     let t = $0.reduce(0.0) { $0 + $1.price }
                     XCTAssertEqual(total, t)
                     expectation.fulfill()
-                })
+                }
         }
     }
 
     func testCheckout() {
         let data = Initializer(container: container, network: API.Network())
-        data.cart = self.data.cart
         service = CartRepository(data: data)
         var cancellable: AnyCancellable?
+
+        // Init the network card.
+        expectation { expectation in
+            _ = self.data.cartHandler.cartResult
+                .first()
+                .map(\.cart)
+                .flatMap {
+                    data.cartHandler.trigger(action: .start(with: $0))
+                        .catch { _ in Empty<Void, Never>() }
+                }
+                .sink {
+                    if case let Subscribers.Completion.failure(error) = $0 {
+                        XCTAssert(false, "\(error)")
+                    }
+                    expectation.fulfill()
+                } receiveValue: {}
+        }
 
         expectation { expectation in
             cancellable = data.$component
@@ -143,9 +172,9 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
                     }
                     return false
                 }
-                .sink(receiveValue: { _ in
+                .sink { _ in
                     expectation.fulfill()
-                })
+                }
         }
         cancellable?.cancel()
 
@@ -163,8 +192,17 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
         }
         cancellable?.cancel()
 
-        XCTAssert(data.cart.pizzas.isEmpty)
-        XCTAssert(data.cart.drinks.isEmpty)
+        expectation { expectation in
+            _ = data.cartHandler.cartResult
+                .first()
+                .map(\.cart)
+                .sink {
+                    XCTAssert($0.pizzas.isEmpty)
+                    XCTAssert($0.drinks.isEmpty)
+                    expectation.fulfill()
+                }
+        }
+
         XCTAssert(CartUseCaseTests.realm.objects(RMPizza.self).isEmpty)
         XCTAssert(CartUseCaseTests.realm.objects(RMCart.self).isEmpty)
         XCTAssert(container.values(DS.Pizza.self).isEmpty)
@@ -182,7 +220,7 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
         expectation { expectation in
             _ = service.total()
                 .first()
-                .sink(receiveCompletion: {
+                .sink {
                     switch $0 {
                     case .finished:
                         DLog("finished.")
@@ -190,9 +228,9 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
                     case let .failure(error):
                         XCTAssert(false, "\(error)")
                     }
-                }, receiveValue: {
+                } receiveValue: {
                     XCTAssertEqual($0, 0.0)
-                })
+                }
         }
     }
 
@@ -206,5 +244,43 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
         items.enumerated().compactMap { item -> Int? in
             self.component.drinks.contains(where: { $0.name == item.element.name }) ? item.offset : nil
         }
+    }
+}
+
+private extension Publishers {
+    struct _CartPublisher<Upstream: Publisher, T>: Publisher where Upstream.Failure == Error {
+        typealias Output = (cart: Cart, pair: T)
+        typealias Failure = Upstream.Failure
+
+        let _upstream: Upstream
+        let _cartHandler: CartHandler
+        let _pair: T
+
+        init(upstream: Upstream, cartHandler: CartHandler, with: T) {
+            _upstream = upstream
+            _cartHandler = cartHandler
+            _pair = with
+        }
+
+        func receive<S>(subscriber: S) where S: Subscriber, Failure == S.Failure, Output == S.Input {
+            _upstream
+                .flatMap { _ in
+                    _cartHandler.cartResult
+                        .first()
+                        .map { (cart: $0.cart, pair: _pair) }
+                        .mapError { _ in API.ErrorType.processingFailed }
+                }
+                .subscribe(subscriber)
+        }
+    }
+}
+
+private extension Publisher where Failure == Error {
+    func _cart<T>(from cartHandler: CartHandler, with: T) -> Publishers._CartPublisher<Self, T> {
+        .init(upstream: self, cartHandler: cartHandler, with: with)
+    }
+
+    func _cart(from cartHandler: CartHandler) -> Publishers._CartPublisher<Self, Void> {
+        .init(upstream: self, cartHandler: cartHandler, with: ())
     }
 }

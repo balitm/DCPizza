@@ -16,14 +16,14 @@ struct CartRepository: CartUseCase {
     }
 
     func items() -> AnyPublisher<[CartItem], Never> {
-        _data.cartHandler.cart
+        _data.cartHandler.cartResult
             .filter { $0.error == nil }
             .map { $0.cart.items() }
             .eraseToAnyPublisher()
     }
 
     func total() -> AnyPublisher<Double, Never> {
-        _data.cartHandler.cart
+        _data.cartHandler.cartResult
             .map { $0.cart.totalPrice() }
             .eraseToAnyPublisher()
     }
@@ -33,7 +33,7 @@ struct CartRepository: CartUseCase {
     }
 
     func checkout() -> AnyPublisher<Void, API.ErrorType> {
-        _data.cartHandler.cart
+        _data.cartHandler.cartResult
             .first()
             .map(\.cart)
             .mapError { _ in
