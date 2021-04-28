@@ -26,6 +26,6 @@ struct MenuRepository: MenuUseCase {
     }
 
     func addToCart(pizza: Pizza) -> AnyPublisher<Void, Error> {
-        Publishers.CartActionPublisher(data: _data, action: .pizza(pizza: pizza)).eraseToAnyPublisher()
+        _data.cartHandler.trigger(action: .pizza(pizza: pizza))
     }
 }

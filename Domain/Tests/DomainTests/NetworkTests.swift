@@ -11,14 +11,13 @@ import Combine
 @testable import Domain
 
 class NetworkTests: UseCaseTestsBase {
-    private var _bag = Set<AnyCancellable>()
-
     func testDrinks() {
         let service = RepositoryUseCaseProvider(container: container,
                                                 network: API.Network()).makeDrinksService()
+        var cancellable: AnyCancellable?
 
         expectation(timeout: 5.0) { expectation in
-            service.drinks()
+            cancellable = service.drinks()
                 .sink(receiveCompletion: {
                     DLog("completed with ", $0)
                 }, receiveValue: {
@@ -27,7 +26,8 @@ class NetworkTests: UseCaseTestsBase {
                         expectation.fulfill()
                     }
                 })
-                .store(in: &_bag)
         }
+
+        cancellable?.cancel()
     }
 }

@@ -20,9 +20,6 @@ struct DrinksRepository: DrinksUseCase {
             .map {
                 (try? $0.get().drinks) ?? []
             }
-            .catch { _ in
-                Empty<[Drink], Never>()
-            }
             .removeDuplicates(by: { $0.count == $1.count })
             .eraseToAnyPublisher()
     }
@@ -33,9 +30,8 @@ struct DrinksRepository: DrinksUseCase {
                 try $0.get().drinks.element(at: drinkIndex)
             }
             .flatMap { [unowned data = _data] in
-                Publishers.CartActionPublisher(data: data, action: .drink(drink: $0))
+                data.cartHandler.trigger(action: .drink(drink: $0))
             }
-            .first()
             .eraseToAnyPublisher()
     }
 }
