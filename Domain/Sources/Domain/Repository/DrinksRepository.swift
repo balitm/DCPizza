@@ -20,9 +20,6 @@ struct DrinksRepository: DrinksUseCase {
             .map {
                 (try? $0.get().drinks) ?? []
             }
-            .catch { _ in
-                Empty<[Drink], Never>()
-            }
             .removeDuplicates(by: { $0.count == $1.count })
             .eraseToAnyPublisher()
     }

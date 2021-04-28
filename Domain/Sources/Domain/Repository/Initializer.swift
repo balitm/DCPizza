@@ -28,6 +28,10 @@ final class Initializer {
 
     private var _bag = Set<AnyCancellable>()
 
+    deinit {
+        DLog("Initializer deinited.")
+    }
+
     init(container: DS.Container?, network: NetworkProtocol) {
         self.container = container
         self.network = network
@@ -36,7 +40,8 @@ final class Initializer {
         let subscriber = AnySubscriber<(image: Image?, index: Int), Never>(receiveSubscription: {
             $0.request(.unlimited)
             // DLog("Recived subscription: ", type(of: $0))
-        }, receiveValue: { [unowned self] value in
+        }, receiveValue: { [weak self] value in
+            guard let self = self else { return .none }
             self.$component
                 .compactMap { try? $0.get() }
                 .first()
