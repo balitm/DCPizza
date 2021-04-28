@@ -32,7 +32,16 @@ class SaveUseCaseTests: NetworklessUseCaseTestsBase {
             component.drinks[0],
             component.drinks[1],
         ]
-        data.cart = Cart(pizzas: pizzas, drinks: drinks, basePrice: data.cart.basePrice)
+
+        expectation { expectation in
+            let cart = Cart(pizzas: pizzas, drinks: drinks, basePrice: 4)
+
+            _ = data.cartHandler.trigger(action: .start(with: cart))
+                .catch { _ in Empty<Void, Never>() }
+                .sink {
+                    expectation.fulfill()
+                }
+        }
 
         expectation { expectation in
             _ = service.saveCart()
@@ -58,10 +67,10 @@ class SaveUseCaseTests: NetworklessUseCaseTestsBase {
             cart.pizzas.enumerated().forEach {
                 XCTAssertEqual($0.element.name, component.pizzas.pizzas[$0.offset].name)
             }
-            try container.write({
+            try container.write {
                 $0.delete(DS.Pizza.self)
                 $0.delete(DS.Cart.self)
-            })
+            }
         } catch {
             XCTAssert(false, "Database threw \(error)")
         }

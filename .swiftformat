@@ -8,10 +8,13 @@
 --disable wrapArguments
 --disable redundantFileprivate
 --operatorfunc no-space
---disable trailingClosures
+--disable preferKeyPath
+--disable wrapMultilineStatementBraces
 
 # rules
 
+--ifdef outdent
+--specifierorder public,override
 --enable isEmpty
 --enable redundantExtensionACL
 --enable redundantFileprivate
@@ -22,3 +25,5 @@
 --enable redundantNilInit
 --enable redundantRawValues
 --enable redundantReturn
+--enable duplicateImports
+# --enable fileHeader

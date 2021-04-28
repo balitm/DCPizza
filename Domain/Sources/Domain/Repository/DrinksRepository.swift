@@ -17,25 +17,21 @@ struct DrinksRepository: DrinksUseCase {
 
     func drinks() -> AnyPublisher<[Drink], Never> {
         _data.$component
-            .map({
+            .map {
                 (try? $0.get().drinks) ?? []
-            })
-            .catch({ _ in
-                Empty<[Drink], Never>()
-            })
+            }
             .removeDuplicates(by: { $0.count == $1.count })
             .eraseToAnyPublisher()
     }
 
     func addToCart(drinkIndex: Int) -> AnyPublisher<Void, Error> {
         _data.$component
-            .tryMap({
+            .tryMap {
                 try $0.get().drinks.element(at: drinkIndex)
-            })
-            .flatMap({ [unowned data = _data] in
-                Publishers.CartActionPublisher(data: data, action: .drink(drink: $0))
-            })
-            .first()
+            }
+            .flatMap { [unowned data = _data] in
+                data.cartHandler.trigger(action: .drink(drink: $0))
+            }
             .eraseToAnyPublisher()
     }
 }
