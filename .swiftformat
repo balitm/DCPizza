@@ -8,7 +8,6 @@
 --disable wrapArguments
 --disable redundantFileprivate
 --operatorfunc no-space
---disable preferKeyPath
 --disable wrapMultilineStatementBraces
 
 # rules
@@ -26,4 +25,3 @@
 --enable redundantRawValues
 --enable redundantReturn
 --enable duplicateImports
-# --enable fileHeader
