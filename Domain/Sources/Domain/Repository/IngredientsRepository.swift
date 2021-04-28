@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-import class AlamofireImage.Image
 
 struct IngredientsRepository: IngredientsUseCase {
     private let _data: Initializer

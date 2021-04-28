@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import class AlamofireImage.Image
 import Combine
 
 final class Initializer {
@@ -107,6 +106,7 @@ final class Initializer {
         $component
             .compactMap { try? $0.get() }
             .first()
+            .receive(on: DispatchQueue.main)
             .map { [weak container] c -> CartAction in
                 // DLog("###### init cart. #########")
                 let dsCart = container?.values(DS.Cart.self).first ?? DS.Cart(pizzas: [], drinks: [])

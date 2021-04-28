@@ -8,7 +8,6 @@
 
 import Foundation
 import Combine
-import class AlamofireImage.Image
 
 public struct Pizza {
     public let name: String
