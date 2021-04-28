@@ -8,9 +8,12 @@
 --disable wrapArguments
 --disable redundantFileprivate
 --operatorfunc no-space
+--disable wrapMultilineStatementBraces
 
 # rules
 
+--ifdef outdent
+--specifierorder public,override
 --enable isEmpty
 --enable redundantExtensionACL
 --enable redundantFileprivate
