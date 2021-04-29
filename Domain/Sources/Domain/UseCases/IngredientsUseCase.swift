@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-import class AlamofireImage.Image
 
 public protocol IngredientsUseCase {
     func ingredients(selected: AnyPublisher<Int, Never>) -> AnyPublisher<[IngredientSelection], Never>

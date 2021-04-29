@@ -60,15 +60,15 @@ class DomainTests: NetworklessUseCaseTestsBase {
             expectation.fulfill()
         }
 
-        let cancellable = Publishers.Zip(API.GetIngredients().cmb.perform(),
-                                         API.GetDrinks().cmb.perform())
-            .sink(receiveCompletion: {
+        let cancellable = Publishers.Zip(API.getIngredients(),
+                                         API.getDrinks())
+            .sink {
                 DLog("Received comletion: ", $0)
                 success()
-            }, receiveValue: {
+            } receiveValue: {
                 DLog("Received #(ingredients: ", $0.0.count, ", drinks: ", $0.1.count, ").")
                 success()
-            })
+            }
 
         wait(for: [expectation], timeout: 120.0)
         cancellable.cancel()

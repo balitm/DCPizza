@@ -9,7 +9,6 @@
 import SwiftUI
 import UIKit
 import Resolver
-import AlamofireNetworkActivityIndicator
 
 @main
 struct DCPizzaApp: App, Resolving {
@@ -18,10 +17,6 @@ struct DCPizzaApp: App, Resolving {
 
     init() {
         _service = Resolver.resolve(DCPizzaViewModel.self)
-
-        // Setup network indicator usage.
-        NetworkActivityIndicatorManager.shared.startDelay = 0.0
-        NetworkActivityIndicatorManager.shared.isEnabled = true
 
         // Set navigation bar appearance.
         UINavigationBar.appearance().largeTitleTextAttributes = [

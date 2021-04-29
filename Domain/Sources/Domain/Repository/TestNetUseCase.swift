@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-import class AlamofireImage.Image
 
 struct TestNetUseCase: NetworkProtocol {
     private func _publish<T: Decodable>(_ data: T) -> AnyPublisher<T, API.ErrorType> {

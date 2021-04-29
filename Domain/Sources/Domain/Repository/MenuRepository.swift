@@ -22,6 +22,7 @@ struct MenuRepository: MenuUseCase {
                     PizzasResult.success(components.pizzas)
                 }
             }
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 
