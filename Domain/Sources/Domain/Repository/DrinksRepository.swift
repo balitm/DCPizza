@@ -21,6 +21,7 @@ struct DrinksRepository: DrinksUseCase {
                 (try? $0.get().drinks) ?? []
             }
             .removeDuplicates(by: { $0.count == $1.count })
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 

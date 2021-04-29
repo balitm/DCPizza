@@ -36,9 +36,7 @@ struct CartRepository: CartUseCase {
         _data.cartHandler.cartResult
             .first()
             .map(\.cart)
-            .mapError { _ in
-                API.ErrorType.processingFailed
-            }
+            .setFailureType(to: API.ErrorType.self)
             .flatMap { [unowned data = _data] in
                 data.network.checkout(cart: $0.asDataSource())
                     .zip(data.cartHandler.trigger(action: .empty)
@@ -48,6 +46,7 @@ struct CartRepository: CartUseCase {
                         }
                     ) { _, _ in () }
             }
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 }
