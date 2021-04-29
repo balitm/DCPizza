@@ -99,6 +99,7 @@ final class Initializer {
             $component
                 .compactMap { try? $0.get() }
                 .first()
+                .receive(on: DS.dbQueue)
                 .map { [weak container] c -> Cart in
                     DLog("###### init card. #########")
                     let dsCart = container?.values(DS.Cart.self).first ?? DS.Cart(pizzas: [], drinks: [])

@@ -14,12 +14,14 @@ protocol DatabaseContainerProtocol {
 
 extension DatabaseContainerProtocol {
     static func initContainer() -> DS.Container? {
-        do {
-            return try DS.Container()
-        } catch {
-            DLog("# DB init failed: ", error)
+        DS.dbQueue.sync {
+            do {
+                return try DS.Container()
+            } catch {
+                DLog("# DB init failed: ", error)
+            }
+            return nil
         }
-        return nil
     }
 
     func execute(_ block: (DS.Container) throws -> Void) {
