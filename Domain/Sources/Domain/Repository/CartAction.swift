@@ -25,8 +25,8 @@ final class CartHandler {
     private let _cancellable: AnyCancellable
 
     init(container: DS.Container?) {
-        let actionInput = CurrentValueRelay<CartAction>(.start(with: Cart.empty))
-        let cartResult = CurrentValueRelay<CartResult>((Cart.empty, nil))
+        let actionInput = CurrentValueSubject<CartAction, Never>(.start(with: Cart.empty))
+        let cartResult = CurrentValueSubject<CartResult, Never>((Cart.empty, nil))
 
         _cancellable = actionInput
             // .debug()
