@@ -29,10 +29,13 @@ final class CartHandler {
         let cartResult = CurrentValueSubject<CartResult, Never>((Cart.empty, nil))
 
         _cancellable = actionInput
+            .receive(on: DS.dbQueue)
             // .debug()
             .scan((Cart.empty, nil)) { currentCart, action -> CartResult in
-                _perform(container, currentCart.cart, action)
+                dispatchPrecondition(condition: .onQueue(DS.dbQueue))
+                return _perform(container, currentCart.cart, action)
             }
+            .receive(on: DispatchQueue.main)
             .subscribe(cartResult)
 
         self.cartResult = cartResult
@@ -63,7 +66,7 @@ final class CartHandler {
                 return ()
             }
 
-        DLog("sent value: ", action)
+        // DLog("sent value: ", action)
         Just(action)
             .subscribe(input)
 
