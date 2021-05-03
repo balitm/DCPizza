@@ -24,9 +24,11 @@ class NetworklessUseCaseTestsBase: UseCaseTestsBase {
 
     func addItemTest(addItem: @escaping () -> AnyPublisher<Void, Error>,
                      test: @escaping (Cart) -> Void = { XCTAssertEqual($0.pizzas.count, 1) }) {
+        var c: AnyCancellable?
+
         expectation { [unowned data = data!] expectation in
             // Empty the cart.
-            _ = data.cartHandler.trigger(action: .empty)
+            c = data.cartHandler.trigger(action: .empty)
                 .handleEvents(receiveCompletion: {
                     if case let Subscribers.Completion.failure(error) = $0 {
                         XCTAssert(false, "\(error)")
@@ -67,5 +69,6 @@ class NetworklessUseCaseTestsBase: UseCaseTestsBase {
                     expectation.fulfill()
                 }
         }
+        c?.cancel()
     }
 }

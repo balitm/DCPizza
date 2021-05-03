@@ -33,6 +33,7 @@ struct DrinksRepository: DrinksUseCase {
             .flatMap { [unowned data = _data] in
                 data.cartHandler.trigger(action: .drink(drink: $0))
             }
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 }

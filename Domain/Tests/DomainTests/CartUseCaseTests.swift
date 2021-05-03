@@ -12,6 +12,7 @@ import RealmSwift
 
 class CartUseCaseTests: NetworklessUseCaseTestsBase {
     var service: CartUseCase!
+    var _bag = Set<AnyCancellable>()
 
     override func setUp() {
         super.setUp()
@@ -31,8 +32,9 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
             component.drinks[1],
         ]
         let cart = Cart(pizzas: pizzas, drinks: drinks, basePrice: 4.0)
+        _bag = Set<AnyCancellable>()
 
-        expectation { [unowned data = data!] expectation in
+        expectation(timeout: 900) { [unowned data = data!] expectation in
             _ = data.cartHandler.trigger(action: .start(with: cart))
                 .sink {
                     if case let Subscribers.Completion.failure(error) = $0 {
@@ -43,9 +45,14 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
         }
     }
 
+    override func tearDown() {
+        _bag.removeAll()
+    }
+
     func testItems() {
         expectation { expectation in
-            _ = service.items()
+            service.items()
+                .debug()
                 .sink(receiveValue: {
                     XCTAssertEqual($0.count, 4)
                     let pizzas = self._pizzaIndexes($0)
@@ -54,13 +61,14 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
                     XCTAssertEqual(drins, [2, 3])
                     expectation.fulfill()
                 })
+                .store(in: &_bag)
         }
     }
 
     func testRemove() {
         expectation { expectation in
             // Remove the 1st pizza.
-            _ = service.remove(at: 0)
+            service.remove(at: 0)
                 ._cart(from: data.cartHandler)
                 .sink {
                     switch $0 {
@@ -75,11 +83,12 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
                     XCTAssertEqual($0.cart.drinks.count, 2)
                     XCTAssertEqual($0.cart.pizzas[0].name, self.component.pizzas.pizzas[1].name)
                 }
+                .store(in: &_bag)
         }
 
         expectation { expectation in
             // Remove the 1st drink.
-            _ = service.remove(at: 1)
+            service.remove(at: 1)
                 ._cart(from: data.cartHandler)
                 .sink {
                     switch $0 {
@@ -94,6 +103,7 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
                     XCTAssertEqual($0.cart.drinks.count, 1)
                     XCTAssertEqual($0.cart.drinks[0].name, self.component.drinks[1].name)
                 }
+                .store(in: &_bag)
         }
     }
 
@@ -101,7 +111,7 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
         var total = 0.0
 
         expectation { [unowned data = data!] expectation in
-            _ = service.total()
+            service.total()
                 .first()
                 .flatMap { total in
                     data.cartHandler.cartResult
@@ -129,16 +139,18 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
                     XCTAssertEqual(price, pp + dp)
                     total = price
                 }
+                .store(in: &_bag)
         }
 
         expectation { expectation in
-            _ = service.items()
+            service.items()
                 .first()
                 .sink {
                     let t = $0.reduce(0.0) { $0 + $1.price }
                     XCTAssertEqual(total, t)
                     expectation.fulfill()
                 }
+                .store(in: &_bag)
         }
     }
 
@@ -147,9 +159,9 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
         service = CartRepository(data: data)
         var cancellable: AnyCancellable?
 
-        // Init the network card.
+        // Init the network cart.
         expectation { expectation in
-            _ = self.data.cartHandler.cartResult
+            self.data.cartHandler.cartResult
                 .first()
                 .map(\.cart)
                 .flatMap {
@@ -162,8 +174,10 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
                     }
                     expectation.fulfill()
                 } receiveValue: {}
+                .store(in: &_bag)
         }
 
+        // Check if the cart is not empty.
         expectation { expectation in
             cancellable = data.$component
                 .filter {
@@ -193,7 +207,7 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
         cancellable?.cancel()
 
         expectation { expectation in
-            _ = data.cartHandler.cartResult
+            data.cartHandler.cartResult
                 .first()
                 .map(\.cart)
                 .sink {
@@ -201,24 +215,29 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
                     XCTAssert($0.drinks.isEmpty)
                     expectation.fulfill()
                 }
+                .store(in: &_bag)
         }
 
-        XCTAssert(CartUseCaseTests.realm.objects(RMPizza.self).isEmpty)
-        XCTAssert(CartUseCaseTests.realm.objects(RMCart.self).isEmpty)
-        XCTAssert(container.values(DS.Pizza.self).isEmpty)
-        XCTAssert(container.values(DS.Cart.self).isEmpty)
+        // Check if the db is empty.
+        DS.dbQueue.sync {
+            XCTAssert(CartUseCaseTests.realm.objects(RMPizza.self).isEmpty)
+            XCTAssert(CartUseCaseTests.realm.objects(RMCart.self).isEmpty)
+            XCTAssert(container.values(DS.Pizza.self).isEmpty)
+            XCTAssert(container.values(DS.Cart.self).isEmpty)
+        }
 
         expectation { expectation in
-            _ = service.items()
+            service.items()
                 .first()
                 .sink(receiveValue: {
                     XCTAssert($0.isEmpty)
                     expectation.fulfill()
                 })
+                .store(in: &_bag)
         }
 
         expectation { expectation in
-            _ = service.total()
+            service.total()
                 .first()
                 .sink {
                     switch $0 {
@@ -231,6 +250,7 @@ class CartUseCaseTests: NetworklessUseCaseTestsBase {
                 } receiveValue: {
                     XCTAssertEqual($0, 0.0)
                 }
+                .store(in: &_bag)
         }
     }
 
@@ -268,7 +288,7 @@ private extension Publishers {
                     _cartHandler.cartResult
                         .first()
                         .map { (cart: $0.cart, pair: _pair) }
-                        .mapError { _ in API.ErrorType.processingFailed }
+                        .setFailureType(to: Error.self)
                 }
                 .subscribe(subscriber)
         }

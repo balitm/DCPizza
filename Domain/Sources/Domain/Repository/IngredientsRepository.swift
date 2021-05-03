@@ -66,6 +66,7 @@ struct IngredientsRepository: IngredientsUseCase {
                 data.cartHandler.trigger(action: .pizza(pizza: $0))
             }
             .first()
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 

@@ -13,12 +13,12 @@ public struct RepositoryUseCaseProvider: UseCaseProvider, DatabaseContainerProto
     private let _data: Initializer
 
     public init() {
-        let container = RepositoryUseCaseProvider.initContainer()
+        let container = Self.initContainer()
         _data = Initializer(container: container, network: API.Network())
     }
 
     init(container: DS.Container? = nil, network: NetworkProtocol) {
-        _data = Initializer(container: container ?? RepositoryUseCaseProvider.initContainer(),
+        _data = Initializer(container: container ?? Self.initContainer(),
                             network: network)
     }
 

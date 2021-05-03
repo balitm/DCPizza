@@ -29,13 +29,16 @@ final class CartHandler {
         let cartResult = CurrentValueSubject<CartResult, Never>((Cart.empty, nil))
 
         _cancellable = actionInput
-            .receive(on: DS.dbQueue)
-            // .debug()
+            .dropFirst()
             .scan((Cart.empty, nil)) { currentCart, action -> CartResult in
+                // if case CartAction.start = action {} else {
                 dispatchPrecondition(condition: .onQueue(DS.dbQueue))
-                return _perform(container, currentCart.cart, action)
+                // }
+                let result = _perform(container, currentCart.cart, action)
+                // DLog("performed result:\n", result)
+                return result
             }
-            .receive(on: DispatchQueue.main)
+            // .debug()
             .subscribe(cartResult)
 
         self.cartResult = cartResult
@@ -57,6 +60,7 @@ final class CartHandler {
 
     func trigger(action: CartAction) -> AnyPublisher<Void, Error> {
         let publisher = cartResult
+            .subscribe(on: DS.dbQueue)
             .first()
             .tryMap { cartResult -> Void in
                 // DLog("trigger recved:\n", cartResult.cart)
@@ -65,9 +69,11 @@ final class CartHandler {
                 }
                 return ()
             }
+            .debug()
 
         // DLog("sent value: ", action)
         Just(action)
+            .subscribe(on: DS.dbQueue)
             .subscribe(input)
 
         return publisher.eraseToAnyPublisher()

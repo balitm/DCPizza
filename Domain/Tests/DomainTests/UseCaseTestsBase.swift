@@ -31,8 +31,10 @@ class UseCaseTestsBase: XCTestCase {
         }
 
         do {
-            let config = _realmConfig
-            realm = try Realm(configuration: config)
+            try DS.dbQueue.sync {
+                let config = _realmConfig
+                realm = try Realm(configuration: config, queue: DS.dbQueue)
+            }
         } catch {
             fatalError("test realm can't be inited:\n\(error)")
         }

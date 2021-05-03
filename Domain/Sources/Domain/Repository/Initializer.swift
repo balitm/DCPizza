@@ -84,7 +84,7 @@ final class Initializer {
             $component
                 .compactMap { try? $0.get() }
                 .first()
-                .sink(receiveValue: { component in
+                .sink { component in
                     component.pizzas.pizzas.enumerated().forEach { item in
                         guard let imageUrl = item.element.imageUrl else { return }
                         network.getImage(url: imageUrl)
@@ -99,7 +99,7 @@ final class Initializer {
                             .map { ($0, item.offset) }
                             .subscribe(subscriber)
                     }
-                }),
+                },
         ]
 
         // Init card.
@@ -107,6 +107,7 @@ final class Initializer {
             .compactMap { try? $0.get() }
             .first()
             .receive(on: DS.dbQueue)
+            .setFailureType(to: Error.self)
             .map { [weak container] c -> CartAction in
                 // DLog("###### init cart. #########")
                 let dsCart = container?.values(DS.Cart.self).first ?? DS.Cart(pizzas: [], drinks: [])
@@ -114,7 +115,7 @@ final class Initializer {
                 cart.basePrice = c.pizzas.basePrice
                 return CartAction.start(with: cart)
             }
-            .receive(on: DispatchQueue.main)
+            .catch { _ in Empty<CartAction, Never>() }
             .subscribe(cartHandler.input)
     }
 }

@@ -19,17 +19,21 @@ struct CartRepository: CartUseCase {
         _data.cartHandler.cartResult
             .filter { $0.error == nil }
             .map { $0.cart.items() }
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 
     func total() -> AnyPublisher<Double, Never> {
         _data.cartHandler.cartResult
             .map { $0.cart.totalPrice() }
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 
     func remove(at index: Int) -> AnyPublisher<Void, Error> {
         _data.cartHandler.trigger(action: .remove(index: index))
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
 
     func checkout() -> AnyPublisher<Void, API.ErrorType> {

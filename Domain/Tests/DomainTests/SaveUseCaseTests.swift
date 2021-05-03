@@ -23,6 +23,7 @@ class SaveUseCaseTests: NetworklessUseCaseTestsBase {
             XCTAssert(false, "no enough components.")
             return
         }
+        var c: AnyCancellable?
 
         let pizzas = [
             component.pizzas.pizzas[0],
@@ -36,15 +37,16 @@ class SaveUseCaseTests: NetworklessUseCaseTestsBase {
         expectation { expectation in
             let cart = Cart(pizzas: pizzas, drinks: drinks, basePrice: 4)
 
-            _ = data.cartHandler.trigger(action: .start(with: cart))
+            c = data.cartHandler.trigger(action: .start(with: cart))
                 .catch { _ in Empty<Void, Never>() }
                 .sink {
                     expectation.fulfill()
                 }
         }
+        c?.cancel()
 
         expectation { expectation in
-            _ = service.saveCart()
+            c = service.saveCart()
                 .sink(receiveCompletion: {
                     if case let Subscribers.Completion.failure(error) = $0 {
                         XCTAssert(false, "failed with: \(error)")
@@ -54,25 +56,28 @@ class SaveUseCaseTests: NetworklessUseCaseTestsBase {
                     XCTAssert(true)
                 })
         }
+        c?.cancel()
 
-        do {
-            let carts = container.values(DS.Cart.self)
-            XCTAssertEqual(carts.count, 1)
-            let cart = carts.first!
-            XCTAssertEqual(cart.pizzas.count, 2)
-            XCTAssertEqual(cart.drinks.count, 2)
-            cart.drinks.enumerated().forEach {
-                XCTAssertEqual($0.element, component.drinks[$0.offset].id)
+        DS.dbQueue.sync {
+            do {
+                let carts = container.values(DS.Cart.self)
+                XCTAssertEqual(carts.count, 1)
+                let cart = carts.first!
+                XCTAssertEqual(cart.pizzas.count, 2)
+                XCTAssertEqual(cart.drinks.count, 2)
+                cart.drinks.enumerated().forEach {
+                    XCTAssertEqual($0.element, component.drinks[$0.offset].id)
+                }
+                cart.pizzas.enumerated().forEach {
+                    XCTAssertEqual($0.element.name, component.pizzas.pizzas[$0.offset].name)
+                }
+                try container.write {
+                    $0.delete(DS.Pizza.self)
+                    $0.delete(DS.Cart.self)
+                }
+            } catch {
+                XCTAssert(false, "Database threw \(error)")
             }
-            cart.pizzas.enumerated().forEach {
-                XCTAssertEqual($0.element.name, component.pizzas.pizzas[$0.offset].name)
-            }
-            try container.write {
-                $0.delete(DS.Pizza.self)
-                $0.delete(DS.Cart.self)
-            }
-        } catch {
-            XCTAssert(false, "Database threw \(error)")
         }
     }
 }
