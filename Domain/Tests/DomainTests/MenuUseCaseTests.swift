@@ -19,8 +19,10 @@ class MenuUseCaseTests: NetworklessUseCaseTestsBase {
     }
 
     func testPizzas() {
+        var c: AnyCancellable?
+
         expectation { expectation in
-            _ = service.pizzas()
+            c = service.pizzas()
                 .first()
                 .sink(receiveValue: {
                     switch $0 {
@@ -33,6 +35,7 @@ class MenuUseCaseTests: NetworklessUseCaseTestsBase {
                     expectation.fulfill()
                 })
         }
+        c?.cancel()
     }
 
     func testAddPizza() {

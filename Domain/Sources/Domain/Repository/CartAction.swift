@@ -25,14 +25,20 @@ final class CartHandler {
     private let _cancellable: AnyCancellable
 
     init(container: DS.Container?) {
-        let actionInput = CurrentValueRelay<CartAction>(.start(with: Cart.empty))
-        let cartResult = CurrentValueRelay<CartResult>((Cart.empty, nil))
+        let actionInput = CurrentValueSubject<CartAction, Never>(.start(with: Cart.empty))
+        let cartResult = CurrentValueSubject<CartResult, Never>((Cart.empty, nil))
 
         _cancellable = actionInput
-            // .debug()
+            .dropFirst()
             .scan((Cart.empty, nil)) { currentCart, action -> CartResult in
-                _perform(container, currentCart.cart, action)
+                // if case CartAction.start = action {} else {
+                dispatchPrecondition(condition: .onQueue(DS.dbQueue))
+                // }
+                let result = _perform(container, currentCart.cart, action)
+                // DLog("performed result:\n", result)
+                return result
             }
+            // .debug()
             .subscribe(cartResult)
 
         self.cartResult = cartResult
@@ -54,6 +60,7 @@ final class CartHandler {
 
     func trigger(action: CartAction) -> AnyPublisher<Void, Error> {
         let publisher = cartResult
+            .subscribe(on: DS.dbQueue)
             .first()
             .tryMap { cartResult -> Void in
                 // DLog("trigger recved:\n", cartResult.cart)
@@ -62,9 +69,11 @@ final class CartHandler {
                 }
                 return ()
             }
+            .debug()
 
-        DLog("sent value: ", action)
+        // DLog("sent value: ", action)
         Just(action)
+            .subscribe(on: DS.dbQueue)
             .subscribe(input)
 
         return publisher.eraseToAnyPublisher()

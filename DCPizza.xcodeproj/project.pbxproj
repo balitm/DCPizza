@@ -36,7 +36,6 @@
 		295DC8C424910C0C00E0591F /* MenuListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC89A24910C0C00E0591F /* MenuListViewModel.swift */; };
 		295DC8C624910C0C00E0591F /* DrinksViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC89D24910C0C00E0591F /* DrinksViewModel.swift */; };
 		295DC8C724910C0C00E0591F /* DrinkRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC89F24910C0C00E0591F /* DrinkRowViewModel.swift */; };
-		295DC8CE24910EEF00E0591F /* AlamofireNetworkActivityIndicator in Frameworks */ = {isa = PBXBuildFile; productRef = 295DC8CD24910EEF00E0591F /* AlamofireNetworkActivityIndicator */; };
 		29607EA624C30BF90090082F /* BackModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29607EA524C30BF90090082F /* BackModifier.swift */; };
 		2962870C24AFB5AC00EA90AF /* Ingredients+Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2962870B24AFB5AC00EA90AF /* Ingredients+Injection.swift */; };
 		2994181724B331A90048DDD5 /* CartListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2994181624B331A90048DDD5 /* CartListView.swift */; };
@@ -125,7 +124,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				295DC8CE24910EEF00E0591F /* AlamofireNetworkActivityIndicator in Frameworks */,
 				2955F63424D0AC110073F09F /* Introspect in Frameworks */,
 				29B56B0B249023490070EBC8 /* Domain in Frameworks */,
 				2951270324AA6E2A00B8D657 /* Resolver in Frameworks */,
@@ -391,7 +389,6 @@
 			name = DCPizza;
 			packageProductDependencies = (
 				29B56B0A249023490070EBC8 /* Domain */,
-				295DC8CD24910EEF00E0591F /* AlamofireNetworkActivityIndicator */,
 				2951270224AA6E2A00B8D657 /* Resolver */,
 				2955F63324D0AC110073F09F /* Introspect */,
 			);
@@ -446,7 +443,6 @@
 			);
 			mainGroup = 29B56A442490197F0070EBC8;
 			packageReferences = (
-				295DC8CC24910EEF00E0591F /* XCRemoteSwiftPackageReference "AlamofireNetworkActivityIndicator" */,
 				2951270124AA6E2A00B8D657 /* XCRemoteSwiftPackageReference "Resolver" */,
 				2955F63224D0AC110073F09F /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
 			);
@@ -816,14 +812,6 @@
 				minimumVersion = 0.1.0;
 			};
 		};
-		295DC8CC24910EEF00E0591F /* XCRemoteSwiftPackageReference "AlamofireNetworkActivityIndicator" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/AlamofireNetworkActivityIndicator";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.1.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -836,11 +824,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2955F63224D0AC110073F09F /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */;
 			productName = Introspect;
-		};
-		295DC8CD24910EEF00E0591F /* AlamofireNetworkActivityIndicator */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 295DC8CC24910EEF00E0591F /* XCRemoteSwiftPackageReference "AlamofireNetworkActivityIndicator" */;
-			productName = AlamofireNetworkActivityIndicator;
 		};
 		29B56B0A249023490070EBC8 /* Domain */ = {
 			isa = XCSwiftPackageProductDependency;

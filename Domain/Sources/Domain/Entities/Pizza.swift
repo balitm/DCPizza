@@ -8,7 +8,6 @@
 
 import Foundation
 import Combine
-import class AlamofireImage.Image
 import CWrapper
 
 public class Pizza: CppConvertibleType {

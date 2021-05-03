@@ -60,15 +60,15 @@ class DomainTests: NetworklessUseCaseTestsBase {
             expectation.fulfill()
         }
 
-        let cancellable = Publishers.Zip(API.GetIngredients().cmb.perform(),
-                                         API.GetDrinks().cmb.perform())
-            .sink(receiveCompletion: {
+        let cancellable = Publishers.Zip(API.getIngredients(),
+                                         API.getDrinks())
+            .sink {
                 DLog("Received comletion: ", $0)
                 success()
-            }, receiveValue: {
+            } receiveValue: {
                 DLog("Received #(ingredients: ", $0.0.count, ", drinks: ", $0.1.count, ").")
                 success()
-            })
+            }
 
         wait(for: [expectation], timeout: 120.0)
         cancellable.cancel()
@@ -121,35 +121,37 @@ class DomainTests: NetworklessUseCaseTestsBase {
     }
 
     func testDB() {
-        do {
-            let realm = DomainTests.realm!
-            let container = DS.Container(realm: realm)
+        DS.dbQueue.sync {
+            do {
+                let realm = DomainTests.realm!
+                let container = DS.Container(realm: realm)
 
-            // Save the btest cart.
-            try container.write {
-                $0.add(testCart.asDataSource())
-            }
+                // Save the test cart.
+                try container.write {
+                    $0.add(testCart.asDataSource())
+                }
 
-            // Load saved cart.
-            guard let dCart = container.values(DS.Cart.self).first else {
-                XCTAssert(false)
+                // Load saved cart.
+                guard let dCart = container.values(DS.Cart.self).first else {
+                    XCTAssert(false)
+                    return
+                }
+
+                // Delete from DB.
+                try container.write {
+                    $0.delete(DS.Cart.self)
+                    $0.delete(DS.Pizza.self)
+                }
+
+                // Compare.
+                let converted = dCart.asDomain(with: component.ingredients, drinks: component.drinks)
+                XCTAssertTrue(_isEqual(converted, rhs: testCart))
                 return
+            } catch {
+                DLog(">>> error caught: ", error)
             }
-
-            // Delete from DB.
-            try container.write {
-                $0.delete(DS.Cart.self)
-                $0.delete(DS.Pizza.self)
-            }
-
-            // Compare.
-            let converted = dCart.asDomain(with: component.ingredients, drinks: component.drinks)
-            XCTAssertTrue(_isEqual(converted, rhs: testCart))
-            return
-        } catch {
-            DLog(">>> error caught: ", error)
+            XCTAssert(false)
         }
-        XCTAssert(false)
     }
 
     private func _isEqual(_ lhs: Domain.Cart, rhs: Domain.Cart) -> Bool {

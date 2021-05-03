@@ -21,9 +21,10 @@ class IngredientsUseCaseTests: NetworklessUseCaseTestsBase {
 
     func testIngredients() {
         let selected = CurrentValueSubject<Int, Never>(0)
+        var c: AnyCancellable?
 
         expectation { expectation in
-            _ = service.ingredients(selected: AnyPublisher(selected))
+            c = service.ingredients(selected: AnyPublisher(selected))
                 .sink(receiveValue: {
                     XCTAssertGreaterThan($0.count, 0)
                 })
@@ -31,6 +32,7 @@ class IngredientsUseCaseTests: NetworklessUseCaseTestsBase {
             selected.send(1)
             expectation.fulfill()
         }
+        c?.cancel()
     }
 
     func testAddPizza() {

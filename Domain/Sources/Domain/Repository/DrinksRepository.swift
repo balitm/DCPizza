@@ -21,6 +21,7 @@ struct DrinksRepository: DrinksUseCase {
                 (try? $0.get().drinks) ?? []
             }
             .removeDuplicates(by: { $0.count == $1.count })
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 
@@ -32,6 +33,7 @@ struct DrinksRepository: DrinksUseCase {
             .flatMap { [unowned data = _data] in
                 data.cartHandler.trigger(action: .drink(drink: $0))
             }
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 }

@@ -19,17 +19,20 @@ class DrinksUseCaseTests: NetworklessUseCaseTestsBase {
     }
 
     func testDrinks() {
+        var c: AnyCancellable?
+
         expectation { expectation in
-            _ = service.drinks()
-                .sink(receiveCompletion: {
+            c = service.drinks()
+                .sink {
                     if case Subscribers.Completion<Never>.finished = $0 {
                         expectation.fulfill()
                     }
-                }, receiveValue: {
+                } receiveValue: {
                     XCTAssertGreaterThan($0.count, 0)
                     expectation.fulfill()
-                })
+                }
         }
+        c?.cancel()
     }
 
     func testAddDrink() {

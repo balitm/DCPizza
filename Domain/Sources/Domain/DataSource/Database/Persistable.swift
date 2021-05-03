@@ -17,6 +17,10 @@ protocol Persistable {
 }
 
 extension DataSource {
+    static let dbQueue = DispatchQueue(label: "dbQueue",
+                                       qos: .background,
+                                       target: DispatchQueue.global(qos: .background))
+
     final class WriteTransaction {
         private let _realm: Realm
 
@@ -40,7 +44,7 @@ extension DataSource {
         convenience init() throws {
             let config = Realm.Configuration.defaultConfiguration
             DLog(">>> realm path: ", config.fileURL!.path)
-            try self.init(realm: Realm())
+            try self.init(realm: Realm(queue: DS.dbQueue))
         }
 
         init(realm: Realm) {

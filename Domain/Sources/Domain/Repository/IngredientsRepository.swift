@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-import class AlamofireImage.Image
 
 struct IngredientsRepository: IngredientsUseCase {
     private let _data: Initializer
@@ -52,7 +51,9 @@ struct IngredientsRepository: IngredientsUseCase {
             }
             .subscribe(AnySubscriber(_ingredients))
 
-        return _ingredients.eraseToAnyPublisher()
+        return _ingredients
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
 
     func addToCart() -> AnyPublisher<Void, Error> {
@@ -60,11 +61,12 @@ struct IngredientsRepository: IngredientsUseCase {
             .map { (pair: (pizza: Pizza, ingredients: [IngredientSelection])) -> Pizza in
                 Pizza(copy: pair.pizza, with: pair.ingredients.compactMap { $0.isOn ? $0.ingredient : nil })
             }
-            .mapError { _ in API.ErrorType.disabled }
+            .setFailureType(to: Error.self)
             .flatMap { [unowned data = _data] in
                 data.cartHandler.trigger(action: .pizza(pizza: $0))
             }
             .first()
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 
