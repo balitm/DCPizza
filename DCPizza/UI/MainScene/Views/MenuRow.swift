@@ -22,12 +22,21 @@ struct MenuRow: View {
                     .clipped()
                 Spacer()
             }
-            self.viewModel.image.map {
-                $0
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(height: 179)
-                    .clipped()
+            if self.viewModel.isLoading {
+                VStack {
+                    ProgressView()
+                        .scaleEffect(2.0)
+                        .progressViewStyle(CircularProgressViewStyle(tint: .black))
+                }
+                .frame(height: 128)
+            } else {
+                self.viewModel.image.map {
+                    $0
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(height: 179)
+                        .clipped()
+                }
             }
             VStack {
                 Spacer()
