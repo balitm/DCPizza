@@ -143,12 +143,16 @@ private struct _Checkout: Encodable {
     let drinks: [DS.Drink.ID]
 }
 
-private let imageDownloader = ImageDownloader(
-    configuration: ImageDownloader.defaultURLSessionConfiguration(),
-    downloadPrioritization: .fifo,
-    maximumActiveDownloads: 2,
-    imageCache: AutoPurgingImageCache()
-)
+private let imageDownloader: ImageDownloader = {
+    let sessionConfig = ImageDownloader.defaultURLSessionConfiguration()
+    sessionConfig.urlCache = nil
+    return ImageDownloader(
+        configuration: sessionConfig,
+        downloadPrioritization: .fifo,
+        maximumActiveDownloads: 2,
+        imageCache: nil
+    )
+}()
 
 private extension ImageDownloader {
     func image(for url: URL) -> AnyPublisher<Image, API.ErrorType> {
