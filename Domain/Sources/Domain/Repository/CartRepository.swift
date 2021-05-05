@@ -35,9 +35,7 @@ struct CartRepository: CartUseCase {
     func checkout() -> AnyPublisher<Void, API.ErrorType> {
         _data.$cart
             .first()
-            .mapError { _ in
-                API.ErrorType.processingFailed
-            }
+            .setFailureType(to: API.ErrorType.self)
             .flatMap { [unowned data = _data] in
                 data.network.checkout(cart: $0.asDataSource())
                     .zip(

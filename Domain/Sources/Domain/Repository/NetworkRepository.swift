@@ -21,26 +21,23 @@ protocol NetworkProtocol {
 extension API {
     struct Network: NetworkProtocol {
         func getPizzas() -> AnyPublisher<DS.Pizzas, API.ErrorType> {
-            GetPizzas().cmb.perform()
+            API.getPizzas()
         }
 
         func getIngredients() -> AnyPublisher<[DS.Ingredient], API.ErrorType> {
-            GetIngredients().cmb.perform()
+            API.getIngredients()
         }
 
         func getDrinks() -> AnyPublisher<[DS.Drink], API.ErrorType> {
-            GetDrinks().cmb.perform()
+            API.getDrinks()
         }
 
         func getImage(url: URL) -> AnyPublisher<Image, API.ErrorType> {
-            let downloader = API.ImageDownloader(path: url.absoluteString)
-            return downloader.cmb.perform()
+            API.downloadImage(url: url)
         }
 
         func checkout(cart: DS.Cart) -> AnyPublisher<Void, API.ErrorType> {
-            Checkout(pizzas: cart.pizzas, drinks: cart.drinks).cmb.perform()
-                .map { _ in () }
-                .eraseToAnyPublisher()
+            API.checkout(pizzas: cart.pizzas, drinks: cart.drinks)
         }
     }
 }

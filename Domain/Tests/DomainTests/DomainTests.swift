@@ -60,8 +60,8 @@ class DomainTests: UseCaseTestsBase {
             expectation.fulfill()
         }
 
-        let cancellable = Publishers.Zip(API.GetIngredients().cmb.perform(),
-                                         API.GetDrinks().cmb.perform())
+        let cancellable = Publishers.Zip(API.getIngredients(),
+                                         API.getDrinks())
             .sink(receiveCompletion: {
                 DLog("Received comletion: ", $0)
                 success()
