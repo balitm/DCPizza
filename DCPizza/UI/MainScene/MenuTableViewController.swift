@@ -72,21 +72,21 @@ final class MenuTableViewController: UITableViewController {
 
             // Show ingredients.
             out.selection
-                .sink(receiveValue: { [unowned self] in
+                .sink { [unowned self] in
                     _ = self._navigator.showIngredients(of: $0)
-                }),
+                },
 
             // Show cart.
             leftPublisher
-                .sink(receiveValue: { [unowned self] in
+                .sink { [unowned self] in
                     self._navigator.showCart()
-                }),
+                },
 
             // Show addedd.
             out.showAdded
-                .sink(receiveValue: { [unowned self] _ in
+                .sink { [unowned self] _ in
                     self._navigator.showAdded()
-                }),
+                },
         ]
     }
 }

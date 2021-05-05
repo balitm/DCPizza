@@ -59,34 +59,37 @@ private extension Publishers.CartActionPublisher {
         }
 
         private func _performAction() {
-            guard let subscriber = _subscriber else { return }
+            DS.dbQueue.async { [weak self] in
+                guard let self = self
+                    , let subscriber = self._subscriber else { return }
 
-            func complete(_ completion: Subscribers.Completion<Error>) {
-                if case Subscribers.Completion<Error>.finished = completion {
-                    _ = subscriber.receive(())
+                func complete(_ completion: Subscribers.Completion<Error>) {
+                    if case Subscribers.Completion<Error>.finished = completion {
+                        _ = subscriber.receive(())
+                    }
+                    subscriber.receive(completion: completion)
                 }
-                subscriber.receive(completion: completion)
-            }
 
-            switch _action {
-            case let .pizza(pizza):
-                _data.cart.add(pizza: pizza)
-                complete(.finished)
-            case let .drink(drink):
-                _data.cart.add(drink: drink)
-                complete(.finished)
-            case let .remove(index):
-                _data.cart.remove(at: index)
-                complete(.finished)
-            case .empty:
-                _data.cart.empty()
-                let completion = _dbAction()
-                complete(completion)
-            case .save:
-                let completion = _dbAction {
-                    $0.add(_data.cart.asDataSource())
+                switch self._action {
+                case let .pizza(pizza):
+                    self._data.cart.add(pizza: pizza)
+                    complete(.finished)
+                case let .drink(drink):
+                    self._data.cart.add(drink: drink)
+                    complete(.finished)
+                case let .remove(index):
+                    self._data.cart.remove(at: index)
+                    complete(.finished)
+                case .empty:
+                    self._data.cart.empty()
+                    let completion = self._dbAction()
+                    complete(completion)
+                case .save:
+                    let completion = self._dbAction {
+                        $0.add(self._data.cart.asDataSource())
+                    }
+                    complete(completion)
                 }
-                complete(completion)
             }
         }
 

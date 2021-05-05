@@ -18,17 +18,20 @@ struct CartRepository: CartUseCase {
     func items() -> AnyPublisher<[CartItem], Never> {
         _data.$cart
             .map { $0.items() }
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 
     func total() -> AnyPublisher<Double, Never> {
         _data.$cart
             .map { $0.totalPrice() }
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 
     func remove(at index: Int) -> AnyPublisher<Void, Error> {
         Publishers.CartActionPublisher(data: _data, action: .remove(index: index))
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 

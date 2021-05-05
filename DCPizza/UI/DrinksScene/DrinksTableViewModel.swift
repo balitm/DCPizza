@@ -40,6 +40,7 @@ struct DrinksTableViewModel: ViewModelType {
                 service.addToCart(drinkIndex: $0)
                     .catch { _ in Empty<Void, Never>() }
             }
+            .receive(on: DispatchQueue.main)
 
         return Output(tableData: items.eraseToAnyPublisher(),
                       showAdded: showAdded.eraseToAnyPublisher())

@@ -33,6 +33,7 @@ struct DrinksRepository: DrinksUseCase {
                 Publishers.CartActionPublisher(data: data, action: .drink(drink: $0))
             }
             .first()
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 }
