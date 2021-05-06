@@ -49,6 +49,7 @@
 		2976A47123FDB6A300828A94 /* IngredientsHeaderCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A47023FDB6A300828A94 /* IngredientsHeaderCellViewModel.swift */; };
 		2976A47323FDBA6700828A94 /* IngredientsItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A47223FDBA6700828A94 /* IngredientsItemTableViewCell.swift */; };
 		2976A47523FDBB3400828A94 /* IngredientsItemCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A47423FDBB3400828A94 /* IngredientsItemCellViewModel.swift */; };
+		298D419626446B600071E8DB /* Publishers+Assign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298D419526446B600071E8DB /* Publishers+Assign.swift */; };
 		29B8ABE024007E4300A07816 /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B8ABDF24007E4300A07816 /* SuccessViewController.swift */; };
 		29EF9A752401D53C002E8E4E /* DrinkCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EF9A702401D53C002E8E4E /* DrinkCellViewModel.swift */; };
 		29EF9A762401D53C002E8E4E /* DrinkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EF9A722401D53C002E8E4E /* DrinkTableViewCell.swift */; };
@@ -106,6 +107,7 @@
 		2976A47023FDB6A300828A94 /* IngredientsHeaderCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsHeaderCellViewModel.swift; sourceTree = "<group>"; };
 		2976A47223FDBA6700828A94 /* IngredientsItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsItemTableViewCell.swift; sourceTree = "<group>"; };
 		2976A47423FDBB3400828A94 /* IngredientsItemCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsItemCellViewModel.swift; sourceTree = "<group>"; };
+		298D419526446B600071E8DB /* Publishers+Assign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Publishers+Assign.swift"; sourceTree = "<group>"; };
 		29B5A7982409746600BDE6AB /* AppDependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencyContainer.swift; sourceTree = "<group>"; };
 		29B8ABDF24007E4300A07816 /* SuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
 		29EF9A6D2401D53C002E8E4E /* DrinksTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrinksTableViewController.swift; sourceTree = "<group>"; };
@@ -209,6 +211,7 @@
 				294ACFF423FC601A0027D0D4 /* ViewModelType.swift */,
 				2976A46E23FDB58E00828A94 /* SeparableTableViewCell.swift */,
 				29432A0D240312E800F4FC06 /* PriceFormatter.swift */,
+				298D419526446B600071E8DB /* Publishers+Assign.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -497,6 +500,7 @@
 				29EF9A752401D53C002E8E4E /* DrinkCellViewModel.swift in Sources */,
 				294ACFFA23FC63530027D0D4 /* MenuCellViewModel.swift in Sources */,
 				294ACFF723FC60C50027D0D4 /* MenuTableViewModel.swift in Sources */,
+				298D419626446B600071E8DB /* Publishers+Assign.swift in Sources */,
 				294ACFF323FC5C270027D0D4 /* MenuTableViewCell.swift in Sources */,
 				29432A0E240312E800F4FC06 /* PriceFormatter.swift in Sources */,
 				294ACFE923FC56630027D0D4 /* UIColor+Extensions.swift in Sources */,
