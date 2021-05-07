@@ -121,35 +121,37 @@ class DomainTests: UseCaseTestsBase {
     }
 
     func testDB() {
-        do {
-            let realm = DomainTests.realm!
-            let container = DS.Container(realm: realm)
+        DS.dbQueue.sync {
+            do {
+                let realm = DomainTests.realm!
+                let container = DS.Container(realm: realm)
 
-            // Save the btest cart.
-            try container.write {
-                $0.add(testCart.asDataSource())
-            }
+                // Save the btest cart.
+                try container.write {
+                    $0.add(testCart.asDataSource())
+                }
 
-            // Load saved cart.
-            guard let dCart = container.values(DS.Cart.self).first else {
-                XCTAssert(false)
+                // Load saved cart.
+                guard let dCart = container.values(DS.Cart.self).first else {
+                    XCTAssert(false)
+                    return
+                }
+
+                // Delete from DB.
+                try container.write {
+                    $0.delete(DS.Cart.self)
+                    $0.delete(DS.Pizza.self)
+                }
+
+                // Compare.
+                let converted = dCart.asDomain(with: component.ingredients, drinks: component.drinks)
+                XCTAssertTrue(_isEqual(converted, rhs: testCart))
                 return
+            } catch {
+                DLog(">>> error caught: ", error)
             }
-
-            // Delete from DB.
-            try container.write {
-                $0.delete(DS.Cart.self)
-                $0.delete(DS.Pizza.self)
-            }
-
-            // Compare.
-            let converted = dCart.asDomain(with: component.ingredients, drinks: component.drinks)
-            XCTAssertTrue(_isEqual(converted, rhs: testCart))
-            return
-        } catch {
-            DLog(">>> error caught: ", error)
+            XCTAssert(false)
         }
-        XCTAssert(false)
     }
 
     private func _isEqual(_ lhs: Domain.Cart, rhs: Domain.Cart) -> Bool {

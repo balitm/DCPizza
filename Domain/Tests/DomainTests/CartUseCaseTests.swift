@@ -12,6 +12,7 @@ import RealmSwift
 
 class CartUseCaseTests: UseCaseTestsBase {
     var service: CartUseCase!
+    var cancellable: AnyCancellable?
 
     override func setUp() {
         super.setUp()
@@ -30,12 +31,13 @@ class CartUseCaseTests: UseCaseTestsBase {
             component.drinks[0],
             component.drinks[1],
         ]
+        sleep(1)
         data.cart = Cart(pizzas: pizzas, drinks: drinks, basePrice: data.cart.basePrice)
     }
 
     func testItems() {
         expectation { expectation in
-            _ = service.items()
+            cancellable = service.items()
                 .sink(receiveValue: {
                     XCTAssertEqual($0.count, 4)
                     let pizzas = self._pizzaIndexes($0)
@@ -45,12 +47,13 @@ class CartUseCaseTests: UseCaseTestsBase {
                     expectation.fulfill()
                 })
         }
+        cancellable?.cancel()
     }
 
     func testRemove() {
         expectation { expectation in
             // Remove the 1st pizza.
-            _ = service.remove(at: 0)
+            cancellable = service.remove(at: 0)
                 .sink(receiveCompletion: {
                     switch $0 {
                     case .finished:
@@ -67,7 +70,7 @@ class CartUseCaseTests: UseCaseTestsBase {
 
         expectation { expectation in
             // Remove the 1st drink.
-            _ = service.remove(at: 1)
+            cancellable = service.remove(at: 1)
                 .sink(receiveCompletion: {
                     switch $0 {
                     case .finished:
@@ -87,9 +90,10 @@ class CartUseCaseTests: UseCaseTestsBase {
         var total = 0.0
 
         expectation { expectation in
-            _ = service.total()
+            XCTAssert(!self.data.cart.isEmpty)
+            cancellable = service.total()
                 .first()
-                .sink(receiveCompletion: {
+                .sink {
                     switch $0 {
                     case .finished:
                         DLog("finished.")
@@ -97,7 +101,7 @@ class CartUseCaseTests: UseCaseTestsBase {
                     case let .failure(error):
                         XCTAssert(false, "\(error)")
                     }
-                }, receiveValue: {
+                } receiveValue: {
                     let pp = self.data.cart.pizzas.reduce(0.0) {
                         $0 + $1.ingredients.reduce(self.data.cart.basePrice) {
                             $0 + $1.price
@@ -109,18 +113,20 @@ class CartUseCaseTests: UseCaseTestsBase {
 
                     XCTAssertEqual($0, pp + dp)
                     total = $0
-                })
+                }
         }
 
         expectation { expectation in
-            _ = service.items()
+            XCTAssert(!data.cart.isEmpty)
+            cancellable = service.items()
                 .first()
-                .sink(receiveValue: {
+                .sink {
                     let t = $0.reduce(0.0) { $0 + $1.price }
                     XCTAssertEqual(total, t)
                     expectation.fulfill()
-                })
+                }
         }
+        cancellable?.cancel()
     }
 
     func testCheckout() {
@@ -159,22 +165,25 @@ class CartUseCaseTests: UseCaseTestsBase {
 
         XCTAssert(data.cart.pizzas.isEmpty)
         XCTAssert(data.cart.drinks.isEmpty)
-        XCTAssert(CartUseCaseTests.realm.objects(RMPizza.self).isEmpty)
-        XCTAssert(CartUseCaseTests.realm.objects(RMCart.self).isEmpty)
-        XCTAssert(container.values(DS.Pizza.self).isEmpty)
-        XCTAssert(container.values(DS.Cart.self).isEmpty)
+        DS.dbQueue.sync {
+            XCTAssert(CartUseCaseTests.realm.objects(RMPizza.self).isEmpty)
+            XCTAssert(CartUseCaseTests.realm.objects(RMCart.self).isEmpty)
+            XCTAssert(container.values(DS.Pizza.self).isEmpty)
+            XCTAssert(container.values(DS.Cart.self).isEmpty)
+        }
 
         expectation { expectation in
-            _ = service.items()
+            cancellable = service.items()
                 .first()
                 .sink(receiveValue: {
                     XCTAssert($0.isEmpty)
                     expectation.fulfill()
                 })
         }
+        cancellable?.cancel()
 
         expectation { expectation in
-            _ = service.total()
+            cancellable = service.total()
                 .first()
                 .sink(receiveCompletion: {
                     switch $0 {
@@ -188,6 +197,7 @@ class CartUseCaseTests: UseCaseTestsBase {
                     XCTAssertEqual($0, 0.0)
                 })
         }
+        cancellable?.cancel()
     }
 
     private func _pizzaIndexes(_ items: [CartItem]) -> [Int] {
