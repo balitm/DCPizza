@@ -10,14 +10,14 @@ import UIKit
 import Domain
 import Combine
 
-enum Section: Hashable {
+private enum _Section: Hashable {
     case item, total
 }
 
 class CartViewController: UIViewController {
     typealias Item = CartViewModel.Item
-    private typealias _DataSource = UITableViewDiffableDataSource<Section, Item>
-    private typealias _Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
+    private typealias _DataSource = UITableViewDiffableDataSource<_Section, Item>
+    private typealias _Snapshot = NSDiffableDataSourceSnapshot<_Section, Item>
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var checkoutTap: UITapGestureRecognizer!
