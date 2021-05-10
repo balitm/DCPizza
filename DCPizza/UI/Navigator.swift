@@ -57,7 +57,7 @@ final class DefaultNavigator: Navigator {
     }
 
     func showAdded() {
-        let vc = storyboard.load(type: AddedViewController.self)
+        let vc = AddedViewController()
         _navigationController.present(vc, animated: true)
     }
 }

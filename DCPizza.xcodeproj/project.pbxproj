@@ -41,6 +41,7 @@
 		2965D815245857BE000B127B /* AppDependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B5A7982409746600BDE6AB /* AppDependencyContainer.swift */; };
 		2965D81624586323000B127B /* Navigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A46823FD76F600828A94 /* Navigator.swift */; };
 		2969857C23FEB5400024466E /* AddedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969857B23FEB5400024466E /* AddedViewController.swift */; };
+		29730429264984830027F082 /* Stevia in Frameworks */ = {isa = PBXBuildFile; productRef = 29730428264984830027F082 /* Stevia */; };
 		29762CFD245DB71A00071C74 /* DrinksTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EF9A6E2401D53C002E8E4E /* DrinksTableViewModel.swift */; };
 		29762CFE245DBAF200071C74 /* DrinksTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EF9A6D2401D53C002E8E4E /* DrinksTableViewController.swift */; };
 		2976A46D23FDB21B00828A94 /* IngredientsHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A46C23FDB21B00828A94 /* IngredientsHeaderTableViewCell.swift */; };
@@ -120,6 +121,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29730429264984830027F082 /* Stevia in Frameworks */,
 				29306D9B2476B9CA001A6684 /* AlamofireNetworkActivityIndicator in Frameworks */,
 				295616782440CEBB0063542A /* Domain in Frameworks */,
 			);
@@ -377,6 +379,7 @@
 			packageProductDependencies = (
 				295616772440CEBB0063542A /* Domain */,
 				29306D9A2476B9CA001A6684 /* AlamofireNetworkActivityIndicator */,
+				29730428264984830027F082 /* Stevia */,
 			);
 			productName = DCPizza;
 			productReference = 2941A3F023FAF0DC005838BA /* DCPizza.app */;
@@ -430,6 +433,7 @@
 			mainGroup = 2941A3E723FAF0DC005838BA;
 			packageReferences = (
 				29306D992476B9CA001A6684 /* XCRemoteSwiftPackageReference "AlamofireNetworkActivityIndicator" */,
+				29730427264984830027F082 /* XCRemoteSwiftPackageReference "Stevia" */,
 			);
 			productRefGroup = 2941A3F123FAF0DC005838BA /* Products */;
 			projectDirPath = "";
@@ -618,7 +622,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -673,7 +677,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -809,6 +813,14 @@
 				minimumVersion = 3.1.0;
 			};
 		};
+		29730427264984830027F082 /* XCRemoteSwiftPackageReference "Stevia" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/freshOS/Stevia";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -820,6 +832,11 @@
 		295616772440CEBB0063542A /* Domain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Domain;
+		};
+		29730428264984830027F082 /* Stevia */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 29730427264984830027F082 /* XCRemoteSwiftPackageReference "Stevia" */;
+			productName = Stevia;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
