@@ -11,7 +11,7 @@ import Domain
 import Combine
 
 enum Section: Hashable {
-    case item // , total
+    case item, total
 }
 
 class CartViewController: UIViewController {
@@ -58,7 +58,7 @@ class CartViewController: UIViewController {
 // MARK: - Private
 
 private extension CartViewController {
-    var _dataSourceProperty: [Item] {
+    var _dataSourceProperty: [[Item]] {
         get { [] }
         set {
             _applySnapshot(items: newValue, animatingDifferences: _isAnimating)
@@ -66,7 +66,7 @@ private extension CartViewController {
     }
 
     func _bind() {
-        _applySnapshot(items: [], animatingDifferences: false)
+        _applySnapshot(items: [[], []], animatingDifferences: false)
         let rightPublisher = navigationItem.rightBarButtonItem!.cmb.publisher().map { _ in () }.eraseToAnyPublisher()
         let selected = tableView.cmb.itemSelected()
             .compactMap { [unowned self] ip -> Int? in
@@ -111,21 +111,32 @@ private extension CartViewController {
             tableView: tableView,
             cellProvider: { tv, ip, item in
                 switch item {
-                case let .padding(viewModel):
-                    return tv.createCell(PaddingTableViewCell.self, viewModel, ip)
                 case let .item(viewModel):
                     return tv.createCell(CartItemTableViewCell.self, viewModel, ip)
                 case let .total(viewModel):
                     return tv.createCell(CartTotalTableViewCell.self, viewModel, ip)
                 }
             })
+        dataSource.defaultRowAnimation = .fade
         return dataSource
     }
 
-    func _applySnapshot(items: [Item], animatingDifferences: Bool = true) {
+    func _applySnapshot(items: [[Item]], animatingDifferences: Bool = true) {
         var snapshot = _Snapshot()
-        snapshot.appendSections([.item])
-        snapshot.appendItems(items, toSection: .item)
+        assert(items.count == 2)
+        snapshot.appendSections([.item, .total])
+        snapshot.appendItems(items[0], toSection: .item)
+        snapshot.appendItems(items[1], toSection: .total)
+        // var sections = [Section.total]
+        // if !items[0].isEmpty {
+        //     sections.insert(.item, at: 0)
+        // }
+        // snapshot.appendSections(sections)
+        // if !items[0].isEmpty {
+        //     snapshot.appendItems(items[0], toSection: .item)
+        // }
+        // snapshot.appendSections(sections)
+        // snapshot.appendItems(items[1], toSection: .total)
         _dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
     }
 }
