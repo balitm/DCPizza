@@ -52,7 +52,7 @@ final class DefaultNavigator: Navigator {
     }
 
     func showSuccess() {
-        let vc = SuccessViewController.create(with: storyboard)
+        let vc = SuccessViewController()
         _navigationController.present(vc, animated: true)
     }
 
