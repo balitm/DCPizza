@@ -29,7 +29,6 @@
 		2953512924588DDC0069D426 /* CartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295C3D6023FEF60000D82655 /* CartViewController.swift */; };
 		29541604245F054C00414BB7 /* IngredientsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A46623FD6BF900828A94 /* IngredientsViewModel.swift */; };
 		29541605245F055400414BB7 /* IngredientsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976A46423FD6B9300828A94 /* IngredientsViewController.swift */; };
-		2955A4CA24574A1A0093E3F2 /* CombineDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 2955A4C924574A1A0093E3F2 /* CombineDataSources */; };
 		2955F7D024716D9C00623BCD /* IngredientsDependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2955F7CF24716D9C00623BCD /* IngredientsDependencyContainer.swift */; };
 		295616782440CEBB0063542A /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 295616772440CEBB0063542A /* Domain */; };
 		2957A6D4245C82D4008ECE50 /* UIGestureRecognizer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2957A6D3245C82D4008ECE50 /* UIGestureRecognizer+Extension.swift */; };
@@ -122,7 +121,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				29306D9B2476B9CA001A6684 /* AlamofireNetworkActivityIndicator in Frameworks */,
-				2955A4CA24574A1A0093E3F2 /* CombineDataSources in Frameworks */,
 				295616782440CEBB0063542A /* Domain in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -378,7 +376,6 @@
 			name = DCPizza;
 			packageProductDependencies = (
 				295616772440CEBB0063542A /* Domain */,
-				2955A4C924574A1A0093E3F2 /* CombineDataSources */,
 				29306D9A2476B9CA001A6684 /* AlamofireNetworkActivityIndicator */,
 			);
 			productName = DCPizza;
@@ -432,7 +429,6 @@
 			);
 			mainGroup = 2941A3E723FAF0DC005838BA;
 			packageReferences = (
-				2955A4C824574A1A0093E3F2 /* XCRemoteSwiftPackageReference "CombineDataSources" */,
 				29306D992476B9CA001A6684 /* XCRemoteSwiftPackageReference "AlamofireNetworkActivityIndicator" */,
 			);
 			productRefGroup = 2941A3F123FAF0DC005838BA /* Products */;
@@ -813,14 +809,6 @@
 				minimumVersion = 3.1.0;
 			};
 		};
-		2955A4C824574A1A0093E3F2 /* XCRemoteSwiftPackageReference "CombineDataSources" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/CombineCommunity/CombineDataSources.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.2.5;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -828,11 +816,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 29306D992476B9CA001A6684 /* XCRemoteSwiftPackageReference "AlamofireNetworkActivityIndicator" */;
 			productName = AlamofireNetworkActivityIndicator;
-		};
-		2955A4C924574A1A0093E3F2 /* CombineDataSources */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2955A4C824574A1A0093E3F2 /* XCRemoteSwiftPackageReference "CombineDataSources" */;
-			productName = CombineDataSources;
 		};
 		295616772440CEBB0063542A /* Domain */ = {
 			isa = XCSwiftPackageProductDependency;
