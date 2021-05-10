@@ -19,16 +19,20 @@ class DrinksTableViewController: UITableViewController {
     private typealias _DataSource = UITableViewDiffableDataSource<_Section, Item>
     private typealias _Snapshot = NSDiffableDataSourceSnapshot<_Section, Item>
 
-    private var _navigator: Navigator!
-    private var _viewModel: DrinksTableViewModel!
+    private var _navigator: Navigator
+    private var _viewModel: DrinksTableViewModel
     private lazy var _dataSource = _makeDataSource()
     private var _bag = Set<AnyCancellable>()
 
-    class func create(with navigator: Navigator, viewModel: DrinksTableViewModel) -> DrinksTableViewController {
-        let vc = navigator.storyboard.load(type: DrinksTableViewController.self)
-        vc._navigator = navigator
-        vc._viewModel = viewModel
-        return vc
+    init(with navigator: Navigator, viewModel: DrinksTableViewModel) {
+        _navigator = navigator
+        _viewModel = viewModel
+        super.init(style: .plain)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     deinit {
@@ -41,6 +45,7 @@ class DrinksTableViewController: UITableViewController {
         super.viewDidLoad()
 
         tableView.tableFooterView = UIView()
+        tableView.register(DrinkTableViewCell.self, forCellReuseIdentifier: DrinkTableViewCell.kReuseID)
         _bind()
     }
 }
@@ -54,6 +59,7 @@ private extension DrinksTableViewController {
     }
 
     func _bind() {
+        title = "DRINKS"
         _applySnapshot(items: [], animatingDifferences: false)
         let selected = tableView.cmb.itemSelected()
             .map { $0.row }

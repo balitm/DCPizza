@@ -537,57 +537,6 @@
             </objects>
             <point key="canvasLocation" x="677.60000000000002" y="-39.130434782608695"/>
         </scene>
-        <!--DRINKS-->
-        <scene sceneID="wa1-tJ-dpD">
-            <objects>
-                <tableViewController storyboardIdentifier="DrinksTableViewController" title="DRINKS" id="fZw-gF-cUX" customClass="DrinksTableViewController" customModule="DCPizza" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="XHY-AN-hJM">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="DrinkTableViewCell" textLabel="xTG-0T-Tl8" detailTextLabel="GgM-JS-x0n" imageView="U3V-ht-evh" style="IBUITableViewCellStyleValue1" id="4UA-cc-5G8" customClass="DrinkTableViewCell" customModule="DCPizza" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="24.5" width="375" height="43.5"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4UA-cc-5G8" id="7hi-CW-CQ5">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="xTG-0T-Tl8">
-                                            <rect key="frame" x="51.5" y="12" width="33" height="20.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" name="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="GgM-JS-x0n">
-                                            <rect key="frame" x="315" y="12" width="44" height="20.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" name="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" image="plus" catalog="system" id="U3V-ht-evh">
-                                            <rect key="frame" x="20.25" y="16" width="12" height="11"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <color key="tintColor" name="tintColor"/>
-                                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="11" weight="regular"/>
-                                        </imageView>
-                                    </subviews>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="fZw-gF-cUX" id="iS4-fA-gez"/>
-                            <outlet property="delegate" destination="fZw-gF-cUX" id="cgm-jz-aom"/>
-                        </connections>
-                    </tableView>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="1Pq-tV-RQp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1372" y="-39"/>
-        </scene>
         <!--Navigation Controller-->
         <scene sceneID="ryt-im-7ov">
             <objects>
@@ -616,7 +565,6 @@
         <image name="ic_cart_button" width="24" height="24"/>
         <image name="ic_cart_navbar" width="24" height="24"/>
         <image name="ic_drinks" width="24" height="24"/>
-        <image name="plus" catalog="system" width="128" height="113"/>
         <image name="xmark" catalog="system" width="128" height="113"/>
         <namedColor name="buttonColor">
             <color red="1" green="0.80392156862745101" blue="0.16862745098039217" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

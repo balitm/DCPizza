@@ -21,4 +21,8 @@ extension UIColor {
                   blue: CGFloat(hex & 0xff) / CGFloat(255.0),
                   alpha: alpha)
     }
+
+    convenience init(_ assetName: AssetColorName) {
+        self.init(named: assetName.rawValue)!
+    }
 }

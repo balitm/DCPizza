@@ -47,7 +47,7 @@ final class DefaultNavigator: Navigator {
 
     func showDrinks() {
         let vm = _dependencyContainer.makeDrinksTableViewModel()
-        let vc = DrinksTableViewController.create(with: self, viewModel: vm)
+        let vc = DrinksTableViewController(with: self, viewModel: vm)
         _navigationController.pushViewController(vc, animated: true)
     }
 
