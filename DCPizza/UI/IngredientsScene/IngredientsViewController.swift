@@ -9,11 +9,16 @@
 import UIKit
 import Domain
 import Combine
-import CombineDataSources
+
+private enum _Section: Hashable {
+    case item
+}
 
 final class IngredientsViewController: UIViewController {
     typealias Item = IngredientsViewModel.Item
     typealias FooterEvent = IngredientsViewModel.FooterEvent
+    private typealias _DataSource = UITableViewDiffableDataSource<_Section, Item>
+    private typealias _Snapshot = NSDiffableDataSourceSnapshot<_Section, Item>
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var showConstraint: NSLayoutConstraint!
@@ -24,6 +29,8 @@ final class IngredientsViewController: UIViewController {
     private var _viewModel: IngredientsViewModel!
     private var _navigator: Navigator!
     private var _connectable: Publishers.MakeConnectable<AnyPublisher<FooterEvent, Never>>?
+    private lazy var _dataSource = _makeDataSource()
+    private var _isAnimating = false
     private var _bag = Set<AnyCancellable>()
 
     class func create(with navigator: Navigator, viewModel: IngredientsViewModel) -> IngredientsViewController {
@@ -52,13 +59,23 @@ final class IngredientsViewController: UIViewController {
         _connectable?
             .connect()
             .store(in: &_bag)
+
+        _isAnimating = true
     }
 }
 
 // MARK: - private bind functions
 
 private extension IngredientsViewController {
+    var _dataSourceProperty: [Item] {
+        get { [] }
+        set {
+            _applySnapshot(items: newValue, animatingDifferences: _isAnimating)
+        }
+    }
+
     func _bind() {
+        _applySnapshot(items: [], animatingDifferences: false)
         let out = _viewModel.transform(
             input: IngredientsViewModel.Input(selected: tableView.cmb.itemSelected().map { $0.row }.eraseToAnyPublisher(),
                                               addEvent: addTap.cmb.event().map { _ in () }.eraseToAnyPublisher())
@@ -68,24 +85,10 @@ private extension IngredientsViewController {
         let titleCancellable = out.title
             .assign(to: \.title, on: self)
 
-        let tableController = TableViewItemsController<[[Item]]> { _, tv, ip, item -> UITableViewCell in
-            switch item {
-            case let .header(viewModel):
-                return tv.createCell(IngredientsHeaderTableViewCell.self, viewModel, ip)
-            case let .ingredient(viewModel):
-                return tv.createCell(IngredientsItemTableViewCell.self, viewModel, ip)
-            }
-        }
-        tableController.rowAnimations = (
-            insert: UITableView.RowAnimation.fade,
-            update: UITableView.RowAnimation.none,
-            delete: UITableView.RowAnimation.none
-        )
-
         _bag = [
             // Table view data source.
             out.tableData
-                .bind(subscriber: tableView.rowsSubscriber(tableController)),
+                .assign(to: \._dataSourceProperty, on: self),
 
             // Update the price text on the added view.
             out.cartText
@@ -121,5 +124,29 @@ private extension IngredientsViewController {
         UIView.animate(withDuration: 0.3, animations: {
             parent.layoutIfNeeded()
         })
+    }
+
+    // MARK: UITableViewDiffableDataSource
+
+    private func _makeDataSource() -> _DataSource {
+        let dataSource = _DataSource(
+            tableView: tableView,
+            cellProvider: { tv, ip, item in
+                switch item {
+                case let .header(viewModel):
+                    return tv.createCell(IngredientsHeaderTableViewCell.self, viewModel, ip)
+                case let .ingredient(viewModel):
+                    return tv.createCell(IngredientsItemTableViewCell.self, viewModel, ip)
+                }
+            })
+        dataSource.defaultRowAnimation = .fade
+        return dataSource
+    }
+
+    func _applySnapshot(items: [Item], animatingDifferences: Bool = true) {
+        var snapshot = _Snapshot()
+        snapshot.appendSections([.item])
+        snapshot.appendItems(items)
+        _dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
     }
 }
