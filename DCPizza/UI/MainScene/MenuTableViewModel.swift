@@ -12,6 +12,8 @@ import Combine
 import class UIKit.UIImage
 
 final class MenuTableViewModel: ViewModelType {
+    typealias Item = MenuCellViewModel
+
     struct Input {
         let selected: AnyPublisher<Int, Never>
         let scratch: AnyPublisher<Void, Never>

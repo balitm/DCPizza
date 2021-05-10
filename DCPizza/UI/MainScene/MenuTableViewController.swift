@@ -9,11 +9,19 @@
 import UIKit
 import Domain
 import Combine
-import CombineDataSources
+
+private enum _Section: Hashable {
+    case item
+}
 
 final class MenuTableViewController: UITableViewController {
+    typealias Item = MenuTableViewModel.Item
+    private typealias _DataSource = UITableViewDiffableDataSource<_Section, Item>
+    private typealias _Snapshot = NSDiffableDataSourceSnapshot<_Section, Item>
+
     private var _viewModel: MenuTableViewModel!
     private var _navigator: Navigator!
+    private lazy var _dataSource = _makeDataSource()
     private var _bag = Set<AnyCancellable>()
 
     func setup(with navigator: Navigator, viewModel: MenuTableViewModel) {
@@ -39,10 +47,20 @@ final class MenuTableViewController: UITableViewController {
     @IBAction func unwindToMenu(_ segue: UIStoryboardSegue) {
         DLog("Unwinded to menu.")
     }
+}
 
-    // MARK: - bind functions
+// MARK: - Private
 
-    private func _bind() {
+private extension MenuTableViewController {
+    var _dataSourceProperty: [Item] {
+        get { [] }
+        set {
+            _applySnapshot(items: newValue, animatingDifferences: true)
+        }
+    }
+
+    func _bind() {
+        _applySnapshot(items: [], animatingDifferences: false)
         let leftPublisher = navigationItem.leftBarButtonItem!.cmb.publisher()
             .map { _ in () }
             .eraseToAnyPublisher()
@@ -58,17 +76,10 @@ final class MenuTableViewController: UITableViewController {
             scratch: rightPublisher
         ))
 
-        let tableController = TableViewItemsController<[[MenuCellViewModel]]>(MenuTableViewCell.self)
-        tableController.rowAnimations = (
-            insert: UITableView.RowAnimation.fade,
-            update: UITableView.RowAnimation.fade,
-            delete: UITableView.RowAnimation.none
-        )
-
         _bag = [
             // Table view data source.
             out.tableData
-                .bind(subscriber: tableView.rowsSubscriber(tableController)),
+                .assign(to: \._dataSourceProperty, on: self),
 
             // Show ingredients.
             out.selection
@@ -88,5 +99,24 @@ final class MenuTableViewController: UITableViewController {
                     self._navigator.showAdded()
                 },
         ]
+    }
+
+    // MARK: UITableViewDiffableDataSource
+
+    private func _makeDataSource() -> _DataSource {
+        let dataSource = _DataSource(
+            tableView: tableView,
+            cellProvider: { tv, ip, item in
+                tv.createCell(MenuTableViewCell.self, item, ip)
+            })
+        dataSource.defaultRowAnimation = .fade
+        return dataSource
+    }
+
+    func _applySnapshot(items: [Item], animatingDifferences: Bool = true) {
+        var snapshot = _Snapshot()
+        snapshot.appendSections([.item])
+        snapshot.appendItems(items)
+        _dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
     }
 }
