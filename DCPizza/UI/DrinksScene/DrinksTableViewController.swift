@@ -26,7 +26,7 @@ class DrinksTableViewController: ViewControllerBase {
     private lazy var _dataSource = _makeDataSource()
     private var _bag = Set<AnyCancellable>()
 
-    init(with navigator: Navigator, viewModel: DrinksTableViewModel) {
+    init(navigator: Navigator, viewModel: DrinksTableViewModel) {
         _navigator = navigator
         _viewModel = viewModel
         super.init()
@@ -38,7 +38,7 @@ class DrinksTableViewController: ViewControllerBase {
         super.viewDidLoad()
 
         _tableView.tableFooterView = UIView()
-        _tableView.register(DrinkTableViewCell.self, forCellReuseIdentifier: DrinkTableViewCell.kReuseID)
+        _tableView.register(DrinkTableViewCell.self)
         _bind()
     }
 
@@ -77,6 +77,7 @@ private extension DrinksTableViewController {
                 .sink(receiveValue: { [weak self] _ in
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         self?._navigator.showAdded()
+                        self?._tableView.deselectRow(at: IndexPath(row: 0, section: 0), animated: true)
                     }
                 }),
         ]

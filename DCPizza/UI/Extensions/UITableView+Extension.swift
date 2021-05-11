@@ -30,6 +30,10 @@ extension UITableView {
         let cell = dequeueReusableCell(withIdentifier: Cell.kReuseID) as! Cell
         return cell
     }
+
+    func register<Cell>(_ type: Cell.Type) where Cell: ReuseID, Cell: UITableViewCell {
+        register(type, forCellReuseIdentifier: Cell.kReuseID)
+    }
 }
 
 protocol CellViewModelProtocol: AnyObject, ReuseID {

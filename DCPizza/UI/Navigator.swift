@@ -41,13 +41,13 @@ final class DefaultNavigator: Navigator {
 
     func showCart() {
         let vm = _dependencyContainer.makeCartViewModel()
-        let vc = CartViewController.create(with: self, viewModel: vm)
+        let vc = CartViewController(navigator: self, viewModel: vm)
         _navigationController.pushViewController(vc, animated: true)
     }
 
     func showDrinks() {
         let vm = _dependencyContainer.makeDrinksTableViewModel()
-        let vc = DrinksTableViewController(with: self, viewModel: vm)
+        let vc = DrinksTableViewController(navigator: self, viewModel: vm)
         _navigationController.pushViewController(vc, animated: true)
     }
 
