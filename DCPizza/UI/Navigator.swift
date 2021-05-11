@@ -35,7 +35,7 @@ final class DefaultNavigator: Navigator {
 
     func showIngredients(of pizza: AnyPublisher<Pizza, Never>) {
         let vm = _dependencyContainer.makeIngredientsViewModel(pizza: pizza)
-        let vc = IngredientsViewController.create(with: self, viewModel: vm)
+        let vc = IngredientsViewController(navigator: self, viewModel: vm)
         _navigationController.pushViewController(vc, animated: true)
     }
 

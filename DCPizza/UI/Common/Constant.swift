@@ -17,4 +17,5 @@ enum AssetColorName: String {
     case tint = "tintColor"
     case text = "textColor"
     case price = "priceColor"
+    case button = "buttonColor"
 }
