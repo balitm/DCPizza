@@ -43,6 +43,7 @@ class DrinksTableViewController: ViewControllerBase {
     }
 
     override func setupViews() {
+        title = "DRINKS"
         view.subviews {
             _tableView
         }
@@ -59,7 +60,6 @@ private extension DrinksTableViewController {
     }
 
     func _bind() {
-        title = "DRINKS"
         _applySnapshot(items: [], animatingDifferences: false)
         let selected = _tableView.cmb.itemSelected()
             .map { $0.row }
@@ -74,10 +74,10 @@ private extension DrinksTableViewController {
 
             // Show addedd.
             out.showAdded
-                .sink(receiveValue: { [weak self] _ in
+                .sink(receiveValue: { [weak self] index in
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         self?._navigator.showAdded()
-                        self?._tableView.deselectRow(at: IndexPath(row: 0, section: 0), animated: true)
+                        self?._tableView.deselectRow(at: IndexPath(row: index, section: 0), animated: true)
                     }
                 }),
         ]

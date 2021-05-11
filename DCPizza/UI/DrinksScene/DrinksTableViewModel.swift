@@ -19,7 +19,7 @@ struct DrinksTableViewModel: ViewModelType {
 
     struct Output {
         let tableData: AnyPublisher<[Item], Never>
-        let showAdded: AnyPublisher<Void, Never>
+        let showAdded: AnyPublisher<Int, Never>
     }
 
     private let _service: DrinksUseCase
@@ -36,9 +36,10 @@ struct DrinksTableViewModel: ViewModelType {
 
         // Add drink to cart.
         let showAdded = input.selected
-            .flatMap { [service = _service] in
-                service.addToCart(drinkIndex: $0)
+            .flatMap { [service = _service] index in
+                service.addToCart(drinkIndex: index)
                     .catch { _ in Empty<Void, Never>() }
+                    .map { index }
             }
             .receive(on: DispatchQueue.main)
 
