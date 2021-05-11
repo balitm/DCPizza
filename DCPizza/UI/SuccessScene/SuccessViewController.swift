@@ -11,24 +11,12 @@ import Domain
 import Combine
 import Stevia
 
-private let _kUnwindSegue = "unwindToMenu"
-
-final class SuccessViewController: UIViewController {
+final class SuccessViewController: ViewControllerBase {
     private var _cancellable: AnyCancellable?
 
-    init() {
-        super.init(nibName: nil, bundle: nil)
+    override init() {
+        super.init()
         isModalInPresentation = true
-        _setupViews()
-    }
-
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    deinit {
-        DLog(">>> deinit: ", type(of: self))
     }
 
     override func viewDidLoad() {
@@ -50,10 +38,8 @@ final class SuccessViewController: UIViewController {
                 }
             }
     }
-}
 
-private extension SuccessViewController {
-    func _setupViews() {
+    override func setupViews() {
         view.style { v in
             v.backgroundColor = .clear
         }

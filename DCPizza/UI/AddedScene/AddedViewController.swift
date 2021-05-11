@@ -11,23 +11,13 @@ import Domain
 import Combine
 import Stevia
 
-final class AddedViewController: UIViewController {
+final class AddedViewController: ViewControllerBase {
     private var _bag = Set<AnyCancellable>()
 
-    init() {
-        super.init(nibName: nil, bundle: nil)
+    override init() {
+        super.init()
         modalPresentationStyle = .overFullScreen
         modalTransitionStyle = .crossDissolve
-        _setupViews()
-    }
-
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    deinit {
-        DLog(">>> deinit: ", type(of: self))
     }
 
     override func viewDidLoad() {
@@ -54,10 +44,8 @@ final class AddedViewController: UIViewController {
             }
             .store(in: &_bag)
     }
-}
 
-private extension AddedViewController {
-    func _setupViews() {
+    override func setupViews() {
         view.style { v in
             v.backgroundColor = .clear
         }

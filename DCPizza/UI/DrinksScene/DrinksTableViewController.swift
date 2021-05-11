@@ -9,34 +9,27 @@
 import UIKit
 import Domain
 import Combine
+import Stevia
 
 private enum _Section: Hashable {
     case item
 }
 
-class DrinksTableViewController: UITableViewController {
+class DrinksTableViewController: ViewControllerBase {
     typealias Item = DrinksTableViewModel.Item
     private typealias _DataSource = UITableViewDiffableDataSource<_Section, Item>
     private typealias _Snapshot = NSDiffableDataSourceSnapshot<_Section, Item>
 
-    private var _navigator: Navigator
-    private var _viewModel: DrinksTableViewModel
+    private let _tableView = UITableView(frame: CGRect.zero, style: .plain)
+    private let _navigator: Navigator
+    private let _viewModel: DrinksTableViewModel
     private lazy var _dataSource = _makeDataSource()
     private var _bag = Set<AnyCancellable>()
 
     init(with navigator: Navigator, viewModel: DrinksTableViewModel) {
         _navigator = navigator
         _viewModel = viewModel
-        super.init(style: .plain)
-    }
-
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    deinit {
-        DLog(">>> deinit: ", type(of: self))
+        super.init()
     }
 
     // MARK: - View functions
@@ -44,9 +37,16 @@ class DrinksTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.tableFooterView = UIView()
-        tableView.register(DrinkTableViewCell.self, forCellReuseIdentifier: DrinkTableViewCell.kReuseID)
+        _tableView.tableFooterView = UIView()
+        _tableView.register(DrinkTableViewCell.self, forCellReuseIdentifier: DrinkTableViewCell.kReuseID)
         _bind()
+    }
+
+    override func setupViews() {
+        view.subviews {
+            _tableView
+        }
+        _tableView.fillContainer()
     }
 }
 
@@ -61,7 +61,7 @@ private extension DrinksTableViewController {
     func _bind() {
         title = "DRINKS"
         _applySnapshot(items: [], animatingDifferences: false)
-        let selected = tableView.cmb.itemSelected()
+        let selected = _tableView.cmb.itemSelected()
             .map { $0.row }
             .eraseToAnyPublisher()
         let input = DrinksTableViewModel.Input(selected: selected)
@@ -86,7 +86,7 @@ private extension DrinksTableViewController {
 
     private func _makeDataSource() -> _DataSource {
         let dataSource = _DataSource(
-            tableView: tableView,
+            tableView: _tableView,
             cellProvider: { tv, ip, item in
                 tv.createCell(DrinkTableViewCell.self, item, ip)
             })
