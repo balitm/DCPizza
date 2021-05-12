@@ -33,8 +33,10 @@ class UseCaseTestsBase: XCTestCase {
         }
 
         do {
-            let config = _realmConfig
-            realm = try Realm(configuration: config)
+            try DS.dbQueue.sync {
+                let config = _realmConfig
+                realm = try Realm(configuration: config, queue: DS.dbQueue)
+            }
         } catch {
             fatalError("test realm can't be inited:\n\(error)")
         }
@@ -49,10 +51,10 @@ class UseCaseTestsBase: XCTestCase {
         component = try! data.component.get()
     }
 
-    func expectation(test: (XCTestExpectation) -> Void) {
+    func expectation(timeout: Double = 30.0, test: (XCTestExpectation) -> Void) {
         let expectation = XCTestExpectation(description: "combine")
         test(expectation)
-        wait(for: [expectation], timeout: 30.0)
+        wait(for: [expectation], timeout: timeout)
     }
 
     func addItemTest(addItem: () -> AnyPublisher<Void, Error>,
@@ -60,8 +62,9 @@ class UseCaseTestsBase: XCTestCase {
         data.cart.empty()
         XCTAssert(data.cart.pizzas.isEmpty)
         XCTAssert(data.cart.drinks.isEmpty)
+        var c: AnyCancellable?
         expectation { expectation in
-            _ = addItem()
+            c = addItem()
                 .sink(receiveCompletion: {
                     if case let Subscribers.Completion.failure(error) = $0 {
                         XCTAssert(false, "failed with: \(error)")
@@ -71,6 +74,7 @@ class UseCaseTestsBase: XCTestCase {
                     XCTAssert(true)
                 })
         }
+        c?.cancel()
         test(data.cart)
     }
 }

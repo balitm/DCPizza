@@ -9,24 +9,27 @@
 import UIKit
 import Domain
 import Combine
-import CombineDataSources
+import Stevia
 
-class DrinksTableViewController: UITableViewController {
+private enum _Section: Hashable {
+    case item
+}
+
+class DrinksTableViewController: ViewControllerBase {
     typealias Item = DrinksTableViewModel.Item
+    private typealias _DataSource = UITableViewDiffableDataSource<_Section, Item>
+    private typealias _Snapshot = NSDiffableDataSourceSnapshot<_Section, Item>
 
-    private var _navigator: Navigator!
-    private var _viewModel: DrinksTableViewModel!
+    private let _tableView = UITableView(frame: CGRect.zero, style: .plain)
+    private let _navigator: Navigator
+    private let _viewModel: DrinksTableViewModel
+    private lazy var _dataSource = _makeDataSource()
     private var _bag = Set<AnyCancellable>()
 
-    class func create(with navigator: Navigator, viewModel: DrinksTableViewModel) -> DrinksTableViewController {
-        let vc = navigator.storyboard.load(type: DrinksTableViewController.self)
-        vc._navigator = navigator
-        vc._viewModel = viewModel
-        return vc
-    }
-
-    deinit {
-        DLog(">>> deinit: ", type(of: self))
+    init(navigator: Navigator, viewModel: DrinksTableViewModel) {
+        _navigator = navigator
+        _viewModel = viewModel
+        super.init()
     }
 
     // MARK: - View functions
@@ -34,12 +37,32 @@ class DrinksTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.tableFooterView = UIView()
+        _tableView.tableFooterView = UIView()
+        _tableView.register(DrinkTableViewCell.self)
         _bind()
     }
 
-    private func _bind() {
-        let selected = tableView.cmb.itemSelected()
+    override func setupViews() {
+        title = "DRINKS"
+        navigationItem.largeTitleDisplayMode = .never
+        view.subviews {
+            _tableView
+        }
+        _tableView.fillContainer()
+    }
+}
+
+private extension DrinksTableViewController {
+    var _dataSourceProperty: [Item] {
+        get { [] }
+        set {
+            _applySnapshot(items: newValue, animatingDifferences: false)
+        }
+    }
+
+    func _bind() {
+        _applySnapshot(items: [], animatingDifferences: false)
+        let selected = _tableView.cmb.itemSelected()
             .map { $0.row }
             .eraseToAnyPublisher()
         let input = DrinksTableViewModel.Input(selected: selected)
@@ -48,17 +71,34 @@ class DrinksTableViewController: UITableViewController {
         _bag = [
             // Table view.
             out.tableData
-                .bind(subscriber: tableView.rowsSubscriber(cellType: DrinkTableViewCell.self, cellConfig: { cell, ip, model in
-                    cell.config(with: model)
-                })),
+                .assign(to: \._dataSourceProperty, on: self),
 
             // Show addedd.
             out.showAdded
-                .sink(receiveValue: { [weak self] _ in
+                .sink(receiveValue: { [weak self] index in
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         self?._navigator.showAdded()
+                        self?._tableView.deselectRow(at: IndexPath(row: index, section: 0), animated: true)
                     }
                 }),
         ]
+    }
+
+    // MARK: UITableViewDiffableDataSource
+
+    private func _makeDataSource() -> _DataSource {
+        let dataSource = _DataSource(
+            tableView: _tableView,
+            cellProvider: { tv, ip, item in
+                tv.createCell(DrinkTableViewCell.self, item, ip)
+            })
+        return dataSource
+    }
+
+    func _applySnapshot(items: [Item], animatingDifferences: Bool = true) {
+        var snapshot = _Snapshot()
+        snapshot.appendSections([.item])
+        snapshot.appendItems(items)
+        _dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
     }
 }

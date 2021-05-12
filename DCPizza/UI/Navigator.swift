@@ -11,8 +11,6 @@ import Domain
 import Combine
 
 protocol Navigator {
-    var storyboard: UIStoryboard { get }
-
     func showIngredients(of pizza: AnyPublisher<Pizza, Never>)
     func showCart()
     func showDrinks()
@@ -21,43 +19,40 @@ protocol Navigator {
 }
 
 final class DefaultNavigator: Navigator {
-    let storyboard: UIStoryboard
     private weak var _dependencyContainer: AppDependencyContainer!
     private weak var _navigationController: UINavigationController!
 
-    init(storyboard: UIStoryboard,
-         navigationController: UINavigationController,
+    init(navigationController: UINavigationController,
          dependencyContainer: AppDependencyContainer) {
-        self.storyboard = storyboard
         _navigationController = navigationController
         _dependencyContainer = dependencyContainer
     }
 
     func showIngredients(of pizza: AnyPublisher<Pizza, Never>) {
         let vm = _dependencyContainer.makeIngredientsViewModel(pizza: pizza)
-        let vc = IngredientsViewController.create(with: self, viewModel: vm)
+        let vc = IngredientsViewController(navigator: self, viewModel: vm)
         _navigationController.pushViewController(vc, animated: true)
     }
 
     func showCart() {
         let vm = _dependencyContainer.makeCartViewModel()
-        let vc = CartViewController.create(with: self, viewModel: vm)
+        let vc = CartViewController(navigator: self, viewModel: vm)
         _navigationController.pushViewController(vc, animated: true)
     }
 
     func showDrinks() {
         let vm = _dependencyContainer.makeDrinksTableViewModel()
-        let vc = DrinksTableViewController.create(with: self, viewModel: vm)
+        let vc = DrinksTableViewController(navigator: self, viewModel: vm)
         _navigationController.pushViewController(vc, animated: true)
     }
 
     func showSuccess() {
-        let vc = SuccessViewController.create(with: storyboard)
+        let vc = SuccessViewController()
         _navigationController.present(vc, animated: true)
     }
 
     func showAdded() {
-        let vc = storyboard.load(type: AddedViewController.self)
+        let vc = AddedViewController()
         _navigationController.present(vc, animated: true)
     }
 }

@@ -9,16 +9,28 @@
 import UIKit
 import Domain
 import Combine
-import CombineDataSources
+import Stevia
 
-final class MenuTableViewController: UITableViewController {
+private enum _Section: Hashable {
+    case item
+}
+
+final class MenuTableViewController: ViewControllerBase {
+    typealias Item = MenuTableViewModel.Item
+    private typealias _DataSource = UITableViewDiffableDataSource<_Section, Item>
+    private typealias _Snapshot = NSDiffableDataSourceSnapshot<_Section, Item>
+
+    private let _tableView = UITableView(frame: CGRect.zero, style: .plain)
+
     private var _viewModel: MenuTableViewModel!
     private var _navigator: Navigator!
+    private lazy var _dataSource = _makeDataSource()
     private var _bag = Set<AnyCancellable>()
 
-    func setup(with navigator: Navigator, viewModel: MenuTableViewModel) {
+    init(navigator: Navigator, viewModel: MenuTableViewModel) {
         _navigator = navigator
         _viewModel = viewModel
+        super.init()
     }
 
     // MARK: - View functions
@@ -26,30 +38,53 @@ final class MenuTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.tableFooterView = UIView()
-
-        DLog("dataSource: ", tableView.dataSource?.description ?? "nil")
-        if tableView.dataSource != nil {
-            tableView.dataSource = nil
-        }
+        _tableView.tableFooterView = UIView()
+        _tableView.register(MenuTableViewCell.self)
 
         _bind()
     }
 
-    @IBAction func unwindToMenu(_ segue: UIStoryboardSegue) {
-        DLog("Unwinded to menu.")
+    override func setupViews() {
+        title = "NENNO'S PIZZA"
+        navigationItem.backButtonTitle = " "
+        navigationItem.largeTitleDisplayMode = .always
+        navigationItem.setRightBarButton(UIBarButtonItem(image: UIImage(systemName: "plus"),
+                                                         style: .plain,
+                                                         target: nil, action: nil),
+                                         animated: false)
+
+        navigationItem.setLeftBarButton(UIBarButtonItem(image: UIImage(imageLiteralResourceName: "ic_cart_navbar"),
+                                                        style: .plain,
+                                                        target: nil, action: nil),
+                                        animated: false)
+
+        view.subviews {
+            _tableView
+        }
+
+        _tableView.fillContainer()
+    }
+}
+
+// MARK: - Private
+
+private extension MenuTableViewController {
+    var _dataSourceProperty: [Item] {
+        get { [] }
+        set {
+            _applySnapshot(items: newValue, animatingDifferences: true)
+        }
     }
 
-    // MARK: - bind functions
-
-    private func _bind() {
+    func _bind() {
+        _applySnapshot(items: [], animatingDifferences: false)
         let leftPublisher = navigationItem.leftBarButtonItem!.cmb.publisher()
             .map { _ in () }
             .eraseToAnyPublisher()
         let rightPublisher = navigationItem.rightBarButtonItem!.cmb.publisher()
             .map { _ in () }
             .eraseToAnyPublisher()
-        let selected = tableView.cmb.itemSelected()
+        let selected = _tableView.cmb.itemSelected()
             .map { $0.row }
             .eraseToAnyPublisher()
 
@@ -58,17 +93,10 @@ final class MenuTableViewController: UITableViewController {
             scratch: rightPublisher
         ))
 
-        let tableController = TableViewItemsController<[[MenuCellViewModel]]>(MenuTableViewCell.self)
-        tableController.rowAnimations = (
-            insert: UITableView.RowAnimation.fade,
-            update: UITableView.RowAnimation.fade,
-            delete: UITableView.RowAnimation.none
-        )
-
         _bag = [
             // Table view data source.
             out.tableData
-                .bind(subscriber: tableView.rowsSubscriber(tableController)),
+                .assign(to: \._dataSourceProperty, on: self),
 
             // Show ingredients.
             out.selection
@@ -88,5 +116,24 @@ final class MenuTableViewController: UITableViewController {
                     self._navigator.showAdded()
                 },
         ]
+    }
+
+    // MARK: UITableViewDiffableDataSource
+
+    private func _makeDataSource() -> _DataSource {
+        let dataSource = _DataSource(
+            tableView: _tableView,
+            cellProvider: { tv, ip, item in
+                tv.createCell(MenuTableViewCell.self, item, ip)
+            })
+        dataSource.defaultRowAnimation = .fade
+        return dataSource
+    }
+
+    func _applySnapshot(items: [Item], animatingDifferences: Bool = true) {
+        var snapshot = _Snapshot()
+        snapshot.appendSections([.item])
+        snapshot.appendItems(items)
+        _dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
     }
 }

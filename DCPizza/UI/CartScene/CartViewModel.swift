@@ -12,7 +12,6 @@ import Combine
 
 final class CartViewModel: ViewModelType {
     enum Item: Hashable {
-        case padding(viewModel: PaddingCellViewModel)
         case item(viewModel: CartItemCellViewModel)
         case total(viewModel: CartTotalCellViewModel)
     }
@@ -23,7 +22,7 @@ final class CartViewModel: ViewModelType {
     }
 
     struct Output {
-        let tableData: AnyPublisher<[Item], Never>
+        let tableData: AnyPublisher<[[Item]], Never>
         let showSuccess: AnyPublisher<Void, Never>
         let canCheckout: AnyPublisher<Bool, Never>
     }
@@ -38,21 +37,19 @@ final class CartViewModel: ViewModelType {
     func transform(input: Input) -> Output {
         let models = _service.items()
             .zip(_service.total())
-            .map { (pair: (items: [CartItem], total: Double)) -> [Item] in
+            .map { (pair: (items: [CartItem], total: Double)) -> [[Item]] in
                 assert(Thread.isMainThread)
-                var items = [Item.padding(viewModel: PaddingCellViewModel(height: 12))]
-                items.append(contentsOf:
-                    pair.items.map { Item.item(viewModel: CartItemCellViewModel(item: $0)) }
-                )
-                items.append(.padding(viewModel: PaddingCellViewModel(height: 24)))
-                items.append(.total(viewModel: CartTotalCellViewModel(price: pair.total)))
+                let items = [
+                    pair.items.map { Item.item(viewModel: CartItemCellViewModel(item: $0)) },
+                    [.total(viewModel: CartTotalCellViewModel(price: pair.total))],
+                ]
                 return items
             }
 
         input.selected
             .flatMap { [service = _service] idx -> AnyPublisher<Void, Never> in
-                assert(idx > 0)
-                return service.remove(at: idx - 1)
+                assert(idx >= 0)
+                return service.remove(at: idx)
                     .catch { _ in Empty<Void, Never>() }
                     .eraseToAnyPublisher()
             }

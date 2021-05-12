@@ -8,7 +8,6 @@
 import UIKit
 import Domain
 import Combine
-import CombineDataSources
 
 protocol ReuseID {
     static var kReuseID: String { get }
@@ -31,6 +30,10 @@ extension UITableView {
         let cell = dequeueReusableCell(withIdentifier: Cell.kReuseID) as! Cell
         return cell
     }
+
+    func register<Cell>(_ type: Cell.Type) where Cell: ReuseID, Cell: UITableViewCell {
+        register(type, forCellReuseIdentifier: Cell.kReuseID)
+    }
 }
 
 protocol CellViewModelProtocol: AnyObject, ReuseID {
@@ -45,23 +48,6 @@ extension UITableView {
         let cell = dequeue(type: Cell.self, for: indexPath)
         cell.config(with: viewModel)
         return cell
-    }
-}
-
-// MARK: - Combine data source
-
-extension UITableView {
-    func rowsSubscriber<C, I>(cellType: C.Type, cellConfig: @escaping TableViewItemsController<[I]>.CellConfig<I.Element, C>)
-        -> AnySubscriber<I, Never> where C: UITableViewCell & CellViewModelProtocol, I: RandomAccessCollection, I: Equatable {
-        rowsSubscriber(.init(cellIdentifier: C.kReuseID, cellType: cellType, cellConfig: cellConfig))
-    }
-}
-
-extension TableViewItemsController {
-    convenience init<C>(_ cellType: C.Type) where C: UITableViewCell & CellViewModelProtocol, Element == C.ViewModel {
-        self.init { dataSource, tableView, indexPath, value in
-            tableView.createCell(cellType, value, indexPath)
-        }
     }
 }
 
