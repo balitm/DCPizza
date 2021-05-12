@@ -54,6 +54,8 @@ class CartViewController: ViewControllerBase {
 
     override func setupViews() {
         title = "CART"
+        navigationItem.backButtonTitle = " "
+        navigationItem.largeTitleDisplayMode = .never
         navigationItem.setRightBarButton(UIBarButtonItem(image: UIImage(named: "ic_drinks"),
                                                          style: .plain,
                                                          target: nil, action: nil),

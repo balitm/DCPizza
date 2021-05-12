@@ -28,9 +28,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         NetworkActivityIndicatorManager.shared.startDelay = 0.0
         NetworkActivityIndicatorManager.shared.isEnabled = true
-        guard let menuViewController = _menuViewController else { return false }
-        menuViewController.setup(with: _injectionContainer.makeNavigator(by: menuViewController),
-                                 viewModel: _injectionContainer.makeMenuTableViewModel())
+
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = _navigationController
+        self.window = window
+        window.makeKeyAndVisible()
         return true
     }
 
@@ -49,9 +51,26 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             .store(in: &_bag)
     }
 
-    private var _menuViewController: MenuTableViewController? {
-        guard let nc = window?.rootViewController as? UINavigationController
-            , let menuVC = nc.viewControllers.first as? MenuTableViewController else { return nil }
-        return menuVC
+    private var _navigationController: UINavigationController {
+        let nc = UINavigationController()
+        // Set navigation bar appearance.
+        let tintColor = UIColor(.tint)
+        nc.navigationBar.largeTitleTextAttributes = [
+            .foregroundColor: tintColor,
+        ]
+
+        nc.navigationBar.titleTextAttributes = [
+            .foregroundColor: tintColor,
+            .font: UIFont.systemFont(ofSize: 17, weight: .heavy),
+        ]
+
+        nc.navigationBar.tintColor = tintColor
+        nc.navigationBar.prefersLargeTitles = true
+
+        let navigator = _injectionContainer.makeNavigator(by: nc)
+        let vc = MenuTableViewController(navigator: navigator,
+                                         viewModel: _injectionContainer.makeMenuTableViewModel())
+        nc.pushViewController(vc, animated: false)
+        return nc
     }
 }

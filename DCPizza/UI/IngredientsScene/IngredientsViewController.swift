@@ -62,6 +62,7 @@ final class IngredientsViewController: ViewControllerBase {
     }
 
     override func setupViews() {
+        navigationItem.largeTitleDisplayMode = .never
         let addView = UIView()
 
         // Config views.

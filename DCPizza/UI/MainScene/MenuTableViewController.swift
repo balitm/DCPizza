@@ -46,6 +46,8 @@ final class MenuTableViewController: ViewControllerBase {
 
     override func setupViews() {
         title = "NENNO'S PIZZA"
+        navigationItem.backButtonTitle = " "
+        navigationItem.largeTitleDisplayMode = .always
         navigationItem.setRightBarButton(UIBarButtonItem(image: UIImage(systemName: "plus"),
                                                          style: .plain,
                                                          target: nil, action: nil),

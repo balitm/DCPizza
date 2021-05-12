@@ -44,6 +44,7 @@ class DrinksTableViewController: ViewControllerBase {
 
     override func setupViews() {
         title = "DRINKS"
+        navigationItem.largeTitleDisplayMode = .never
         view.subviews {
             _tableView
         }
