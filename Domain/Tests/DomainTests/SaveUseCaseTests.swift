@@ -70,5 +70,7 @@ class SaveUseCaseTests: UseCaseTestsBase {
                 XCTAssert(false, "Database threw \(error)")
             }
         }
+
+        cancellable?.cancel()
     }
 }
