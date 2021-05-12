@@ -11,8 +11,6 @@ import Domain
 import Combine
 
 protocol Navigator {
-    var storyboard: UIStoryboard { get }
-
     func showIngredients(of pizza: AnyPublisher<Pizza, Never>)
     func showCart()
     func showDrinks()
@@ -21,14 +19,11 @@ protocol Navigator {
 }
 
 final class DefaultNavigator: Navigator {
-    let storyboard: UIStoryboard
     private weak var _dependencyContainer: AppDependencyContainer!
     private weak var _navigationController: UINavigationController!
 
-    init(storyboard: UIStoryboard,
-         navigationController: UINavigationController,
+    init(navigationController: UINavigationController,
          dependencyContainer: AppDependencyContainer) {
-        self.storyboard = storyboard
         _navigationController = navigationController
         _dependencyContainer = dependencyContainer
     }

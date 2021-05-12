@@ -25,9 +25,8 @@ class AppDependencyContainer {
         MenuTableViewModel(service: menuService)
     }
 
-    func makeNavigator(by viewController: UIViewController) -> Navigator {
-        DefaultNavigator(storyboard: viewController.storyboard!,
-                         navigationController: viewController.navigationController!,
+    func makeNavigator(by navigationController: UINavigationController) -> Navigator {
+        DefaultNavigator(navigationController: navigationController,
                          dependencyContainer: self)
     }
 

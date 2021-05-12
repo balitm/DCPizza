@@ -9,24 +9,28 @@
 import UIKit
 import Domain
 import Combine
+import Stevia
 
 private enum _Section: Hashable {
     case item
 }
 
-final class MenuTableViewController: UITableViewController {
+final class MenuTableViewController: ViewControllerBase {
     typealias Item = MenuTableViewModel.Item
     private typealias _DataSource = UITableViewDiffableDataSource<_Section, Item>
     private typealias _Snapshot = NSDiffableDataSourceSnapshot<_Section, Item>
+
+    private let _tableView = UITableView(frame: CGRect.zero, style: .plain)
 
     private var _viewModel: MenuTableViewModel!
     private var _navigator: Navigator!
     private lazy var _dataSource = _makeDataSource()
     private var _bag = Set<AnyCancellable>()
 
-    func setup(with navigator: Navigator, viewModel: MenuTableViewModel) {
+    init(navigator: Navigator, viewModel: MenuTableViewModel) {
         _navigator = navigator
         _viewModel = viewModel
+        super.init()
     }
 
     // MARK: - View functions
@@ -34,18 +38,29 @@ final class MenuTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.tableFooterView = UIView()
-
-        DLog("dataSource: ", tableView.dataSource?.description ?? "nil")
-        if tableView.dataSource != nil {
-            tableView.dataSource = nil
-        }
+        _tableView.tableFooterView = UIView()
+        _tableView.register(MenuTableViewCell.self)
 
         _bind()
     }
 
-    @IBAction func unwindToMenu(_ segue: UIStoryboardSegue) {
-        DLog("Unwinded to menu.")
+    override func setupViews() {
+        title = "NENNO'S PIZZA"
+        navigationItem.setRightBarButton(UIBarButtonItem(image: UIImage(systemName: "plus"),
+                                                         style: .plain,
+                                                         target: nil, action: nil),
+                                         animated: false)
+
+        navigationItem.setLeftBarButton(UIBarButtonItem(image: UIImage(imageLiteralResourceName: "ic_cart_navbar"),
+                                                        style: .plain,
+                                                        target: nil, action: nil),
+                                        animated: false)
+
+        view.subviews {
+            _tableView
+        }
+
+        _tableView.fillContainer()
     }
 }
 
@@ -67,7 +82,7 @@ private extension MenuTableViewController {
         let rightPublisher = navigationItem.rightBarButtonItem!.cmb.publisher()
             .map { _ in () }
             .eraseToAnyPublisher()
-        let selected = tableView.cmb.itemSelected()
+        let selected = _tableView.cmb.itemSelected()
             .map { $0.row }
             .eraseToAnyPublisher()
 
@@ -105,7 +120,7 @@ private extension MenuTableViewController {
 
     private func _makeDataSource() -> _DataSource {
         let dataSource = _DataSource(
-            tableView: tableView,
+            tableView: _tableView,
             cellProvider: { tv, ip, item in
                 tv.createCell(MenuTableViewCell.self, item, ip)
             })
