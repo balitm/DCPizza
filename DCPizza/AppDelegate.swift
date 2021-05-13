@@ -68,8 +68,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         nc.navigationBar.prefersLargeTitles = true
 
         let navigator = _injectionContainer.makeNavigator(by: nc)
-        let vc = MenuTableViewController(navigator: navigator,
-                                         viewModel: _injectionContainer.makeMenuTableViewModel())
+        let vc = MenuViewController(navigator: navigator,
+                                    viewModel: _injectionContainer.makeMenuTableViewModel())
         nc.pushViewController(vc, animated: false)
         return nc
     }

@@ -15,18 +15,18 @@ private enum _Section: Hashable {
     case item
 }
 
-class DrinksTableViewController: ViewControllerBase {
-    typealias Item = DrinksTableViewModel.Item
+class DrinksViewController: ViewControllerBase {
+    typealias Item = DrinksViewModel.Item
     private typealias _DataSource = UITableViewDiffableDataSource<_Section, Item>
     private typealias _Snapshot = NSDiffableDataSourceSnapshot<_Section, Item>
 
     private let _tableView = UITableView(frame: CGRect.zero, style: .plain)
     private let _navigator: Navigator
-    private let _viewModel: DrinksTableViewModel
+    private let _viewModel: DrinksViewModel
     private lazy var _dataSource = _makeDataSource()
     private var _bag = Set<AnyCancellable>()
 
-    init(navigator: Navigator, viewModel: DrinksTableViewModel) {
+    init(navigator: Navigator, viewModel: DrinksViewModel) {
         _navigator = navigator
         _viewModel = viewModel
         super.init()
@@ -52,7 +52,7 @@ class DrinksTableViewController: ViewControllerBase {
     }
 }
 
-private extension DrinksTableViewController {
+private extension DrinksViewController {
     var _dataSourceProperty: [Item] {
         get { [] }
         set {
@@ -65,7 +65,7 @@ private extension DrinksTableViewController {
         let selected = _tableView.cmb.itemSelected()
             .map { $0.row }
             .eraseToAnyPublisher()
-        let input = DrinksTableViewModel.Input(selected: selected)
+        let input = DrinksViewModel.Input(selected: selected)
         let out = _viewModel.transform(input: input)
 
         _bag = [

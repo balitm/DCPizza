@@ -11,7 +11,7 @@ import Domain
 import Combine
 import class UIKit.UIImage
 
-final class MenuTableViewModel: ViewModelType {
+final class MenuViewModel: ViewModelType {
     typealias Item = MenuCellViewModel
 
     struct Input {

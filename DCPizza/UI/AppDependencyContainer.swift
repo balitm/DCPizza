@@ -21,8 +21,8 @@ class AppDependencyContainer {
         drinksService = provider.makeDrinksService()
     }
 
-    func makeMenuTableViewModel() -> MenuTableViewModel {
-        MenuTableViewModel(service: menuService)
+    func makeMenuTableViewModel() -> MenuViewModel {
+        MenuViewModel(service: menuService)
     }
 
     func makeNavigator(by navigationController: UINavigationController) -> Navigator {
@@ -34,8 +34,8 @@ class AppDependencyContainer {
         CartViewModel(service: provider.makeCartService())
     }
 
-    func makeDrinksTableViewModel() -> DrinksTableViewModel {
-        DrinksTableViewModel(service: drinksService)
+    func makeDrinksTableViewModel() -> DrinksViewModel {
+        DrinksViewModel(service: drinksService)
     }
 
     func makeIngredientsViewModel(pizza: AnyPublisher<Pizza, Never>) -> IngredientsViewModel {

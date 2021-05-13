@@ -15,19 +15,19 @@ private enum _Section: Hashable {
     case item
 }
 
-final class MenuTableViewController: ViewControllerBase {
-    typealias Item = MenuTableViewModel.Item
+final class MenuViewController: ViewControllerBase {
+    typealias Item = MenuViewModel.Item
     private typealias _DataSource = UITableViewDiffableDataSource<_Section, Item>
     private typealias _Snapshot = NSDiffableDataSourceSnapshot<_Section, Item>
 
     private let _tableView = UITableView(frame: CGRect.zero, style: .plain)
 
-    private var _viewModel: MenuTableViewModel!
+    private var _viewModel: MenuViewModel!
     private var _navigator: Navigator!
     private lazy var _dataSource = _makeDataSource()
     private var _bag = Set<AnyCancellable>()
 
-    init(navigator: Navigator, viewModel: MenuTableViewModel) {
+    init(navigator: Navigator, viewModel: MenuViewModel) {
         _navigator = navigator
         _viewModel = viewModel
         super.init()
@@ -68,7 +68,7 @@ final class MenuTableViewController: ViewControllerBase {
 
 // MARK: - Private
 
-private extension MenuTableViewController {
+private extension MenuViewController {
     var _dataSourceProperty: [Item] {
         get { [] }
         set {
@@ -88,7 +88,7 @@ private extension MenuTableViewController {
             .map { $0.row }
             .eraseToAnyPublisher()
 
-        let out = _viewModel.transform(input: MenuTableViewModel.Input(
+        let out = _viewModel.transform(input: MenuViewModel.Input(
             selected: selected,
             scratch: rightPublisher
         ))

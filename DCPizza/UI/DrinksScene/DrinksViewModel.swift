@@ -10,7 +10,7 @@ import Foundation
 import Domain
 import Combine
 
-struct DrinksTableViewModel: ViewModelType {
+struct DrinksViewModel: ViewModelType {
     typealias Item = DrinkCellViewModel
 
     struct Input {
