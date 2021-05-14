@@ -36,32 +36,6 @@ final class Initializer {
         self.network = network
         cartHandler = CartHandler(container: container)
 
-        let subscriber = AnySubscriber<(image: Image?, index: Int), Never>(receiveSubscription: {
-            $0.request(.unlimited)
-            // DLog("Recived subscription: ", type(of: $0))
-        }, receiveValue: { [weak self] value in
-            guard let self = self else { return .none }
-            self.$component
-                .compactMap { try? $0.get() }
-                .first()
-                .map { component in
-                    // DLog("insert image to: ", value.index)
-                    let pizza = component.pizzas.pizzas[value.index]
-                    var pizzas = component.pizzas.pizzas
-                    pizzas[value.index] = Pizza(copy: pizza, image: value.image)
-                    let all = Pizzas(pizzas: pizzas, basePrice: component.pizzas.basePrice)
-                    return ComponentsResult.success(
-                        Components(pizzas: all, ingredients: component.ingredients, drinks: component.drinks)
-                    )
-                }
-                .assign(to: \.component, on: self)
-                .store(in: &self._bag)
-
-            return .unlimited
-        }, receiveCompletion: { _ in
-            // DLog("Received completion: ", $0)
-        })
-
         _bag = [
             // Get components.
             Publishers.Zip3(network.getPizzas(),
@@ -79,27 +53,6 @@ final class Initializer {
                     Just(ComponentsResult.failure($0))
                 }
                 .assign(to: \.component, on: self),
-
-            // Download pizza images.
-            $component
-                .compactMap { try? $0.get() }
-                .first()
-                .sink { component in
-                    component.pizzas.pizzas.enumerated().forEach { item in
-                        guard let imageUrl = item.element.imageUrl else { return }
-                        network.getImage(url: imageUrl)
-                            .map { $0 as Image? }
-                            .catch { error -> Just<Image?> in
-                                DLog("Error during image receiving: ", error)
-                                return Just<Image?>(nil)
-                            }
-                            // .handleEvents(receiveOutput: {
-                            //     DLog("Inserting ", $0 == nil ? "nil" : "not nil")
-                            // })
-                            .map { ($0, item.offset) }
-                            .subscribe(subscriber)
-                    }
-                },
         ]
 
         // Init card.
