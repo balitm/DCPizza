@@ -25,6 +25,7 @@ final class MenuViewController: ViewControllerBase {
     private var _viewModel: MenuViewModel!
     private var _navigator: Navigator!
     private lazy var _dataSource = _makeDataSource()
+    private let _itemShown = PassthroughSubject<Item, Never>()
     private var _bag = Set<AnyCancellable>()
 
     init(navigator: Navigator, viewModel: MenuViewModel) {
@@ -90,6 +91,7 @@ private extension MenuViewController {
 
         let out = _viewModel.transform(input: MenuViewModel.Input(
             selected: selected,
+            shown: _itemShown.eraseToAnyPublisher(),
             scratch: rightPublisher
         ))
 
@@ -123,8 +125,10 @@ private extension MenuViewController {
     private func _makeDataSource() -> _DataSource {
         let dataSource = _DataSource(
             tableView: _tableView,
-            cellProvider: { tv, ip, item in
-                tv.createCell(MenuTableViewCell.self, item, ip)
+            cellProvider: { [weak itemShown = _itemShown] tv, ip, item in
+                let cell = tv.createCell(MenuTableViewCell.self, item, ip)
+                itemShown?.send(item)
+                return cell
             })
         dataSource.defaultRowAnimation = .fade
         return dataSource

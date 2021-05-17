@@ -17,15 +17,21 @@ struct MenuCellViewModel {
     let priceText: String
     let image: UIImage?
     let url: URL?
+    let offset: Int
     let tap = PassthroughSubject<Void, Never>()
 
-    init(basePrice: Double, pizza: Pizza) {
+    init(basePrice: Double, pizza: Pizza, offset: Int) {
         nameText = pizza.name
         let price = pizza.price(from: basePrice)
         priceText = format(price: price)
         ingredientsText = pizza.ingredientNames()
         image = pizza.image
         url = pizza.imageUrl
+        self.offset = offset
+    }
+
+    var shouldFetchImage: Bool {
+        image == nil && url != nil
     }
 }
 

@@ -16,6 +16,7 @@ final class MenuViewModel: ViewModelType {
 
     struct Input {
         let selected: AnyPublisher<Int, Never>
+        let shown: AnyPublisher<Item, Never>
         let scratch: AnyPublisher<Void, Never>
     }
 
@@ -36,12 +37,11 @@ final class MenuViewModel: ViewModelType {
         let cachedPizzas = CurrentValueRelay(Pizzas.empty)
         _service.pizzas()
             .compactMap {
-                switch $0 {
-                case let .success(pizzas):
-                    return pizzas as Pizzas?
-                case .failure:
+                guard $0.error == nil else {
+                    // Handle error.
                     return nil
                 }
+                return $0.pizzas
             }
             .subscribe(cachedPizzas)
             .store(in: &_bag)
@@ -50,14 +50,24 @@ final class MenuViewModel: ViewModelType {
             .throttle(for: 0.4, scheduler: RunLoop.current, latest: true)
             .map { pizzas -> [MenuCellViewModel] in
                 let basePrice = pizzas.basePrice
-                let vms = pizzas.pizzas.map {
-                    MenuCellViewModel(basePrice: basePrice, pizza: $0)
+                let vms = pizzas.pizzas.enumerated().map {
+                    MenuCellViewModel(basePrice: basePrice, pizza: $0.element, offset: $0.offset)
                 }
                 DLog("############## update pizza vms. #########")
                 return vms
             }
             .share()
 
+        // Fetch a pizza image if needed.
+        input.shown
+            .compactMap {
+                $0.shouldFetchImage
+                    ? ImageInfo(url: $0.url!, offset: $0.offset)
+                    : nil
+            }
+            .subscribe(_service.imageInfo)
+
+        // Buy tapped.
         let cartEvents = viewModels
             .map { vms in
                 vms.enumerated().map { pair in

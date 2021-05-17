@@ -38,16 +38,13 @@ struct MenuRepository: MenuUseCase {
             .store(in: &_bag)
 
         _imageInfo
-            .subscribe(on: DS.dbQueue)
-            .compactMap { info -> ImageInfo? in
-                dispatchPrecondition(condition: .onQueue(DS.dbQueue))
-                return info.url == nil ? nil : info
-            }
             .flatMap { info in
-                API.downloadImage(url: info.url!)
+                API.downloadImage(url: info.url)
                     .map { _Event.fetched(tuple: _IndexedImage(info.offset, $0)) }
                     .catch { _ in Empty<_Event, Never>() }
             }
+            // .debug()
+            .receive(on: DS.dbQueue)
             .subscribe(event)
             .store(in: &_bag)
 
@@ -68,6 +65,17 @@ struct MenuRepository: MenuUseCase {
             .receive(on: DispatchQueue.main)
             .subscribe(_pizzas)
             .store(in: &_bag)
+    }
+
+    var imageInfo: AnySubscriber<ImageInfo, Never> {
+        AnySubscriber<ImageInfo, Never> {
+            $0.request(.unlimited)
+        } receiveValue: { [weak imageInfo = _imageInfo] in
+            imageInfo?.send($0)
+            return .unlimited
+        } receiveCompletion: {
+            DLog("Swallow ", $0)
+        }
     }
 
     func pizzas() -> AnyPublisher<PizzasResult, Never> {
