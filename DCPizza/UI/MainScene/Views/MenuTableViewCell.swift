@@ -16,6 +16,7 @@ final class MenuTableViewCell: TableViewCellBase {
     private let _ingredientsLabel = UILabel()
     private let _priceLabel = UILabel()
     private let _pizzaView = UIImageView()
+    private let _activityView = UIActivityIndicatorView(style: .large)
 
     private weak var _tap: UITapGestureRecognizer!
     private var _bag = Set<AnyCancellable>()
@@ -33,12 +34,15 @@ final class MenuTableViewCell: TableViewCellBase {
         _tap = tap
         contentView.clipsToBounds = true
 
+        // Setup views.
+        _activityView.style { a in
+            a.hidesWhenStopped = true
+            a.color = .black
+        }
         _pizzaView.style { v in
             v.contentMode = .scaleAspectFill
             v.clipsToBounds = true
         }
-
-        // Setup views.
         _nameLabel.style { l in
             l.font = UIFont.boldSystemFont(ofSize: 24)
             l.textColor = UIColor(.text)
@@ -70,6 +74,7 @@ final class MenuTableViewCell: TableViewCellBase {
         // Subviews.
         contentView.subviews {
             bgView
+            _activityView
             _pizzaView
             effectView
         }
@@ -104,6 +109,8 @@ final class MenuTableViewCell: TableViewCellBase {
 
         _priceLabel.Leading == priceImageView.Trailing + 4
         _priceLabel.fillVertically(padding: 4).trailing(8)
+
+        _activityView.width(80).height(80).top(20).centerHorizontally()
     }
 
     override func prepareForReuse() {
@@ -119,8 +126,14 @@ extension MenuTableViewCell: CellViewModelProtocol {
         _ingredientsLabel.text = viewModel.ingredientsText
         _priceLabel.text = viewModel.priceText
 
-        // Image updater.
-        _pizzaView.image = viewModel.image
+        if let image = viewModel.image {
+            // Image.
+            _pizzaView.image = image
+            _activityView.stopAnimating()
+        } else if viewModel.shouldFetchImage {
+            // Activity indicator.
+            _activityView.startAnimating()
+        }
 
         // Tap event.
         _tap.cmb.event()
