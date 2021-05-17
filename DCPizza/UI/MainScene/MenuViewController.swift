@@ -73,7 +73,7 @@ private extension MenuViewController {
     var _dataSourceProperty: [Item] {
         get { [] }
         set {
-            _applySnapshot(items: newValue, animatingDifferences: true)
+            _applySnapshot(items: newValue, animatingDifferences: _hasAppeared)
         }
     }
 

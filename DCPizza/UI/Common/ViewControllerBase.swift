@@ -10,6 +10,8 @@ import UIKit
 import Domain
 
 class ViewControllerBase: UIViewController {
+    private(set) var _hasAppeared = false
+
     init() {
         super.init(nibName: nil, bundle: nil)
         setupViews()
@@ -22,6 +24,18 @@ class ViewControllerBase: UIViewController {
 
     deinit {
         DLog(">>> deinit: ", type(of: self))
+    }
+
+    // MARK: View lifecycle functions
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        _hasAppeared = true
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        _hasAppeared = false
     }
 
     /// Hook function to override to set up and layout views.

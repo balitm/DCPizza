@@ -26,7 +26,6 @@ class CartViewController: ViewControllerBase {
 
     private let _navigator: Navigator
     private let _viewModel: CartViewModel
-    private var _isAnimating = false
     private lazy var _dataSource = _makeDataSource()
     private var _bag = Set<AnyCancellable>()
 
@@ -45,11 +44,6 @@ class CartViewController: ViewControllerBase {
         _tableView.register(CartItemTableViewCell.self)
         _tableView.register(CartTotalTableViewCell.self)
         _bind()
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        _isAnimating = true
     }
 
     override func setupViews() {
@@ -101,7 +95,7 @@ private extension CartViewController {
     var _dataSourceProperty: [[Item]] {
         get { [] }
         set {
-            _applySnapshot(items: newValue, animatingDifferences: _isAnimating)
+            _applySnapshot(items: newValue, animatingDifferences: _hasAppeared)
         }
     }
 

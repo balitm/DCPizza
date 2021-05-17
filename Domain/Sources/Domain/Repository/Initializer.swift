@@ -62,7 +62,7 @@ final class Initializer {
                     DLog("###### init card. #########")
                     return cart
                 }
-                .debug()
+                // .debug()
                 .assign(to: \.cart, on: self),
         ]
     }

@@ -31,7 +31,6 @@ final class IngredientsViewController: ViewControllerBase {
     private let _navigator: Navigator
     private var _connectable: Publishers.MakeConnectable<AnyPublisher<FooterEvent, Never>>?
     private lazy var _dataSource = _makeDataSource()
-    private var _isAnimating = false
     private var _bag = Set<AnyCancellable>()
 
     init(navigator: Navigator, viewModel: IngredientsViewModel) {
@@ -57,8 +56,6 @@ final class IngredientsViewController: ViewControllerBase {
         _connectable?
             .connect()
             .store(in: &_bag)
-
-        _isAnimating = true
     }
 
     override func setupViews() {
@@ -107,7 +104,7 @@ private extension IngredientsViewController {
     var _dataSourceProperty: [Item] {
         get { [] }
         set {
-            _applySnapshot(items: newValue, animatingDifferences: _isAnimating)
+            _applySnapshot(items: newValue, animatingDifferences: _hasAppeared)
         }
     }
 
