@@ -43,7 +43,6 @@
 		2994181B24B336DD0048DDD5 /* CartItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2994181A24B336DD0048DDD5 /* CartItemRow.swift */; };
 		2994181D24B33A5D0048DDD5 /* CartTotalRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2994181C24B33A5D0048DDD5 /* CartTotalRow.swift */; };
 		2994181E24B3431D0048DDD5 /* CartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DC87824910C0C00E0591F /* CartViewModel.swift */; };
-		29B56A532490197F0070EBC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B56A522490197F0070EBC8 /* SceneDelegate.swift */; };
 		29B56A57249019800070EBC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29B56A56249019800070EBC8 /* Assets.xcassets */; };
 		29B56A5A249019800070EBC8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29B56A59249019800070EBC8 /* Preview Assets.xcassets */; };
 		29B56A5D249019800070EBC8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 29B56A5B249019800070EBC8 /* LaunchScreen.storyboard */; };
@@ -103,7 +102,6 @@
 		2994181A24B336DD0048DDD5 /* CartItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartItemRow.swift; sourceTree = "<group>"; };
 		2994181C24B33A5D0048DDD5 /* CartTotalRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartTotalRow.swift; sourceTree = "<group>"; };
 		29B56A4D2490197F0070EBC8 /* DCPizza.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DCPizza.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		29B56A522490197F0070EBC8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		29B56A56249019800070EBC8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		29B56A59249019800070EBC8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		29B56A5C249019800070EBC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -336,7 +334,6 @@
 				295DC86A24910C0C00E0591F /* UI */,
 				2955386A254C811C00D5A62D /* DCPizzaApp.swift */,
 				2951270424AA70A900B8D657 /* App+Injection.swift */,
-				29B56A522490197F0070EBC8 /* SceneDelegate.swift */,
 				295DC86724910A5800E0591F /* Main.storyboard */,
 				29B56A56249019800070EBC8 /* Assets.xcassets */,
 				29B56A5B249019800070EBC8 /* LaunchScreen.storyboard */,
@@ -518,7 +515,6 @@
 				2994181E24B3431D0048DDD5 /* CartViewModel.swift in Sources */,
 				295DC8A524910C0C00E0591F /* PriceFormatter.swift in Sources */,
 				2994181724B331A90048DDD5 /* CartListView.swift in Sources */,
-				29B56A532490197F0070EBC8 /* SceneDelegate.swift in Sources */,
 				295658282539FBA2007412B9 /* Publishers+Assign.swift in Sources */,
 				29C3BE8E249FAE2900AE7F6F /* IngredientsItemRow.swift in Sources */,
 				295DC8BF24910C0C00E0591F /* Color+Extension.swift in Sources */,
