@@ -66,6 +66,17 @@ struct MenuRepository: MenuUseCase {
         ]
     }
 
+    var imageInfo: AnySubscriber<ImageInfo, Never> {
+        AnySubscriber<ImageInfo, Never> {
+            $0.request(.unlimited)
+        } receiveValue: { [weak imageInfo = _imageInfo] in
+            imageInfo?.send($0)
+            return .unlimited
+        } receiveCompletion: {
+            DLog("Swallow ", $0)
+        }
+    }
+
     func pizzas() -> AnyPublisher<PizzasResult, Never> {
         _pizzas
             .eraseToAnyPublisher()

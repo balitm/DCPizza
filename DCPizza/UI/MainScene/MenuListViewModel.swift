@@ -12,6 +12,9 @@ import Combine
 import struct SwiftUI.Image
 
 final class MenuListViewModel: ObservableObject {
+    // Input
+    @Published var shown: MenuRowViewModel?
+
     // Output
     @Published var listData = [MenuRowViewModel]()
     @Published var showAdded = false
@@ -25,12 +28,8 @@ final class MenuListViewModel: ObservableObject {
         // Cache pizzas.
         service.pizzas()
             .compactMap {
-                switch $0 {
-                case let .success(pizzas):
-                    return pizzas as Pizzas?
-                case .failure:
-                    return nil
-                }
+                if $0.error != nil { return nil }
+                return $0.pizzas as Pizzas?
             }
             .subscribe(_cachedPizzas)
             .store(in: &_bag)
@@ -49,6 +48,18 @@ final class MenuListViewModel: ObservableObject {
             .assign(to: \.listData, on: self)
             .store(in: &_bag)
 
+        // Fetch a pizza image if needed.
+        $shown
+            .dropFirst()
+            .compactMap {
+                guard let item = $0 else { return nil }
+                return item.isLoading
+                    ? ImageInfo(url: item.url!, offset: item.index)
+                    : nil
+            }
+            .subscribe(service.imageInfo)
+
+        // Buy tapped.
         let cartEvents = $listData
             .map { vms in
                 vms.map {

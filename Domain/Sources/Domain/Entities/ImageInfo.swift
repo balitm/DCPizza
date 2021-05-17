@@ -9,7 +9,11 @@ import Foundation
 import class AlamofireImage.Image
 
 public struct ImageInfo {
-    let image: Image?
-    let url: URL?
+    let url: URL
     let offset: Int
+
+    public init(url: URL, offset: Int) {
+        self.url = url
+        self.offset = offset
+    }
 }
