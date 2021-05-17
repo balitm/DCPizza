@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-import class AlamofireImage.Image
 
 struct MenuRepository: MenuUseCase {
     private typealias _IndexedImage = (offset: Int, image: Image?)

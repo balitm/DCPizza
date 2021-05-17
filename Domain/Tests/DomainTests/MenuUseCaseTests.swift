@@ -25,10 +25,10 @@ class MenuUseCaseTests: NetworklessUseCaseTestsBase {
             c = service.pizzas()
                 .first()
                 .sink(receiveValue: {
-                    switch $0 {
-                    case let .failure(error):
+                    if let error = $0.error {
                         XCTAssert(false, "Received error: \(error)")
-                    case let .success(pizzas):
+                    } else {
+                        let pizzas = $0.pizzas
                         DLog("all pizzas: ", pizzas.pizzas.count)
                         XCTAssertGreaterThan(pizzas.pizzas.count, 0)
                     }

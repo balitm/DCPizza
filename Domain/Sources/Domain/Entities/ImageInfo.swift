@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import class AlamofireImage.Image
 
 public struct ImageInfo {
     let url: URL
