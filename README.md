@@ -9,7 +9,7 @@ Swift Package Manager is used for managing the distributions and dependencies. T
 
 - swiftUI-c++: A Domain package with some C++ code/class entities for domain/repository based implementation of clean architecture using **C++** + **Combine** + **SwiftUI**
 - swiftUI: A Domain package for domain/repository based implementation of clean architecture using **Combine** + **SwiftUI**
-- combine+clean: Domain package for domain/repository based implementation of clean architecture using **Combine** + **UIKit**
+- combine+clean: Domain package for domain/repository based implementation of clean architecture using **Combine** + **UIKit** (without storyboards, xibs)
 - rx+clean: Domain package for domain/repository based implementation of clean architecture using **RxSwift** + **UIKit**
 - combine: **Combine** + **UIKit** based version. The Domain package implementation does not contain all the business logic but in the ViewModels there are a nice FPR implementation of the cart handling.
 
