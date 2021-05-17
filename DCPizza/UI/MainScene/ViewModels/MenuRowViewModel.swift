@@ -13,6 +13,7 @@ import Combine
 
 final class MenuRowViewModel: ObservableObject {
     @Published var tap = -1
+    @Published var fetchIndex = -1
 
     let index: Int
     let nameText: String
@@ -20,7 +21,10 @@ final class MenuRowViewModel: ObservableObject {
     let priceText: String
     let image: Image?
     let url: URL?
-    var isLoading: Bool { image == nil && url != nil }
+    var isLoading: Bool {
+        DLog("isLoading called for #", index)
+        return image == nil && url != nil
+    }
 
     init(index: Int, basePrice: Double, pizza: Pizza) {
         self.index = index

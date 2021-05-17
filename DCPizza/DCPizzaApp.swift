@@ -8,15 +8,17 @@
 
 import SwiftUI
 import UIKit
-import Resolver
+import Domain
+// import Resolver
 
 @main
-struct DCPizzaApp: App, Resolving {
+struct DCPizzaApp: App /* , Resolving */ {
     @Environment(\.scenePhase) private var _phase
-    private let _service: DCPizzaViewModel
+    // private let _service: DCPizzaViewModel
+    let menuService = RepositoryUseCaseProvider().makeMenuService()
 
     init() {
-        _service = Resolver.resolve(DCPizzaViewModel.self)
+        // _service = Resolver.resolve(DCPizzaViewModel.self)
 
         // Set navigation bar appearance.
         UINavigationBar.appearance().largeTitleTextAttributes = [
@@ -33,14 +35,18 @@ struct DCPizzaApp: App, Resolving {
 
     var body: some Scene {
         WindowGroup {
-            resolver.resolve(MenuListView.self)
+            // resolver.resolve(MenuListView.self)
+            //     .environmentObject(resolver.resolve(MenuListViewModel.self))
+            MenuListView()
+                .environmentObject(MenuListViewModel(service: menuService))
         }
         .onChange(of: _phase) {
             switch $0 {
             case .active:
                 break
             case .inactive:
-                _service.saveCart()
+                // _service.saveCart()
+                break
             case .background:
                 break
             @unknown default:
