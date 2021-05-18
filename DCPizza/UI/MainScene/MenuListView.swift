@@ -13,7 +13,7 @@ import Resolver
 import Introspect
 
 struct MenuListView: View, Resolving {
-    @InjectedObject private var _viewModel: MenuListViewModel
+    @EnvironmentObject private var _viewModel: MenuListViewModel
 
     var body: some View {
         NavigationView {

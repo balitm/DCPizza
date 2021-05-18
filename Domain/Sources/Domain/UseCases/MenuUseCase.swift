@@ -8,9 +8,13 @@
 import Foundation
 import Combine
 
-public typealias PizzasResult = Result<Pizzas, API.ErrorType>
-
 public protocol MenuUseCase {
+    /// Request to fetch a pizza image.
+    var imageInfo: AnySubscriber<ImageInfo, Never> { get }
+
+    /// DataSource of available pizzas.
     func pizzas() -> AnyPublisher<PizzasResult, Never>
+
+    /// Add a pizza to the shopping cart.
     func addToCart(pizza: Pizza) -> AnyPublisher<Void, Error>
 }

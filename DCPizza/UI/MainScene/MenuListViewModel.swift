@@ -25,12 +25,8 @@ final class MenuListViewModel: ObservableObject {
         // Cache pizzas.
         service.pizzas()
             .compactMap {
-                switch $0 {
-                case let .success(pizzas):
-                    return pizzas as Pizzas?
-                case .failure:
-                    return nil
-                }
+                if $0.error != nil { return nil }
+                return $0.pizzas as Pizzas?
             }
             .subscribe(_cachedPizzas)
             .store(in: &_bag)
@@ -49,6 +45,22 @@ final class MenuListViewModel: ObservableObject {
             .assign(to: \.listData, on: self)
             .store(in: &_bag)
 
+        // Fetch a pizza image if needed.
+        $listData
+            .map { vms in
+                vms.map {
+                    $0.$fetchInfo
+                        .dropFirst()
+                        .removeDuplicates { $0 == $1 }
+                }
+            }
+            .flatMap {
+                Publishers.MergeMany($0)
+            }
+            .debug()
+            .subscribe(service.imageInfo)
+
+        // Buy tapped.
         let cartEvents = $listData
             .map { vms in
                 vms.map {
@@ -61,9 +73,14 @@ final class MenuListViewModel: ObservableObject {
             }
 
         // Update cart on add events.
-        cartEvents.combineLatest(_cachedPizzas)
-            .flatMap { (pair: (index: Int, pizzas: Pizzas)) in
-                service.addToCart(pizza: pair.pizzas.pizzas[pair.index])
+        cartEvents
+            .flatMap { [cachedPizzas = _cachedPizzas] index in
+                cachedPizzas
+                    .first()
+                    .map { (index: index, pizzas: $0) }
+            }
+            .flatMap { index, pizzas in
+                service.addToCart(pizza: pizzas.pizzas[index])
                     .catch { _ in Empty<Void, Never>() }
                     .map { true }
             }

@@ -55,9 +55,9 @@ struct MenuRow: View {
                     }
                     Spacer()
                         .frame(width: 30)
-                    Button(action: {
+                    Button {
                         self.viewModel.addToCart()
-                    }) {
+                    } label: {
                         HStack {
                             Image("ic_cart_button")
                                 .resizable()
