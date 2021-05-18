@@ -12,9 +12,6 @@ import Combine
 import struct SwiftUI.Image
 
 final class MenuListViewModel: ObservableObject {
-    // Input
-    @Published var shown: MenuRowViewModel?
-
     // Output
     @Published var listData = [MenuRowViewModel]()
     @Published var showAdded = false
@@ -49,14 +46,18 @@ final class MenuListViewModel: ObservableObject {
             .store(in: &_bag)
 
         // Fetch a pizza image if needed.
-        $shown
-            .dropFirst()
-            .compactMap {
-                guard let item = $0 else { return nil }
-                return item.isLoading
-                    ? ImageInfo(url: item.url!, offset: item.index)
-                    : nil
+        $listData
+            .map { vms in
+                vms.map {
+                    $0.$fetchInfo
+                        .dropFirst()
+                        .removeDuplicates { $0 == $1 }
+                }
             }
+            .flatMap {
+                Publishers.MergeMany($0)
+            }
+            .debug()
             .subscribe(service.imageInfo)
 
         // Buy tapped.
@@ -72,9 +73,14 @@ final class MenuListViewModel: ObservableObject {
             }
 
         // Update cart on add events.
-        cartEvents.combineLatest(_cachedPizzas)
-            .flatMap { (pair: (index: Int, pizzas: Pizzas)) in
-                service.addToCart(pizza: pair.pizzas.pizzas[pair.index])
+        cartEvents
+            .flatMap { [cachedPizzas = _cachedPizzas] index in
+                cachedPizzas
+                    .first()
+                    .map { (index: index, pizzas: $0) }
+            }
+            .flatMap { index, pizzas in
+                service.addToCart(pizza: pizzas.pizzas[index])
                     .catch { _ in Empty<Void, Never>() }
                     .map { true }
             }

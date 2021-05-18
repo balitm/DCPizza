@@ -13,7 +13,7 @@ import Combine
 
 final class MenuRowViewModel: ObservableObject {
     @Published var tap = -1
-    @Published var fetchIndex = -1
+    @Published var fetchInfo = ImageInfo.empty
 
     let index: Int
     let nameText: String
@@ -22,8 +22,12 @@ final class MenuRowViewModel: ObservableObject {
     let image: Image?
     let url: URL?
     var isLoading: Bool {
-        DLog("isLoading called for #", index)
-        return image == nil && url != nil
+        // DLog("isLoading called for #", index)
+        let isLoading = image == nil && url != nil
+        if isLoading {
+            fetchInfo = ImageInfo(url: url!, offset: index)
+        }
+        return isLoading
     }
 
     init(index: Int, basePrice: Double, pizza: Pizza) {
