@@ -57,7 +57,6 @@ final class MenuListViewModel: ObservableObject {
             .flatMap {
                 Publishers.MergeMany($0)
             }
-            .debug()
             .subscribe(service.imageInfo)
 
         // Buy tapped.

@@ -39,6 +39,8 @@ final class IngredientsViewModel: ObservableObject {
     }
 
     init(service: IngredientsUseCase) {
+        DLog(">>> init: ", type(of: self))
+
         _service = service
 
         // Title.

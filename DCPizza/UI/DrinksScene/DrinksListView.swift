@@ -13,14 +13,14 @@ import Introspect
 
 struct DrinksListView: View {
     @Environment(\.presentationMode) private var _mode: Binding<PresentationMode>
-    @EnvironmentObject private var _viewModel: DrinksViewModel
+    @StateObject private var _viewModel = Resolver.resolve(DrinksViewModel.self)
 
     var body: some View {
         List {
             ForEach(_viewModel.listData) { item in
-                Button(action: {
+                Button {
                     self._viewModel.removeFromCart(index: item.index)
-                }) {
+                } label: {
                     DrinkRow(viewModel: item)
                 }
                 .listRowInsets(EdgeInsets())

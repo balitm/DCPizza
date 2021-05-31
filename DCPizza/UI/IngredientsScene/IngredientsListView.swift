@@ -13,22 +13,18 @@ import Resolver
 
 struct IngredientsListView: View {
     @Environment(\.presentationMode) private var _mode: Binding<PresentationMode>
-    @ObservedObject private var _viewModel: IngredientsViewModel
+    @StateObject var viewModel: IngredientsViewModel
     @State private var _isShowFooter = false
-
-    init(viewModel: IngredientsViewModel) {
-        _viewModel = viewModel
-    }
 
     var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .center, spacing: 0) {
                 List {
-                    IngredientsHeaderRow(viewModel: self._viewModel.headerData)
+                    IngredientsHeaderRow(viewModel: self.viewModel.headerData)
                         .listRowInsets(EdgeInsets())
-                    ForEach(self._viewModel.listData) { vm in
+                    ForEach(self.viewModel.listData) { vm in
                         Button(action: {
-                            self._viewModel.selected = vm.index
+                            self.viewModel.selected = vm.index
                         }) {
                             IngredientsItemRow(viewModel: vm)
                         }
@@ -43,24 +39,24 @@ struct IngredientsListView: View {
                 if self._isShowFooter {
                     _FooterView(geometry: geometry)
                         .transition(.move(edge: .bottom))
-                        .environmentObject(self._viewModel)
+                        .environmentObject(self.viewModel)
                 }
             }
         }
-        .onReceive(_viewModel.footerEvent, perform: { event in
+        .onReceive(viewModel.footerEvent, perform: { event in
             withAnimation {
                 self._isShowFooter = event == .show
             }
         })
         .edgesIgnoringSafeArea(.bottom)
-        .navigationTitle(_viewModel.title)
+        .navigationTitle(viewModel.title)
         .navigationBarTitleDisplayMode(.inline)
         .backNavigationBarItems(_mode)
-        .sheet(isPresented: $_viewModel.showAdded) {
+        .sheet(isPresented: $viewModel.showAdded) {
             AddedView()
         }
         .onAppear {
-            self._viewModel.isAppeared = ()
+            self.viewModel.isAppeared = ()
         }
     }
 }
