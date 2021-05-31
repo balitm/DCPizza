@@ -13,8 +13,7 @@ import Introspect
 
 struct CartListView: View, Resolving {
     @Environment(\.presentationMode) private var _mode: Binding<PresentationMode>
-    @EnvironmentObject private var _viewModel: CartViewModel
-    @EnvironmentObject private var _drinksViewModel: DrinksViewModel
+    @StateObject private var _viewModel = Resolver.resolve(CartViewModel.self)
 
     init() {
         DLog(">>> inited: ", type(of: self))
@@ -43,7 +42,7 @@ struct CartListView: View, Resolving {
                     }
                 }
 
-                _FooterView(geometry: geometry)
+                _FooterView(viewModel: _viewModel, geometry: geometry)
             }
             .edgesIgnoringSafeArea(.bottom)
             .navigationTitle(Text("CART"))
@@ -51,9 +50,7 @@ struct CartListView: View, Resolving {
             .backNavigationBarItems(
                 _mode,
                 trailing:
-                NavigationLink(destination: resolver.resolve(DrinksListView.self)
-                    .environmentObject(_drinksViewModel)
-                ) {
+                NavigationLink(destination: resolver.resolve(DrinksListView.self)) {
                     Image("ic_drinks")
                 }
                 .isDetailLink(false)
@@ -75,7 +72,7 @@ private struct _ListHeader: View {
 }
 
 private struct _FooterView: View {
-    @EnvironmentObject private var _viewModel: CartViewModel
+    @ObservedObject var viewModel: CartViewModel
     let geometry: GeometryProxy
 
     var body: some View {
@@ -83,12 +80,12 @@ private struct _FooterView: View {
             Text("CHECKOUT")
                 .font(.system(size: 16, weight: .bold))
                 .frame(width: geometry.size.width, height: 50)
-                .foregroundColor(self._viewModel.canCheckout ? .white : .gray)
+                .foregroundColor(self.viewModel.canCheckout ? .white : .gray)
                 .contentShape(Rectangle())
                 .onTapGesture(perform: {
-                    self._viewModel.checkout()
+                    self.viewModel.checkout()
                 })
-                .disabled(!self._viewModel.canCheckout)
+                .disabled(!self.viewModel.canCheckout)
 
             if geometry.safeAreaInsets.bottom > 0 {
                 Spacer()

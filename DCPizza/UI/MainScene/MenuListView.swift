@@ -13,7 +13,7 @@ import Resolver
 import Introspect
 
 struct MenuListView: View, Resolving {
-    @EnvironmentObject private var _viewModel: MenuListViewModel
+    @StateObject private var _viewModel = Resolver.resolve(MenuListViewModel.self)
 
     var body: some View {
         NavigationView {
@@ -46,8 +46,6 @@ struct MenuListView: View, Resolving {
                         NavigationLink(
                             destination:
                             resolver.resolve(CartListView.self)
-                                .environmentObject(resolver.resolve(CartViewModel.self))
-                                .environmentObject(resolver.resolve(DrinksViewModel.self))
                         ) {
                             Image("ic_cart_navbar")
                         }
