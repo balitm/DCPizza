@@ -15,11 +15,9 @@ import Resolver
 struct DCPizzaApp: App, Resolving {
     @Environment(\.scenePhase) private var _phase
     private let _service: DCPizzaViewModel
-    private let _mainViewModel: MenuListViewModel
 
     init() {
         // Create main (menu) view model.
-        _mainViewModel = Resolver.resolve(MenuListViewModel.self)
         _service = Resolver.resolve(DCPizzaViewModel.self)
 
         // Set navigation bar appearance.
@@ -38,7 +36,6 @@ struct DCPizzaApp: App, Resolving {
     var body: some Scene {
         WindowGroup {
             resolver.resolve(MenuListView.self)
-                .environmentObject(_mainViewModel)
         }
         .onChange(of: _phase) {
             switch $0 {

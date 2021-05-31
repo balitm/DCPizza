@@ -21,6 +21,10 @@ final class CartViewModel: ObservableObject {
     @Injected private var _service: CartUseCase
     private var _bag = Set<AnyCancellable>()
 
+    deinit {
+        DLog(">>> deinit: ", type(of: self))
+    }
+
     init() {
         DLog(">>> init: ", type(of: self))
 

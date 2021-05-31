@@ -69,7 +69,6 @@ final class CartHandler {
                 }
                 return ()
             }
-            .debug()
 
         // DLog("sent value: ", action)
         Just(action)
