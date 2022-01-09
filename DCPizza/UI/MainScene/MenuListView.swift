@@ -68,6 +68,7 @@ struct MenuListView: View, Resolving {
                 AddedView()
             }
         }
+        .accentColor(KColors.cTint)
     }
 }
 

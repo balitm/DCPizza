@@ -10,7 +10,7 @@ import Resolver
 import Domain
 
 extension Resolver: ResolverRegistering {
-    static let mock = Resolver(parent: main)
+    static let mock = Resolver(child: main)
 
     public static func registerAllServices() {
         // Provider.

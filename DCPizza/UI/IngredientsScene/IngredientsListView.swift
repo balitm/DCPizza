@@ -49,6 +49,7 @@ struct IngredientsListView: View {
             }
         })
         .edgesIgnoringSafeArea(.bottom)
+        .listStyle(PlainListStyle())
         .navigationTitle(viewModel.title)
         .navigationBarTitleDisplayMode(.inline)
         .backNavigationBarItems(_mode)

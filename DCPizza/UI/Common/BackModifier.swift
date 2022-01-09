@@ -17,14 +17,6 @@ extension View {
                 .font(.system(size: 20, weight: .semibold))
         }
         return navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    backButton
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    trailing
-                }
-            }
             .navigationBarItems(leading: backButton, trailing: trailing)
     }
 
