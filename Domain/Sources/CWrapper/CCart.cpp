@@ -84,7 +84,7 @@ Cart *cart_create(const Pizza *pizzas[], size_t pizza_count,
 {
     auto pizza_vector = convert<cpplib::Pizza>(pizzas, pizza_count);
     auto drink_vector = convert<cpplib::Drink>(drinks, drink_count);
-    return _create_obj(new cpplib::Cart(move(pizza_vector), move(drink_vector), basePrice));
+    return _create_obj(new cpplib::Cart(std::move(pizza_vector), std::move(drink_vector), basePrice));
 }
 
 void cart_add_pizza(Cart *cart, const Pizza *pizza)

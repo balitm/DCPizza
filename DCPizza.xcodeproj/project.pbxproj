@@ -329,11 +329,11 @@
 			children = (
 				295DC86A24910C0C00E0591F /* UI */,
 				2955386A254C811C00D5A62D /* DCPizzaApp.swift */,
+				295A85FB255031B7005F1E8C /* DCPizzaViewModel.swift */,
 				2951270424AA70A900B8D657 /* App+Injection.swift */,
 				29B56A56249019800070EBC8 /* Assets.xcassets */,
 				29B56A5E249019800070EBC8 /* Info.plist */,
 				29B56A58249019800070EBC8 /* Preview Content */,
-				295A85FB255031B7005F1E8C /* DCPizzaViewModel.swift */,
 			);
 			path = DCPizza;
 			sourceTree = "<group>";

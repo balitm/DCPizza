@@ -11,6 +11,7 @@
 #include "Ingredient.hpp"
 #include "Utility.hpp"
 #include <string.h>
+#include <cassert>
 
 using std::unique_ptr;
 

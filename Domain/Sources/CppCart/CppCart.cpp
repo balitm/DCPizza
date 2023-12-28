@@ -7,6 +7,7 @@
 
 #include <numeric>
 #include <algorithm>
+#include <cassert>
 #include "CppCart.hpp"
 #include "Pizza.hpp"
 #include "Drink.hpp"

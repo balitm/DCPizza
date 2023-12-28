@@ -6,6 +6,7 @@
 //
 
 #include "CartItem.hpp"
+#include <cassert>
 
 namespace cpplib {
 
