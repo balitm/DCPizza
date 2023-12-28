@@ -1,25 +1,33 @@
-# OS X
-.DS_Store
-
 # Xcode
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-xcuserdata/
-*.xccheckout
-#profile
-*.moved-aside
-DerivedData
-*.hmap
-*.ipa
-project.xcworkspace/
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
-.*.sw?
-/build*/*
-/Carthage/*
-/CartDerived/*
+## User settings
+xcuserdata/
+
+build/
+DerivedData/
+
+## App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+#
+# Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
+# Packages/
+# Package.pins
+Package.resolved
+# *.xcodeproj
+#
+# Xcode automatically generates this directory with a .xcworkspacedata file and xcuserdata
+# hence it is not needed unless you have added a package configuration file to your project
+# .swiftpm
+
+.build/
+
+# Add this line if you want to avoid checking in source code from the Xcode workspace
+DCPizza.xcodeproj/*.xcworkspace
+
+.DS_Store

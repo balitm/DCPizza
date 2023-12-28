@@ -2,11 +2,11 @@
 --disable leadingDelimiters
 --disable linebreakAtEndOfFile
 --disable numberFormatting
---disable sortedImports
+--disable sortImports
 --disable strongOutlets
 --disable unusedArguments
 --disable wrapArguments
---disable redundantFileprivate
+#--disable redundantFileprivate
 --operatorfunc no-space
 --disable wrapMultilineStatementBraces
 
@@ -24,4 +24,9 @@
 --enable redundantNilInit
 --enable redundantRawValues
 --enable redundantReturn
+--enable redundantBackticks
+--enable redundantBreak
+--enable redundantClosure
 --enable duplicateImports
+#--enable fileHeader
+#--header strip
