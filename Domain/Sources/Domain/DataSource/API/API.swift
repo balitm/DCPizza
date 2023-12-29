@@ -10,7 +10,7 @@ import Foundation
 import Combine
 import class UIKit.UIImage
 
-private let _kBaseUrl = URL(string: "https://api.jsonbin.io/b/")!
+private let _kBaseUrl = URL(string: "https://api.jsonbin.io/v3/b/")!
 
 public enum API {
     public enum ErrorType: Error {
@@ -59,6 +59,10 @@ public enum API {
 }
 
 private extension API {
+    struct _Record<D: Decodable>: Decodable {
+        let record: D
+    }
+
     static func _fetch<D: Decodable>(_ urlRequest: URLRequest) -> AnyPublisher<D, ErrorType> {
         DLog("url: ", urlRequest.url?.absoluteString ?? "nil")
 
@@ -68,16 +72,20 @@ private extension API {
                 guard response.statusCode == 200 else {
                     throw ErrorType.status(code: response.statusCode)
                 }
+                // DLog("output of ", urlRequest.url?.absoluteString ?? "nil", "\n", output.data.count, "\n",
+                //      String(decoding: output.data, as: UTF8.self))
                 return output.data
             }
-            .decode(type: D.self, decoder: _decoder)
+            .decode(type: _Record<D>.self, decoder: _decoder)
             .mapError { error -> ErrorType in
+                DLog("url: ", urlRequest.url?.absoluteString ?? "nil", ", type: ", D.self)
                 DLog("fetch error: ", error)
                 if let httpError = error as? ErrorType {
                     return httpError
                 }
                 return ErrorType.processingFailed
             }
+            .map(\.record)
             .eraseToAnyPublisher()
     }
 
@@ -115,7 +123,7 @@ private extension API {
         return request
     }
 
-    static func _createPostURL<E: Encodable>(_ parameters: E) -> URLRequest {
+    static func _createPostURL(_ parameters: some Encodable) -> URLRequest {
         // Assembling the url.
         guard let url = URL(string: "http://httpbin.org/post") else { fatalError() }
         let components = URLComponents(url: url, resolvingAgainstBaseURL: true)!
